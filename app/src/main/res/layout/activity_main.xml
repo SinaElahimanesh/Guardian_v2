@@ -4,15 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    xmlns:attv="http://schemas.android.com/apk/res-auto"
+    attv:encryptionSpeed = "50"
+    attv:decryptionSpeed = "50"
+    android:orientation="vertical"
+    attv:typingSpeed = "50">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/appThemeColor"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.22"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/Logo"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/logo_white" />
+
+        </LinearLayout>
+
+        <com.dragankrstic.autotypetextview.AutoTypeTextView
+            android:id="@+id/lblTextWithoutMistakes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            android:fontFamily="@font/adobe_arabic_regular"
+            android:textColor="#F8FFF8"
+            android:textSize="39sp"
+            attv:animateTextTypeWithoutMistakes="@string/app_name_detailed" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/retryButton"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="#BCEC8E"
+        android:fontFamily="@font/iran_sans"
+        android:text="@string/try_again"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
