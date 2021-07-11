@@ -1,15 +1,23 @@
 <resources>
     <string name="app_name">Guardian</string>
 
+    <!-- LOAD Page -->
     <string name="app_name_detailed">گاردیَن</string>
     <string name="try_again">تلاش مجدد</string>
+
+    <!-- REGISTER Page -->
     <string name="register_subtitle1">نام کاربری</string>
     <string name="register_subtitle2">رمز عبور</string>
     <string name="register_subtitle3">شماره تلفن همراه</string>
     <string name="register_button">ثبت نام</string>
     <string name="register_linkToLogin">قبلا از گاردین استفاده کرده ام، ورود</string>
+
+    <!-- LOGIN Page -->
     <string name="login_subtitle1">نام کاربری</string>
     <string name="login_subtitle2">رمز عبور</string>
     <string name="login_button">ورود</string>
     <string name="login_linkToRegister">هنوز ثبت نام نکرده ام، ثبت نام</string>
+
+    <!-- SEAT_BELT Page -->
+    <string name="fasteningSeatBelt_description">در ابتدا لطفا کمربند ایمنی <br/> خود را ببندید!</string>
 </resources>

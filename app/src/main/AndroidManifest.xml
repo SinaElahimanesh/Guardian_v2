@@ -9,7 +9,8 @@
         android:roundIcon="@drawable/blue"
         android:supportsRtl="true"
         android:theme="@style/Theme.Guardian_v2">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".SeatBeltActivity"></activity>
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
