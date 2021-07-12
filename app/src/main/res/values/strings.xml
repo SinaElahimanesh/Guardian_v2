@@ -19,5 +19,13 @@
     <string name="login_linkToRegister">هنوز ثبت نام نکرده ام، ثبت نام</string>
 
     <!-- SEAT_BELT Page -->
-    <string name="fasteningSeatBelt_description">در ابتدا لطفا کمربند ایمنی <br/> خود را ببندید!</string>
+    <string name="fasteningSeatBelt_description">در ابتدا لطفا کمربند ایمنی <br /> خود را ببندید!</string>
+
+    <!-- SLEEP_MANAGER Page -->
+    <string name="sleep_input_request">لطفا برای سلامت خودتان میزان خواب خود را به دقت وارد کنید.</string>
+    <string name="save_button">ذخیره</string>
+    <string name="record_automatically_button">اندازه گیری خواب به صورت خودکار</string>
+    <string name="wakeup_time">ساعت بیدارشدن:</string>
+    <string name="sleep_time">ساعت خواب:</string>
+    <string name="sleep_duration">میزان خواب</string>
 </resources>
