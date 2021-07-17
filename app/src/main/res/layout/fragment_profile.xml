@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F7F7F7"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:alpha="0.85"
+                android:background="@drawable/rectangle_box_main"
+                android:src="@drawable/rectangle_box_main"
+                tools:ignore="MissingConstraints">
+
+                <!--            <ImageView-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="match_parent"-->
+                <!--                android:alpha="1"-->
+                <!--                android:background="#7E7E7E" />-->
+
+                <!-- This LinearLayout represents the contents of the screen  -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--                <Button-->
+                    <!--                    android:id="@+id/menuButton2"-->
+                    <!--                    style="?android:attr/borderlessButtonStyle"-->
+                    <!--                    android:layout_width="25dp"-->
+                    <!--                    android:layout_height="25dp"-->
+                    <!--                    android:layout_marginStart="12dp"-->
+                    <!--                    android:layout_marginLeft="6dp"-->
+                    <!--                    android:layout_marginTop="12dp"-->
+                    <!--                    android:background="@drawable/menu_icon" />-->
+
+                    <!-- The ActionBar displayed at the top -->
+                    <!--        <include-->
+                    <!--            layout="@layout/toolbar"-->
+                    <!--            android:layout_width="match_parent"-->
+                    <!--            android:layout_height="wrap_content" />-->
+
+                    <!-- The main content view where fragments are loaded -->
+                    <FrameLayout
+                        android:id="@+id/flContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                </LinearLayout>
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layoutDirection="ltr"
+                    android:layout_gravity="right">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layoutDirection="ltr"
+                        android:layout_marginBottom="15dp"
+                        android:paddingRight="6dp">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/iran_sans"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="سینا الهی منش"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            android:textSize="19sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:layout_gravity="center"
+                            android:alpha="1"
+                            android:fontFamily="@font/iran_sans"
+                            android:src="@drawable/user_icon_circle"
+                            android:textColor="#191919"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/logout"
+                            android:layout_width="25dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginBottom="40dp"
+                            android:alpha="1"
+                            android:fontFamily="@font/iran_sans"
+                            android:src="@drawable/logout_icon"
+                            android:textColor="#191919"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!--                <ImageView-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="47.5dp"-->
+                    <!--                    android:alpha="0.2"-->
+                    <!--                    android:background="#FFFFFF"-->
+                    <!--                    android:elevation="2dp" />-->
+
+                </FrameLayout>
+
+
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/frameLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="245dp"
+                android:layout_gravity="right"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout"><!-- height: 250  -->
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/card_background" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layoutDirection="ltr"
+                    android:orientation="vertical"
+                    android:paddingTop="6dp"> <!-- height: 90  -->
+
+                    <TextView
+                        android:textColor="#8B000000"
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sadgan_medium"
+                        android:gravity="center_horizontal"
+                        android:text="میانگین رانندگی سالم شما"
+                        android:textAlignment="center"
+                        android:textSize="17sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="60dp"
+                        android:background="#D77E7E7E"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3"
+                        tools:layout_editor_absoluteX="40dp" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <FrameLayout
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/avg_background"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="bottom|center"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/circle_gradient_green" />
+
+                    <TextView
+                        android:textColor="#8B000000"
+                        android:id="@+id/tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/product_sans_bold"
+                        android:lines="1"
+                        android:text="64%"
+                        android:textSize="36sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/avg_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="25dp"
+                        android:text="safe"
+                        android:fontFamily="@font/sadgan_medium"
+                        android:textColor="#9A000000"
+                        android:textSize="11.5sp" />
+
+                </FrameLayout>
+            </FrameLayout>
+
+
+            <!--        <com.mapbox.mapboxsdk.maps.MapView-->
+            <!--            android:id="@+id/mapView"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            app:layout_constraintTop_toTopOf="parent"-->
+            <!--            mapbox:mapbox_cameraTargetLat="35.715298"-->
+            <!--            mapbox:mapbox_cameraTargetLng="51.404343"-->
+            <!--            mapbox:mapbox_cameraZoom="12" />-->
+
+
+            <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--            android:id="@+id/fab_location_search"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_gravity="end|bottom"-->
+            <!--            android:layout_margin="10dp"-->
+            <!--            android:tint="@android:color/white"-->
+            <!--            app:backgroundTint="#85C1E9"-->
+            <!--            app:layout_constraintBottom_toTopOf="@+id/textView"-->
+            <!--            app:layout_constraintStart_toStartOf="parent"-->
+            <!--            app:srcCompat="@android:drawable/ic_search_category_default"-->
+            <!--            tools:ignore="MissingConstraints" />-->
+
+
+            <!--        <TextView-->
+            <!--            android:id="@+id/textView"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:background="#B6F485"-->
+            <!--            android:fontFamily="@font/iran_sans"-->
+            <!--            android:gravity="center_horizontal"-->
+            <!--            android:paddingTop="8dp"-->
+            <!--            android:paddingBottom="10dp"-->
+            <!--            android:text="@string/activity_selectNav_description"-->
+            <!--            android:textAlignment="center"-->
+            <!--            android:textSize="17dp"-->
+            <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--            tools:ignore="MissingConstraints"-->
+            <!--            tools:layout_editor_absoluteX="-16dp" />-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:alpha="1"
+                android:background="#FFFFFF"
+                android:paddingTop="12dp"
+                android:orientation="vertical"
+                android:weightSum="1"
+                app:layout_constraintBottom_toTopOf="@+id/startButton">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:text="نام کاربری"
+                    android:textColor="@color/blue_grey_active"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:background="@drawable/border_background"
+                    android:hint="SinaElahimanesh"
+                    android:textColor="#99000000"
+                    android:textAlignment="center"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:text="رمز عبور"
+                    android:textColor="@color/blue_grey_active"
+                    android:textSize="14sp"/>
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:background="@drawable/border_background"
+                    android:hint="Pass123456"
+                    android:textColor="#99000000"
+                    android:textAlignment="center"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:text="شماره تلفن همراه"
+                    android:textColor="@color/blue_grey_active"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:background="@drawable/border_background"
+                    android:hint="0930 500 6036"
+                    android:textColor="#99000000"
+                    android:textAlignment="center"
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:padding="10dp"
+            android:text="ذخیره"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

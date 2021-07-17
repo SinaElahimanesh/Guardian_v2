@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".DrivingFragment">
+
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr"
+        android:fillViewport="true"
+        tools:context=".MyDrive">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@drawable/top_title_gradient"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="14dp"
+                    android:alpha="1"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/iran_sans"
+                    android:src="@drawable/blue"
+                    android:textColor="#191919"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/iran_sans"
+                    android:text="رانندگی من"
+                    android:textColor="#ffffff"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/backButton"
+                    android:layout_width="24dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="14dp"
+                    android:background="@drawable/ic_driving_menu"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="510dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/item_background"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/user_icon_circle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:orientation="vertical"
+                        android:paddingRight="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/usernameTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/iran_sans"
+                            android:paddingRight="10dp"
+                            android:text="سینا الهی منش"
+                            android:textAlignment="center"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/phoneNumberTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/iran_sans"
+                            android:paddingRight="10dp"
+                            android:text="۰۹۳۰۵۰۰۶۰۳۶"
+                            android:textAlignment="center"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                    <!--            <TextView-->
+                    <!--                android:layout_width="140dp"-->
+                    <!--                android:layout_height="wrap_content"-->
+                    <!--                android:fontFamily="@font/iran_sans"-->
+                    <!--                android:paddingRight="10dp"-->
+                    <!--                android:text="سینا الهی منش"-->
+                    <!--                android:textSize="16sp"-->
+                    <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--                app:layout_constraintEnd_toStartOf="@+id/imageView"-->
+                    <!--                app:layout_constraintTop_toTopOf="parent"-->
+                    <!--                android:layout_marginRight="7dp"/>-->
+
+
+                    <LinearLayout
+                        android:layout_width="104dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="18dp"
+                        android:background="@drawable/border_background"
+                        android:orientation="vertical"
+                        android:padding="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/text1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/product_sans_bold"
+                            android:text="96%"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/safetyStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/iran_sans"
+                            android:text="بسیار ایمن"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="361dp"
+                    android:layoutDirection="rtl"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="2dp">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayou2"
+                            android:layout_width="120dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="سرعت"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="112 km/h"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginRight="7dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="رانندگی بدون توقف"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="3:15"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout"
+                            android:layout_width="160dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="میزان لرزش خودرو"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="3/5"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginRight="7dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="میزان خواب"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="6:30"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout4"
+                            android:layout_width="140dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="شتاب خودرو"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="5 m/s2"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginRight="7dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="ساعت رانندگی"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="6:30"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout5"
+                            android:layout_width="170dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="محدوده های خطر جاده"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="5 m/s2"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginRight="7dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="وضعیت آب و هوا"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="6:30"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout8"
+                            android:layout_width="160dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="نوع جاده"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="5 m/s2"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginRight="7dp"
+                            android:background="@drawable/factor_background"
+                            android:orientation="vertical"
+                            android:padding="6dp"
+                            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/sadgan_medium"
+                                android:paddingBottom="4dp"
+                                android:text="بیشترین زمان سفر"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/text11"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/iran_sans"
+                                android:text="6:30"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/date"
+                    android:paddingRight="7dp"
+                    android:paddingLeft="7dp"
+                    android:fontFamily="@font/iran_sans"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="11dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_height="45dp"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:background="@drawable/button_background"
+                    android:text="مشاهده ی جزییات وضعیت رانندگی"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:alpha="0.75"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</FrameLayout>
