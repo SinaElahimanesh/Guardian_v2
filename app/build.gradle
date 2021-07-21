@@ -78,5 +78,7 @@ dependencies {
 
     // new
     implementation 'com.gauravk.bubblenavigation:bubblenavigation:1.0.7'
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    implementation 'com.github.Chrisvin:RubberPicker:v1.5'
 }
 apply plugin: 'com.google.gms.google-services'

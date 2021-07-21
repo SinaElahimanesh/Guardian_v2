@@ -31,7 +31,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginEnd="14dp"
                     android:alpha="1"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/iran_sans"
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/iran_sans"
-                    android:text="رانندگی من"
+                    android:text="@string/my_driving_title"
                     android:textColor="#ffffff"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +91,7 @@
                         android:id="@+id/imageView"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginRight="15dp"
+                        android:layout_marginEnd="15dp"
                         android:src="@drawable/user_icon_circle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="9dp"
                         android:orientation="vertical"
-                        android:paddingRight="6dp"
+                        android:paddingEnd="6dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imageView"
                         app:layout_constraintTop_toTopOf="parent">
@@ -115,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/iran_sans"
-                            android:paddingRight="10dp"
+                            android:paddingEnd="10dp"
                             android:text="سینا الهی منش"
                             android:textAlignment="center"
                             android:textSize="16sp" />
@@ -126,29 +126,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/iran_sans"
-                            android:paddingRight="10dp"
+                            android:paddingEnd="10dp"
                             android:text="۰۹۳۰۵۰۰۶۰۳۶"
                             android:textAlignment="center"
                             android:textSize="12sp" />
 
                     </LinearLayout>
-                    <!--            <TextView-->
-                    <!--                android:layout_width="140dp"-->
-                    <!--                android:layout_height="wrap_content"-->
-                    <!--                android:fontFamily="@font/iran_sans"-->
-                    <!--                android:paddingRight="10dp"-->
-                    <!--                android:text="سینا الهی منش"-->
-                    <!--                android:textSize="16sp"-->
-                    <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--                app:layout_constraintEnd_toStartOf="@+id/imageView"-->
-                    <!--                app:layout_constraintTop_toTopOf="parent"-->
-                    <!--                android:layout_marginRight="7dp"/>-->
-
 
                     <LinearLayout
                         android:layout_width="104dp"
                         android:layout_height="50dp"
-                        android:layout_marginLeft="18dp"
+                        android:layout_marginStart="18dp"
                         android:background="@drawable/border_background"
                         android:orientation="vertical"
                         android:padding="4dp"
@@ -212,7 +200,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="سرعت"
+                                android:text="@string/driving_speed"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -230,7 +218,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_marginStart="7dp"
                             android:background="@drawable/factor_background"
                             android:orientation="vertical"
                             android:padding="6dp"
@@ -243,7 +231,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="رانندگی بدون توقف"
+                                android:text="@string/driving_without_stop"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -287,7 +275,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="میزان لرزش خودرو"
+                                android:text="@string/driving_vibration"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -305,7 +293,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_marginStart="7dp"
                             android:background="@drawable/factor_background"
                             android:orientation="vertical"
                             android:padding="6dp"
@@ -318,7 +306,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="میزان خواب"
+                                android:text="@string/driving_sleep"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -362,7 +350,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="شتاب خودرو"
+                                android:text="@string/driving_acceleration"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -380,7 +368,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_marginStart="7dp"
                             android:background="@drawable/factor_background"
                             android:orientation="vertical"
                             android:padding="6dp"
@@ -393,7 +381,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="ساعت رانندگی"
+                                android:text="@string/driving_time"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -438,7 +426,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="محدوده های خطر جاده"
+                                android:text="@string/driving_danger_zones"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -456,7 +444,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_marginStart="7dp"
                             android:background="@drawable/factor_background"
                             android:orientation="vertical"
                             android:padding="6dp"
@@ -469,7 +457,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="وضعیت آب و هوا"
+                                android:text="@string/driving_weather"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -513,7 +501,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="نوع جاده"
+                                android:text="@string/driving_road"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -531,7 +519,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_marginStart="7dp"
                             android:background="@drawable/factor_background"
                             android:orientation="vertical"
                             android:padding="6dp"
@@ -544,7 +532,7 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
-                                android:text="بیشترین زمان سفر"
+                                android:text="@string/driving_month"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -580,7 +568,7 @@
                     android:textAlignment="center"
                     android:gravity="center"
                     android:background="@drawable/button_background"
-                    android:text="مشاهده ی جزییات وضعیت رانندگی"
+                    android:text="@string/driving_detail_button"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:alpha="0.75"

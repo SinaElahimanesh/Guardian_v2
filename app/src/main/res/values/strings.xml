@@ -28,6 +28,78 @@
     <string name="wakeup_time">ساعت بیدارشدن:</string>
     <string name="sleep_time">ساعت خواب:</string>
     <string name="sleep_duration">میزان خواب</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- MY_DRIVING Page -->
+    <string name="my_driving_title">رانندگی من</string>
+    <string name="driving_speed">سرعت</string>
+    <string name="driving_without_stop">رانندگی بدون توقف</string>
+    <string name="driving_vibration">میزان لرزش خودرو</string>
+    <string name="driving_sleep">میزان خواب</string>
+    <string name="driving_acceleration">شتاب خودرو</string>
+    <string name="driving_time">ساعت رانندگی</string>
+    <string name="driving_danger_zones">محدوده های خطر جاده</string>
+    <string name="driving_weather">وضعیت آب و هوا</string>
+    <string name="driving_road">نوع جاده</string>
+    <string name="driving_month">بیشترین زمان سفر</string>
+    <string name="driving_detail_button">مشاهده ی جزییات وضعیت رانندگی</string>
+
+    <!-- MY_PROFILE Page -->
+    <string name="profile_driving_percent_average">میانگین رانندگی سالم شما</string>
+    <string name="profile_username">نام کاربری</string>
+    <string name="profile_password">رمز عبور</string>
+    <string name="profile_phone">شماره تلفن همراه</string>
+    <string name="profile_save_button">ذخیره</string>
+
+    <!-- SETTINGS Page -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="settings_general_title">تنظیمات عمومی</string>
+    <string name="settings_darkmode_title">حالت شب</string>
+    <string name="settings_danger_title">حالت خطر</string>
+    <string name="settings_danger_subtitle">می توانید حالت خطر برنامه برای ارتباط های صوتی را غیر فعال کنید.</string>
+    <string name="settings_voice_title">اعلان های صوتی</string>
+    <string name="settings_voice_subtitle">می توانید انتخاب کنید اعلان های صوتی برنامه هرچند دقیقه یکبار به شما اعلام شود.</string>
+    <string name="settings_done_button">انجام شود</string>
+
+    <!-- INFO Page -->
+    <string name="guardian_info_description">تصادفات رانندگی یکی از علل مهم مرگ و میر در سرتاسر جهان و به ویژه در ایران می باشد؛ به صورتی که می توان از آن به عنوان دومین علت مرگ و میر در ایران یاد کرد.
+    <b><i>گاردیَن</i></b> با بررسی عوامل موثر بر رانندگی سالم شما از جمله؛ میزان خواب، ساعت شبانه روز، سرعت خودرو، میزان رانندگی بدون توقف، نوع جاده، ترافیک مسیر، آب و هوا، درنظر گرفتن محدوده ی ۳۰ کیلومتری شهرهای بزرگ به صورت هوشمند
+    با ارائه ی راهکار های مناسب به اینکه شما سالم تر رانندگی کنید، کمک کند!</string>
+    <string name="info_title">درباره گاردین</string>
+    <string name="info_subtitle">درباره ی ما</string>
+    <string name="return_button">بازگشت</string>
+
+    <!-- SUPPORT Page -->
+    <string name="support_title">پشتیبانی</string>
+    <string name="support_website">وبسایت گاردین</string>
+    <string name="website_address">https://guardianapp.ir</string>
+    <string name="support_website_subtitle">شما می توانید از وبسایت گاردین در جریان آخرین اخبار و اتفاقات گاردین باشید!</string>
+    <string name="support_contact_title">راه های ارتباطی پیشتیبانی گاردین</string>
+    <string name="support_contact_subtitle">اگر هرگونه مشکلی در استفاده از برنامه یا قابلیت های آن داشتید، می توانید با پشتیبانی گاردین در ارتباط باشید.</string>
+
+    <!-- GPS Dialog -->
+    <string name="gps_subtitle">برای استفاده از گاردین لطفا GPS تلفن همراه خود را روشن نمایید.</string>
+    <string name="gps_button">موقعیت مکانی GPS</string>
+
+    <!-- INTERNET Dialog -->
+    <string name="internet_subtitle">اتصال شما به اینترنت برقرار نیست. برای استفاده از گاردین به اینترنت متصل شوید!</string>
+    <string name="internet_data_button">اینترنت موبایل</string>
+    <string name="internet_wifi_button">اینترنت Wi-Fi</string>
+
+    <!-- LOGOUT Dialog -->
+    <string name="logout_title">خروج از حساب کاربری</string>
+    <string name="logout_subtitle">آیا مطمئن هستید که می خواهید از حساب کاربری خود خارج شوید؟</string>
+    <string name="no_text">خیر</string>
+    <string name="yes_text">بله</string>
+
+    <!-- PERMISSION Dialog -->
+    <string name="permission_subtitle">گاردین برای یافتن موقعیت شما روی نقشه، به موقعیت مکانی شما نیاز دارد. لطفا این دسترسی را به برنامه بدهید.</string>
+    <string name="permission_button">اجازه دادن</string>
+
+    <!-- SLEEP_SURENESS Dialog -->
+    <string name="sleep_sureness_subtitle">آیا مطمئن هستید می خواهید این میزان خواب را ذخیره کنید؟</string>
+    <string name="exit_text">خروج</string>
+
+    <!-- UPDATE Dialog -->
+    <string name="update_subtitle">نسخه ی برنامه ی شما به روز نیست. لطفا با کلیک روی دکمه ی زیر آن را به روزرسانی کنید!</string>
+    <string name="update_button">به روزرسانی گاردین</string>
 </resources>

@@ -9,7 +9,10 @@
         android:roundIcon="@drawable/blue"
         android:supportsRtl="true"
         android:theme="@style/Theme.Guardian_v2">
-        <activity android:name=".MainMenuActivity"></activity>
+        <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".SupportActivity" />
+        <activity android:name=".MainDrivingActivity" />
+        <activity android:name=".MainMenuActivity" />
         <activity android:name=".SleepManagerActivity" />
         <activity android:name=".SeatBeltActivity" />
         <activity android:name=".RegisterActivity" />

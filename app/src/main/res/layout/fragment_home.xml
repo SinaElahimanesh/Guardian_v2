@@ -3,12 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Button
+        android:id="@+id/startButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="46.5dp"
+        android:layout_gravity="bottom"
+        android:background="@color/blue_active"
+        android:fontFamily="@font/iran_sans"
+        android:text="شروع سفر"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="18.5sp" />
 
 </FrameLayout>
