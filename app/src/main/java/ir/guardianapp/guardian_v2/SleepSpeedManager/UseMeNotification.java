@@ -1,7 +1,5 @@
 package ir.guardianapp.guardian_v2.SleepSpeedManager;
 
-import android.app.AppComponentFactory;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,15 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PersistableBundle;
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -28,11 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.security.Provider;
 import java.util.Calendar;
 import java.util.Date;
+import ir.guardianapp.guardian_v2.MainActivity;
+import ir.guardianapp.guardian_v2.R;
 
 public class UseMeNotification extends Service{
+    private final String CHANNEL_ID = "guardian";
 
     @Override
     public void onCreate() {
@@ -43,8 +38,14 @@ public class UseMeNotification extends Service{
             makeNotification();
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     public static void makeUsageDataFile(Context context){
-        File file = new File(context.getFilesDir(), "UsageData");
+        new File(context.getFilesDir(), "UsageData");
     }
 
     public static boolean writeInfoToFile(Context context, Date time){
@@ -57,15 +58,14 @@ public class UseMeNotification extends Service{
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return false;
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
             return false;
         }
     }
 
-    private static final int NOTIFICATION_ID = 1231234;
-    private final String CHANNEL_ID = "guardian";
+
     public void makeNotification(){
         createNotificationChannel();
         Intent intent = new Intent(this, MainActivity.class);
@@ -93,13 +93,6 @@ public class UseMeNotification extends Service{
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
-
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     public static Date readDataFromFile(Context context){
