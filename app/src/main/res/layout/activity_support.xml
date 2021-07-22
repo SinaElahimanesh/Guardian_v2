@@ -56,8 +56,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/backButton"
+                <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="8dp"
@@ -234,7 +233,7 @@
 
                 <Button
                     android:layout_gravity="center_horizontal"
-                    android:id="@+id/date"
+                    android:id="@+id/backButton"
                     android:paddingRight="7dp"
                     android:paddingLeft="7dp"
                     android:fontFamily="@font/iran_sans"
