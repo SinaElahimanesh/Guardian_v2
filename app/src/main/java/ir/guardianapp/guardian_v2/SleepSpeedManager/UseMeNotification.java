@@ -64,7 +64,6 @@ public class UseMeNotification extends Service{
         }
     }
 
-
     private static final int NOTIFICATION_ID = 1231234;
     private final String CHANNEL_ID = "guardian";
     public void makeNotification(){
@@ -102,4 +101,31 @@ public class UseMeNotification extends Service{
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    public static Date readDataFromFile(Context context){
+        String ret = "";
+        try {
+            InputStream inputStream = context.openFileInput("UsageData");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (IOException e) {
+            return null;
+        }
+        Gson gson = new Gson();
+        return   gson.fromJson(ret,Date.class);
+    }
+
 }
