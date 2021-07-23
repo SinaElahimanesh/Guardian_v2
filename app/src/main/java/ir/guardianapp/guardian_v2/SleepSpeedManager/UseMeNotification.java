@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -23,18 +25,19 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
+
 import ir.guardianapp.guardian_v2.MainActivity;
 import ir.guardianapp.guardian_v2.R;
 
-public class UseMeNotification extends Service{
+public class UseMeNotification extends Service {
     private final String CHANNEL_ID = "guardian";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Date date=readDataFromFile(this);
+        Date date = readDataFromFile(this);
         Date dateNow = Calendar.getInstance().getTime();
-        if(dateNow.getMonth()!=date.getMonth() || dateNow.getDay()-date.getDay()>15)
+        if (dateNow.getMonth() != date.getMonth() || dateNow.getDay() - date.getDay() > 15)
             makeNotification();
     }
 
@@ -44,11 +47,11 @@ public class UseMeNotification extends Service{
         return null;
     }
 
-    public static void makeUsageDataFile(Context context){
+    public static void makeUsageDataFile(Context context) {
         new File(context.getFilesDir(), "UsageData");
     }
 
-    public static boolean writeInfoToFile(Context context, Date time){
+    public static boolean writeInfoToFile(Context context, Date time) {
         try {
             makeUsageDataFile(context);
             Gson gson = new Gson();
@@ -66,7 +69,7 @@ public class UseMeNotification extends Service{
     }
 
 
-    public void makeNotification(){
+    public void makeNotification() {
         createNotificationChannel();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -95,30 +98,29 @@ public class UseMeNotification extends Service{
         }
     }
 
-    public static Date readDataFromFile(Context context){
+    public static Date readDataFromFile(Context context) {
         String ret = "";
         try {
             InputStream inputStream = context.openFileInput("UsageData");
 
-            if ( inputStream != null ) {
+            if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                while ((receiveString = bufferedReader.readLine()) != null) {
                     stringBuilder.append(receiveString);
                 }
 
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return null;
         }
         Gson gson = new Gson();
-        return   gson.fromJson(ret,Date.class);
+        return gson.fromJson(ret, Date.class);
     }
 
 }
