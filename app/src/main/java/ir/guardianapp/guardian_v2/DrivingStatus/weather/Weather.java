@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+
 import androidx.core.app.ActivityCompat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -68,11 +71,11 @@ public class Weather {
             return null;
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(location == null){
+        if (location == null) {
             System.out.println("weather invalid");
-           return getWeather(58,30);
+            return getWeather(58, 30);
         }
-        return getWeather(location.getLongitude(),location.getLatitude());
+        return getWeather(location.getLongitude(), location.getLatitude());
     }
 
 
@@ -92,28 +95,27 @@ public class Weather {
         return weatherType;
     }
 
-    public String getWeatherTypePersian(){
-        if(weatherType.equals(WeatherType.Thunderstorm)) return "رعد و برق";
-        if(weatherType.equals(WeatherType.Drizzle)) return "باران ملایم";
-        if(weatherType.equals(WeatherType.Rain)) return "باران";
-        if(weatherType.equals(WeatherType.Snow)) return "برف";
-        if(weatherType.equals(WeatherType.Clear)) return "صاف";
-        if(weatherType.equals(WeatherType.Clouds)) return "ابری";
-        if(weatherType.equals(WeatherType.Mist)) return "مه";
-        if(weatherType.equals(WeatherType.Smoke)) return "دود";
-        if(weatherType.equals(WeatherType.Haze)) return "مه";
-        if(weatherType.equals(WeatherType.Dust)) return "شن";
-        if(weatherType.equals(WeatherType.Fog)) return "مه";
-        if(weatherType.equals(WeatherType.Sand)) return "شنی";
-        if(weatherType.equals(WeatherType.Ash)) return "خاکستر";
-        if(weatherType.equals(WeatherType.Tornado)) return "طوفانی";
-        if(weatherType.equals(WeatherType.Squall)) return "باد شدید";
-        return "?";
-    }
-
     public String getImageUrl() {
         return "http://openweathermap.org/img/wn/" + Id + "@2x.png";
     }
 
-    //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(imageView);
+    public String getWeatherTypePersian() {
+        // handle translation in string.xml
+        if (weatherType.equals(WeatherType.Thunderstorm)) return "رعد و برق";
+        if (weatherType.equals(WeatherType.Drizzle)) return "باران ملایم";
+        if (weatherType.equals(WeatherType.Rain)) return "باران";
+        if (weatherType.equals(WeatherType.Snow)) return "برف";
+        if (weatherType.equals(WeatherType.Clear)) return "صاف";
+        if (weatherType.equals(WeatherType.Clouds)) return "ابری";
+        if (weatherType.equals(WeatherType.Mist)) return "مه";
+        if (weatherType.equals(WeatherType.Smoke)) return "دود";
+        if (weatherType.equals(WeatherType.Haze)) return "مه";
+        if (weatherType.equals(WeatherType.Dust)) return "شن";
+        if (weatherType.equals(WeatherType.Fog)) return "مه";
+        if (weatherType.equals(WeatherType.Sand)) return "شنی";
+        if (weatherType.equals(WeatherType.Ash)) return "خاکستر";
+        if (weatherType.equals(WeatherType.Tornado)) return "طوفانی";
+        if (weatherType.equals(WeatherType.Squall)) return "باد شدید";
+        return "?";
+    }
 }

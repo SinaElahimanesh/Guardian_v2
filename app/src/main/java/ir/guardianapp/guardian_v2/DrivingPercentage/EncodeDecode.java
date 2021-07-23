@@ -10,10 +10,10 @@ public class EncodeDecode {
     }
 
     public static String sleepDecode(double input) {
-        int hour = (int)Math.round(input / 60);
-        int minute = (int)Math.round(input % 60);
+        int hour = (int) Math.round(input / 60);
+        int minute = (int) Math.round(input % 60);
 
-        return String.format("%dH:%dM",hour, minute);
+        return String.format("%dH:%dM", hour, minute);
     }
 
     public static double speedEncode(double userSpeed) {
@@ -22,7 +22,7 @@ public class EncodeDecode {
 
     public static String speedDecode(double input) {
 
-        int speed = (int)Math.round(input);
+        int speed = (int) Math.round(input);
         return String.format("%d (Km/H)", speed);
     }
 
@@ -41,17 +41,17 @@ public class EncodeDecode {
 
     public static String vibrationDecode(double input) {
 
-        input = (int)Math.round(input);
+        input = (int) Math.round(input);
         String vibrationOutput = "بدون لرزش";
-        if(input == 0) {
+        if (input == 0) {
             vibrationOutput = "بدون لرزش";
-        } else if(input == 1) {
+        } else if (input == 1) {
             vibrationOutput = "لرزش کم";
-        } else if(input == 2) {
+        } else if (input == 2) {
             vibrationOutput = "لرزش متوسط";
-        } else if(input == 3) {
+        } else if (input == 3) {
             vibrationOutput = "لرزش زیاد";
-        } else if(input == 4) {
+        } else if (input == 4) {
             vibrationOutput = "لرزش بسیار زیاد";
         }
         return String.format("%s", vibrationOutput);
@@ -63,7 +63,7 @@ public class EncodeDecode {
     }
 
     public static String timeDecode(double input) {
-        int hour = (int)Math.round(input / 60);
+        int hour = (int) Math.round(input / 60);
         int start = hour - 1;
         int end = hour + 1;
         return String.format("%d:00 - %d:00", start, end);
@@ -72,7 +72,7 @@ public class EncodeDecode {
     public static double nearCitiesEncode(double userDistance) {
 
         double nearCities_factor = 1;
-        if(userDistance <= 30) {
+        if (userDistance <= 30) {
             nearCities_factor = 10;
         } else {
             nearCities_factor = 2.5;
@@ -83,9 +83,9 @@ public class EncodeDecode {
     public static String nearCitiesDecode(double input) {
 
         String nearCitiesOutput = "ایمن";
-        if(input <= 3) {
+        if (input <= 3) {
             nearCitiesOutput = "بسیار ایمن";
-        } else if(input <= 5) {
+        } else if (input <= 5) {
             nearCitiesOutput = "ایمن";
         } else {
             nearCitiesOutput = "ناایمن";
@@ -102,29 +102,29 @@ public class EncodeDecode {
 
         input = Math.round(input);
         String monthOutput = "";
-        if(input == 1) {
+        if (input == 1) {
             monthOutput = "فروردین";
-        } else if(input == 2) {
+        } else if (input == 2) {
             monthOutput = "اردیبهشت";
-        } else if(input == 3) {
+        } else if (input == 3) {
             monthOutput = "خرداد";
-        } else if(input == 4) {
+        } else if (input == 4) {
             monthOutput = "تیر";
-        } else if(input == 5) {
+        } else if (input == 5) {
             monthOutput = "مرداد";
-        } else if(input == 6) {
+        } else if (input == 6) {
             monthOutput = "شهریور";
-        } else if(input == 7) {
+        } else if (input == 7) {
             monthOutput = "مهر";
-        } else if(input == 8) {
+        } else if (input == 8) {
             monthOutput = "آبان";
-        } else if(input == 9) {
+        } else if (input == 9) {
             monthOutput = "آذر";
-        } else if(input == 10) {
+        } else if (input == 10) {
             monthOutput = "دی";
-        } else if(input == 11) {
+        } else if (input == 11) {
             monthOutput = "بهمن";
-        } else if(input == 12) {
+        } else if (input == 12) {
             monthOutput = "اسفند";
         }
         return String.format("%s", monthOutput);
@@ -133,35 +133,35 @@ public class EncodeDecode {
     public static double weatherEncode(WeatherType weatherType) {
 
         double weather_factor = 0;
-        if(weatherType == WeatherType.Thunderstorm) {
+        if (weatherType == WeatherType.Thunderstorm) {
             weather_factor = 60;
-        } else if(weatherType == WeatherType.Drizzle) {
+        } else if (weatherType == WeatherType.Drizzle) {
             weather_factor = 88;
-        } else if(weatherType == WeatherType.Rain) {
+        } else if (weatherType == WeatherType.Rain) {
             weather_factor = 78;
-        } else if(weatherType == WeatherType.Snow) {
+        } else if (weatherType == WeatherType.Snow) {
             weather_factor = 50;
-        } else if(weatherType == WeatherType.Clear) {
+        } else if (weatherType == WeatherType.Clear) {
             weather_factor = 96;
-        } else if(weatherType == WeatherType.Clouds) {
+        } else if (weatherType == WeatherType.Clouds) {
             weather_factor = 100;
-        } else if(weatherType == WeatherType.Mist) {
+        } else if (weatherType == WeatherType.Mist) {
             weather_factor = 70;
-        } else if(weatherType == WeatherType.Smoke) {
+        } else if (weatherType == WeatherType.Smoke) {
             weather_factor = 60;
-        } else if(weatherType == WeatherType.Haze) {
+        } else if (weatherType == WeatherType.Haze) {
             weather_factor = 80;
-        } else if(weatherType == WeatherType.Dust) {
+        } else if (weatherType == WeatherType.Dust) {
             weather_factor = 75;
-        } else if(weatherType == WeatherType.Fog) {
+        } else if (weatherType == WeatherType.Fog) {
             weather_factor = 82;
-        } else if(weatherType == WeatherType.Sand) {
+        } else if (weatherType == WeatherType.Sand) {
             weather_factor = 75;
-        } else if(weatherType == WeatherType.Ash) {
+        } else if (weatherType == WeatherType.Ash) {
             weather_factor = 80;
-        } else if(weatherType == WeatherType.Squall) {
+        } else if (weatherType == WeatherType.Squall) {
             weather_factor = 58;
-        } else if(weatherType == WeatherType.Tornado) {
+        } else if (weatherType == WeatherType.Tornado) {
             weather_factor = 58;
         }
         return weather_factor;
@@ -191,40 +191,40 @@ public class EncodeDecode {
     }
 
     public static String withoutStopDecode(double input) {
-        int hour = (int)Math.round(input / 60);
-        int minute = (int)Math.round(input % 60);
+        int hour = (int) Math.round(input / 60);
+        int minute = (int) Math.round(input % 60);
 
-        return String.format("%dH:%dM",hour, minute);
+        return String.format("%dH:%dM", hour, minute);
     }
 
     public static double roadTypeEncode(RoadType roadType) {
 
         int roadType_factor = 100;
-        if(roadType == RoadType.motorway) {
+        if (roadType == RoadType.motorway) {
             roadType_factor = 100;
-        } else if(roadType == RoadType.trunk) {
+        } else if (roadType == RoadType.trunk) {
             roadType_factor = 100;
-        } else if(roadType == RoadType.primary) {
+        } else if (roadType == RoadType.primary) {
             roadType_factor = 90;
-        } else if(roadType == RoadType.secondary) {
+        } else if (roadType == RoadType.secondary) {
             roadType_factor = 75;
-        } else if(roadType == RoadType.tertiary) {
+        } else if (roadType == RoadType.tertiary) {
             roadType_factor = 50;
-        } else if(roadType == RoadType.unclassified) {
+        } else if (roadType == RoadType.unclassified) {
             roadType_factor = 30;
-        } else if(roadType == RoadType.residential) {
+        } else if (roadType == RoadType.residential) {
             roadType_factor = 60;
-        } else if(roadType == RoadType.motorway_link) {
+        } else if (roadType == RoadType.motorway_link) {
             roadType_factor = 90;
-        } else if(roadType == RoadType.trunk_link) {
+        } else if (roadType == RoadType.trunk_link) {
             roadType_factor = 90;
-        } else if(roadType == RoadType.primary_link) {
+        } else if (roadType == RoadType.primary_link) {
             roadType_factor = 80;
-        } else if(roadType == RoadType.secondary_link) {
+        } else if (roadType == RoadType.secondary_link) {
             roadType_factor = 65;
-        } else if(roadType == RoadType.tertiary_link) {
+        } else if (roadType == RoadType.tertiary_link) {
             roadType_factor = 40;
-        } else if(roadType == RoadType.road) {
+        } else if (roadType == RoadType.road) {
             roadType_factor = 30;
         }
         return roadType_factor;
@@ -233,39 +233,39 @@ public class EncodeDecode {
     public static String roadTypeDecode(double input) {
 
         String roadTypeOutput = "ایمن";
-       if(input >= 95) {
-           roadTypeOutput = "کاملا ایمن";
-       } else if(input >= 90) {
-           roadTypeOutput = "تقریبا ایمن";
-       } else if(input >= 75) {
-           roadTypeOutput = "ایمن";
-       } else if(input >= 50) {
-           roadTypeOutput = "ناایمن";
-       } else if(input >= 35) {
-           roadTypeOutput = "بسیار ناایمن";
-       } else {
-           roadTypeOutput = "خطرناک";
-       }
+        if (input >= 95) {
+            roadTypeOutput = "کاملا ایمن";
+        } else if (input >= 90) {
+            roadTypeOutput = "تقریبا ایمن";
+        } else if (input >= 75) {
+            roadTypeOutput = "ایمن";
+        } else if (input >= 50) {
+            roadTypeOutput = "ناایمن";
+        } else if (input >= 35) {
+            roadTypeOutput = "بسیار ناایمن";
+        } else {
+            roadTypeOutput = "خطرناک";
+        }
 
         return String.format("%s", roadTypeOutput);
     }
 
     public static String calculateStatusAlgorithm(double percentage) {
         String status = "";
-        if(percentage < 0) {
+        if (percentage < 0) {
             return "اطلاعات ناموجود";
         }
-        if(percentage >= 90) {
+        if (percentage >= 90) {
             status = "بسیار ایمن";
-        } else if(percentage >= 70) {
+        } else if (percentage >= 70) {
             status = "ایمن";
-        } else if(percentage >= 55) {
+        } else if (percentage >= 55) {
             status = "نیازمند دقت";
-        } else if(percentage >= 48) {
+        } else if (percentage >= 48) {
             status = "نیازمند دقت بالا";
-        } else if(percentage >= 40) {
+        } else if (percentage >= 40) {
             status = "ناایمن";
-        } else if(percentage >= 30) {
+        } else if (percentage >= 30) {
             status = "ایمنی بسیار پایین";
         } else {
             status = "بسیار خطرناک";
