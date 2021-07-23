@@ -45,12 +45,13 @@ public class SleepSpeedDetectorService extends Service {
     private ActivityRecognitionClient mActivityRecognitionClient;
     private boolean started = false;
     private Date lastNotification;
-    private static HashMap<Date,DetectedActivity> sleepData= new HashMap<>();
-    private  static ArrayList<Date> allDates = new ArrayList<>();
+    private static HashMap<Date, DetectedActivity> sleepData = new HashMap<>();
+    private static ArrayList<Date> allDates = new ArrayList<>();
     private static DetectedActivity lastActivity;
 
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
@@ -67,7 +68,7 @@ public class SleepSpeedDetectorService extends Service {
         System.out.println(serviceIsRunningInForeground(this));
         Intent notificationIntent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setPriority(Notification.PRIORITY_MIN)
                 .setContentTitle("Guardian")
@@ -78,9 +79,9 @@ public class SleepSpeedDetectorService extends Service {
                 .setAutoCancel(true);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         builder.setOngoing(true);
-        if(countDownTimer==null)
+        if (countDownTimer == null)
             startForeground(NOTIFICATION_ID, builder.build());
-        this.intent=intent;
+        this.intent = intent;
         countDownTimer = new CountDownTimer(999999999, 1000 * 60 * 5) {
             @Override
             public void onTick(long l) {
@@ -110,53 +111,54 @@ public class SleepSpeedDetectorService extends Service {
     }
 
     public void recognizeActivity() {
-        if((mActivityRecognitionClient==null)&&(!started)) {
+        if ((mActivityRecognitionClient == null) && (!started)) {
             mActivityRecognitionClient = new ActivityRecognitionClient(this);
             mActivityRecognitionClient.requestActivityUpdates(0, PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_ONE_SHOT));
             started = true;
         }
 
-        if(ActivityRecognitionResult.hasResult(intent)) {
+        if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
             detectedActivitiesToJson(detectedActivities);
         }
     }
 
-    private static void deleteOldData(){
-        if(allDates.isEmpty()) return;
-        while((allDates.get(0).getDay()!=allDates.get(allDates.size()-1).getDay()) && (allDates.get(allDates.size()-1).getHours()>allDates.get(0).getHours())){
+    private static void deleteOldData() {
+        if (allDates.isEmpty()) return;
+        while ((allDates.get(0).getDay() != allDates.get(allDates.size() - 1).getDay()) && (allDates.get(allDates.size() - 1).getHours() > allDates.get(0).getHours())) {
             sleepData.remove(allDates.get(0));
             allDates.remove(0);
         }
     }
 
     String detectedActivitiesToJson(ArrayList<DetectedActivity> detectedActivitiesList) {
-        Type type = new TypeToken<ArrayList<DetectedActivity>>() {}.getType();
-        System.out.println(detectedActivitiesList.toString()+Calendar.getInstance().getTime()+" sleep"+Calendar.getInstance().getTime().getDay());
-        if(detectedActivitiesList!=null){  ///sleep
-            lastActivity=detectedActivitiesList.get(0);
+        Type type = new TypeToken<ArrayList<DetectedActivity>>() {
+        }.getType();
+        System.out.println(detectedActivitiesList.toString() + Calendar.getInstance().getTime() + " sleep" + Calendar.getInstance().getTime().getDay());
+        if (detectedActivitiesList != null) {  ///sleep
+            lastActivity = detectedActivitiesList.get(0);
             deleteOldData();
             Date date = getDate(Calendar.getInstance().getTime());
-            sleepData.put(date,detectedActivitiesList.get(0));
+            sleepData.put(date, detectedActivitiesList.get(0));
             allDates.add(date);
-            System.out.println(sleepData+" sleep");
+            System.out.println(sleepData + " sleep");
         }
-        if ((detectedActivitiesList.size()>=1)&&(detectedActivitiesList.get(0).getType() == DetectedActivity.IN_VEHICLE) && (detectedActivitiesList.get(0).getConfidence()) >= 60){ //speed
+        if ((detectedActivitiesList.size() >= 1) && (detectedActivitiesList.get(0).getType() == DetectedActivity.IN_VEHICLE) && (detectedActivitiesList.get(0).getConfidence()) >= 60) { //speed
             ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 
             List<ActivityManager.RunningTaskInfo> allTasks = am.getRunningTasks(1);
             for (ActivityManager.RunningTaskInfo aTask : allTasks) {
-                if(aTask.baseActivity.getClassName().contains("guardian"))
+                if (aTask.baseActivity.getClassName().contains("guardian"))
                     return null;
             }
-            if(lastNotification!=null){
+            if (lastNotification != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(lastNotification);
-                calendar.add(Calendar.MINUTE,20);
+                calendar.add(Calendar.MINUTE, 20);
                 Date newDate = calendar.getTime();
                 calendar.clear();
-                if(newDate.before(lastNotification) == false)
+                if (newDate.before(lastNotification) == false)
                     return null;
             }
             makeNotification();
@@ -165,7 +167,7 @@ public class SleepSpeedDetectorService extends Service {
         return new Gson().toJson(detectedActivitiesList, type);
     }
 
-    public void makeNotification(){
+    public void makeNotification() {
         createNotificationChannel();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -199,8 +201,8 @@ public class SleepSpeedDetectorService extends Service {
                 Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
                 Integer.MAX_VALUE)) {
-            if (getClass().getName().equals(service.service.getClassName())){
-                if (service.foreground){
+            if (getClass().getName().equals(service.service.getClassName())) {
+                if (service.foreground) {
                     return true;
                 }
             }
@@ -221,25 +223,24 @@ public class SleepSpeedDetectorService extends Service {
     }
 
 
-    static void clear(){
+    static void clear() {
         sleepData.clear();
         allDates.clear();
     }
 
 
-
-    public static boolean isSleepValid(Date sleepTime, Date awakeTime){
+    public static boolean isSleepValid(Date sleepTime, Date awakeTime) {
         Date date = getDate(sleepTime);
         int error = 0;
-        while(date.after(awakeTime)  == false){
-            if((sleepData.containsKey(date))&&(sleepData.get(date).getType()!=DetectedActivity.STILL)&&(sleepData.get(date).getConfidence()==100)){
+        while (date.after(awakeTime) == false) {
+            if ((sleepData.containsKey(date)) && (sleepData.get(date).getType() != DetectedActivity.STILL) && (sleepData.get(date).getConfidence() == 100)) {
                 error++;
-                if(date.getHours()>7)
+                if (date.getHours() > 7)
                     error++;
             }
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.MINUTE,5);
+            calendar.add(Calendar.MINUTE, 5);
             date = calendar.getTime();
             calendar.clear();
         }
@@ -247,9 +248,49 @@ public class SleepSpeedDetectorService extends Service {
     }
 
 
-
-    private static Date getDate(Date date){
-        return new Date(date.getYear(),date.getMonth(),date.getDate(),date.getHours(),(date.getMinutes()/5)*5,0);
+    public static ArrayList<Date> getSleepTime() {
+        deleteOldData();
+        ArrayList<Boolean> l = new ArrayList<>();
+        for (Date date : allDates) {
+            l.add(((sleepData.containsKey(date)) && (sleepData.get(date).getType() == DetectedActivity.STILL) && (sleepData.get(date).getConfidence() == 100)));
+        }
+        int index = 0;
+        int lenght = 0;
+        int maxLenght = 0;
+        for (int i = 0; i < l.size(); i++) {
+            if (l.get(i)) {
+                lenght++;
+                index = i;
+            } else {
+                if (lenght > maxLenght) {
+                    maxLenght = lenght;
+                    index = i;
+                }
+                lenght = 0;
+            }
+        }
+        if (allDates.size() < 2) return null;
+        ArrayList<Date> dates = new ArrayList<>();
+        dates.add(allDates.get(index - lenght + 1));
+        dates.add(allDates.get(index));
+        return dates;
     }
+
+
+    private static Date getDate(Date date) {
+        return new Date(date.getYear(), date.getMonth(), date.getDate(), date.getHours(), (date.getMinutes() / 5) * 5, 0);
+    }
+
+    public static HashMap<Date, DetectedActivity> getSleepData() {
+        return sleepData;
+    }
+
+    public static int isDriving() {  // 1 for true -1 for false 0 for not sure
+        if (lastActivity == null) return 0;
+        if ((lastActivity.getType() == DetectedActivity.IN_VEHICLE) && (lastActivity.getConfidence() > 50))
+            return 1;
+        return -1;
+    }
+
 
 }
