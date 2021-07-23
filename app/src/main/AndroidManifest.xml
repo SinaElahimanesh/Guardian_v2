@@ -49,6 +49,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <service android:name=".DrivingStatus.location.LocationService" />
+        <service android:name=".SleepSpeedManager.UseMeNotification" />
+        <service android:name=".SleepSpeedManager.SleepSpeedDetectorService" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
