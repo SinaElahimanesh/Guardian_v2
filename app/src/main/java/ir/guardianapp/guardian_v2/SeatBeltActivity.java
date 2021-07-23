@@ -36,7 +36,7 @@ public class SeatBeltActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                timer.setText(millisUntilFinished / 1000 + " s");
+                timer.setText(String.valueOf(millisUntilFinished / 1000 + " s"));
 
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
