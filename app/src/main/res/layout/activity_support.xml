@@ -72,10 +72,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="64dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/item_background"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -111,6 +111,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
+                            android:textColor="@color/black"
                             android:id="@+id/textView9"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -124,6 +125,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:textColor="@color/black"
                             android:id="@+id/websiteText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -138,6 +140,7 @@
                             tools:ignore="RtlCompat" />
 
                         <TextView
+                            android:textColor="@color/grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -167,6 +170,7 @@
 
 
                         <TextView
+                            android:textColor="@color/black"
                             android:id="@+id/textView5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -181,6 +185,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:textColor="@color/grey"
                             android:id="@+id/subtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/appThemeColor</item>
         <item name="colorPrimaryDark">@color/appThemeColor</item>
         <item name="colorAccent">@color/appThemeColor</item>
+        <item name="android:textColor">@color/black</item>
 
         <item name = "android:windowActionBar">false</item>
         <item name = "android:windowNoTitle">true</item>

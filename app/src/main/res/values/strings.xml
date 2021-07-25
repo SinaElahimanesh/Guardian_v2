@@ -6,14 +6,14 @@
     <string name="try_again">تلاش مجدد</string>
 
     <!-- REGISTER Page -->
-    <string name="register_subtitle1">نام کاربری</string>
+    <string name="register_subtitle1">نام کاربر</string>
     <string name="register_subtitle2">رمز عبور</string>
     <string name="register_subtitle3">شماره تلفن همراه</string>
     <string name="register_button">ثبت نام</string>
     <string name="register_linkToLogin">قبلا از گاردین استفاده کرده ام، ورود</string>
 
     <!-- LOGIN Page -->
-    <string name="login_subtitle1">نام کاربری</string>
+    <string name="login_subtitle1">تلفن همراه</string>
     <string name="login_subtitle2">رمز عبور</string>
     <string name="login_button">ورود</string>
     <string name="login_linkToRegister">هنوز ثبت نام نکرده ام، ثبت نام</string>
@@ -40,12 +40,12 @@
     <string name="driving_danger_zones">محدوده های خطر جاده</string>
     <string name="driving_weather">وضعیت آب و هوا</string>
     <string name="driving_road">نوع جاده</string>
-    <string name="driving_month">بیشترین زمان سفر</string>
-    <string name="driving_detail_button">مشاهده ی جزییات وضعیت رانندگی</string>
+    <string name="driving_month">بیشترین ماه سفر</string>
+    <string name="driving_detail_button">به روزآوری اطلاعات</string>
 
     <!-- MY_PROFILE Page -->
     <string name="profile_driving_percent_average">میانگین رانندگی سالم شما</string>
-    <string name="profile_username">نام کاربری</string>
+    <string name="profile_username">نام کاربر</string>
     <string name="profile_password">رمز عبور</string>
     <string name="profile_phone">شماره تلفن همراه</string>
     <string name="profile_save_button">ذخیره</string>
@@ -102,4 +102,15 @@
     <!-- UPDATE Dialog -->
     <string name="update_subtitle">نسخه ی برنامه ی شما به روز نیست. لطفا با کلیک روی دکمه ی زیر آن را به روزرسانی کنید!</string>
     <string name="update_button">به روزرسانی گاردین</string>
+
+
+
+
+    <string name="showcase_restbutton">با استفاده از این دکمه می توانید نزدیک ترین مجتمع رفاهی یا پمپ بنزین به خود را در هر لحظه مشاهده کنید!</string>
+    <string name="showcase_alertmessagetext">این قسمت در هر لحظه به شما نشان می دهد که وضعیت رانندگی شما چگونه است و کمک می کند که سفری ایمن تر داشته باشید!
+و گاردین به صورت صوتی این موارد را به شما گزارش خواهد داد.</string>
+    <string name="showcase_drivingbackground">در این قسمت 《درصد رانندگی سالم》 شما نشان داده می شود؛ که نشان می دهد در هر لحظه چقدر شرایط شما برای رانندگی مناسب است!</string>
+    <string name="showcase_statistics">در هر لحظه میتوانید سرعت رانندگی خود، آب و هوای مسیر و اینکه چند دقیقه است که بدون توقف رانندگی می کنید را ملاحظه کنید.</string>
+    <string name="showcase_menubutton">می توانید منوی برنامه را از این قسمت مشاهده کنید.</string>
+
 </resources>

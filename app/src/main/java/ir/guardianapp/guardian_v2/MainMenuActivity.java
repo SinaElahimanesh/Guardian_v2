@@ -3,15 +3,24 @@ package ir.guardianapp.guardian_v2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 
 import com.gauravk.bubblenavigation.BubbleNavigationLinearView;
 import com.gauravk.bubblenavigation.listener.BubbleNavigationChangeListener;
 
+import java.util.concurrent.Executors;
+
+import ir.guardianapp.guardian_v2.database.DataBaseHelper;
+
 public class MainMenuActivity extends AppCompatActivity {
 
     public static Fragment CURRENT_FRAGMENT;
+
+    public DataBaseHelper dbHelper;
+    protected SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +33,8 @@ public class MainMenuActivity extends AppCompatActivity {
                     .commit();
         }
 
+        newDB();
+
         BubbleNavigationLinearView bubbleNavigationLinearView = findViewById(R.id.bottom_navigation_view_linear);
         bubbleNavigationLinearView.setNavigationChangeListener(new BubbleNavigationChangeListener() {
             @Override
@@ -33,7 +44,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     case 0:
                         if(!(CURRENT_FRAGMENT instanceof TripsFragment)) {
                             removeAllFragments();
-                            CURRENT_FRAGMENT = new TripsFragment();
+                            CURRENT_FRAGMENT = new TripsFragment(dbHelper);
                             loadFragment(CURRENT_FRAGMENT);
                         }
                         break;
@@ -93,5 +104,11 @@ public class MainMenuActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    static final int DEFAULT_THREAD_POOL_SIZE = 10;
+    private void newDB() {
+        dbHelper = new DataBaseHelper(this, Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE));
+        db = dbHelper.db;
     }
 }

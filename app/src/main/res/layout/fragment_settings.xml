@@ -76,10 +76,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="70dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/item_background"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,20 +90,31 @@
                     android:id="@+id/constraintLayout6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_background"
-                    android:paddingEnd="20dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="15dp"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="5dp">
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/textView6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:paddingEnd="30dp"
                         android:text="@string/settings_general_title"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_gravity="center"
+                        android:background="#7E7E7E"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/textView6"
                         app:layout_constraintStart_toStartOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -128,6 +139,7 @@
                         android:background="@drawable/factor_background"
                         android:orientation="vertical"
                         android:paddingLeft="20dp"
+                        android:layout_marginTop="6dp"
                         android:paddingRight="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -144,6 +156,7 @@
                             app:sb_show_indicator="false" />
 
                         <TextView
+                            android:textColor="@color/black"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -182,6 +195,7 @@
                             app:sb_show_indicator="false" />
 
                         <TextView
+                            android:textColor="@color/black"
                             android:id="@+id/textView5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -196,6 +210,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:textColor="@color/grey"
                             android:id="@+id/safetyStatus2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -230,10 +245,10 @@
                             android:layout_marginBottom="5dp"
                             app:dampingRatio="0.3"
                             app:defaultThumbInsideColor="#51D367"
-                            app:defaultThumbRadius="16dp"
+                            app:defaultThumbRadius="10dp"
                             app:elasticBehavior="cubic"
                             app:highlightDefaultThumbOnTouchColor="#CD5D67"
-                            app:highlightTrackColor="#E2E3E4"
+                            app:highlightTrackColor="#51D367"
                             app:highlightTrackWidth="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/safetyStatus"
@@ -247,6 +262,7 @@
 
 
                         <TextView
+                            android:textColor="@color/black"
                             android:id="@+id/textView4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -261,6 +277,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:textColor="@color/grey"
                             android:id="@+id/safetyStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

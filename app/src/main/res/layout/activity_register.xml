@@ -166,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:id="@+id/messageTextSignUp"
+                    android:id="@+id/messageTextRegister"
                     android:textAlignment="center"
                     android:layout_gravity="center"
                     android:textColor="#2DB42D"
@@ -175,21 +175,33 @@
                     android:paddingLeft="6dp"
                     android:fontFamily="@font/iran_sans"/>
 
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginTop="7.5dp"
+                    android:layout_marginRight="35dp"
+                    android:visibility="invisible"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:indeterminate="true"/>
+
                 <Button
-                    android:id="@+id/SignUpButt"
+                    android:id="@+id/registerButton"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="7.5dp"
                     android:layout_marginLeft="35dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginRight="35dp"
                     android:background="@drawable/button_background"
-                    android:text="@string/register_button"
-                    android:textColor="@color/inputBoxColor"
                     android:fontFamily="@font/sadgan_medium"
                     android:gravity="center_vertical|center_horizontal"
-                    android:textSize="16sp"/>
+                    android:text="@string/register_button"
+                    android:textColor="@color/inputBoxColor"
+                    android:textSize="16sp" />
+
                 <Button
-                    android:id="@+id/signUpIn"
+                    android:id="@+id/register2loginButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -203,26 +215,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/progress_bar"
-        android:elevation="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
-        android:layout_centerHorizontal="true"
-        android:padding="13dp"
-        android:visibility="invisible"
-        android:id="@+id/signUpProgress">
-
-        <ProgressBar
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
 
     </LinearLayout>
 

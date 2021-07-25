@@ -3,7 +3,10 @@ package ir.guardianapp.guardian_v2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int TIME_OUT = 3000;
     private static final String ONESIGNAL_APP_ID = "52708f3f-d26f-4739-9b0e-97093714a222";
 
+    private static SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.appThemeColor));
         }
+
+        MainActivity.initializeSharedPreferences(this);
 
         // Enable verbose OneSignal logging to debug issues if needed.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -121,5 +128,25 @@ public class MainActivity extends AppCompatActivity {
     }
     public static boolean getShowGuide() {
         return showGuide;
+    }
+
+
+    private static void initializeSharedPreferences(Activity activity) {
+        sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+    }
+
+    public static void writeToSharedPreferences(String key, String value) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String readFromSharedPreferences(Activity activity, String key) {
+        return sharedPref.getString(key, "");
+    }
+
+    private static void checkToken(Activity activity) {
+        String token = MainActivity.readFromSharedPreferences(activity, "TOKEN");
+
     }
 }

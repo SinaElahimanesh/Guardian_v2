@@ -1,64 +1,137 @@
 package ir.guardianapp.guardian_v2;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DrivingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import ir.guardianapp.guardian_v2.DrivingPercentage.EncodeDecode;
+import ir.guardianapp.guardian_v2.extras.Network;
+import ir.guardianapp.guardian_v2.models.Driving;
+import ir.guardianapp.guardian_v2.models.User;
+import ir.guardianapp.guardian_v2.network.MessageResult;
+import ir.guardianapp.guardian_v2.network.ThreadGenerator;
+
 public class DrivingFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    static final int DEFAULT_THREAD_POOL_SIZE = 5;
+    static ExecutorService executorService;
+    private Handler handler;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ProgressBar progressBar;
+    private TextView withoutStopDriving;
+    private TextView speed;
+    private TextView sleep;
+    private TextView vibration;
+    private TextView time;
+    private TextView acceleration;
+    private TextView weather;
+    private TextView dangerZone;
+    private TextView month;
+    private TextView roadType;
+    private  TextView average;
+    private TextView username;
+    private TextView phoneNum;
+    private TextView averageDescription;
 
     public DrivingFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DrivingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DrivingFragment newInstance(String param1, String param2) {
         DrivingFragment fragment = new DrivingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_driving, container, false);
+        View view = inflater.inflate(R.layout.fragment_driving, container, false);
+        withoutStopDriving = view.findViewById(R.id.withoutStopDriving);
+        speed = view.findViewById(R.id.speed);
+        sleep = view.findViewById(R.id.sleep);
+        vibration = view.findViewById(R.id.vibration);
+        time = view.findViewById(R.id.time);
+        acceleration = view.findViewById(R.id.acceleration);
+        weather = view.findViewById(R.id.weather);
+        dangerZone = view.findViewById(R.id.danger_zone);
+        month = view.findViewById(R.id.month);
+        roadType = view.findViewById(R.id.road_type);
+
+        average = view.findViewById(R.id.average);
+        username = view.findViewById(R.id.usernameTextView);
+        phoneNum = view.findViewById(R.id.phoneNumberTextView);
+        averageDescription = view.findViewById(R.id.safetyStatus);
+        progressBar = view.findViewById(R.id.progressBar);
+
+        requestUpdateData();
+        Button updateDataButton = view.findViewById(R.id.updateDataButton);
+        updateDataButton.setOnClickListener(v -> {
+            requestUpdateData();
+        });
+        return view;
+    }
+
+    private void requestUpdateData() {
+        executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == MessageResult.SUCCESSFUL) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setProgress(progressBar.getProgress());
+
+                    Driving driving = Driving.getInstance();
+                    withoutStopDriving.setText(EncodeDecode.withoutStopDecode(driving.getTripDuration()));
+                    speed.setText(EncodeDecode.speedDecode(driving.getSpeed()));
+                    sleep.setText(EncodeDecode.sleepDecode(driving.getSleep()));
+                    vibration.setText(EncodeDecode.vibrationDecode(driving.getVibration()));
+                    time.setText(EncodeDecode.timeDecode(driving.getTime()));
+                    acceleration.setText(EncodeDecode.accelerationDecode(driving.getAcceleration()));
+                    weather.setText(EncodeDecode.weatherDecode(driving.getWeather()));
+                    dangerZone.setText(EncodeDecode.nearCitiesDecode(driving.getRadius30KM()));
+                    month.setText(EncodeDecode.monthDecode(driving.getMonth()));
+                    roadType.setText(EncodeDecode.roadTypeDecode(driving.getRoadType()));
+                    average.setText(((Math.round(driving.getAverage() * 100.0) / 100.0) + "%").toString());
+                    averageDescription.setText(EncodeDecode.calculateStatusAlgorithm(driving.getAverage()));
+
+                    User user = User.getInstance();
+                    username.setText(user.getUsername());
+                    phoneNum.setText(user.getPhoneNum());
+
+                } else if (msg.what == MessageResult.FAILED) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_LONG).show();
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
+            progressBar.setVisibility(View.VISIBLE);
+            executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler));
+
+        }
     }
 }

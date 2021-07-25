@@ -34,7 +34,9 @@
     <color name="default_inactive">#78909c</color>
 
     <color name="black">#FF000000</color>
+    <color name="grey">#A4000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorBar">#7E7E7E</color>
 
     <!-- DEFAULT COLORS -->
     <color name="purple_200">#FFBB86FC</color>
