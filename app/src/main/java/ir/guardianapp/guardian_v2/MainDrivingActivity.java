@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -43,6 +45,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,10 +58,23 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+
 import ir.guardianapp.guardian_v2.DrivingPercentage.DriveAlertHandler;
 import ir.guardianapp.guardian_v2.DrivingPercentage.StatusCalculator;
 import ir.guardianapp.guardian_v2.DrivingStatus.ShakeSituation;
@@ -225,7 +241,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         }, 30000);
 
         // Guide
-        if(MainActivity.getShowGuide()) {
+        if (MainActivity.getShowGuide()) {
             GuideManager.showGuide(this);
         }
     }
@@ -240,7 +256,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
             animation.start();
 
             mapMarker.remove();
-            if(mapLocation != null && mMap != null)
+            if (mapLocation != null && mMap != null)
                 updateCameraBearing(mMap, mapLocation);
 
             back2mapButton.setVisibility(View.INVISIBLE);
@@ -254,7 +270,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
             animation.setDuration(750);
             animation.start();
 
-            if(mapLocation != null && mMap != null)
+            if (mapLocation != null && mMap != null)
                 updateCameraBearing(mMap, mapLocation);
 
             back2mapButton.setVisibility(View.VISIBLE);
@@ -268,7 +284,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
                 animation1.start();
 
                 mapMarker.remove();
-                if(mapLocation != null && mMap != null)
+                if (mapLocation != null && mMap != null)
                     updateCameraBearing(mMap, mapLocation);
 
                 back2mapButton.setVisibility(View.INVISIBLE);
@@ -280,14 +296,14 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     }
 
     private void showAlertBox() {
-        if(!restComplex) {
+        if (!restComplex) {
             String toShowAlert = DriveAlertHandler.toShowAlert();
-            if(toShowAlert.equalsIgnoreCase("")) {
+            if (toShowAlert.equalsIgnoreCase("")) {
                 alertMessageText.setText("با دقت به رانندگی ادامه دهید.");
                 alertMessageBox.setBackgroundResource(R.drawable.rectangle_alert_background_green);
 //            alertMessageText.setTextColor(Color.BLACK);
                 alertMessageImage.setImageResource(R.drawable.warning_white);
-            } else if(DriveAlertHandler.getCurrentAlertType() == DriveAlertHandler.Type.REST_AREA){
+            } else if (DriveAlertHandler.getCurrentAlertType() == DriveAlertHandler.Type.REST_AREA) {
                 alertMessageText.setText(toShowAlert);
                 alertMessageBox.setBackgroundResource(R.drawable.rectangle_alert_background_orange);
                 alertMessageImage.setImageResource(R.drawable.coffee_white);
@@ -311,17 +327,17 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
             mapLocation = location;
             if (mMap != null) {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.8f));
-                updateCameraBearing(mMap,location);
+                updateCameraBearing(mMap, location);
             }
         }
     };
 
     private void updateCameraBearing(GoogleMap googleMap, Location location) {
-        if ( googleMap == null) return;
+        if (googleMap == null) return;
 
         if (restComplex & mMap != null & location != null) {
 
-            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             GPSTracker gpsTracker = new GPSTracker(this);
             LatLng latLng1 = new LatLng(gpsTracker.getNearestPlaceLatitude(), gpsTracker.getNearestPlaceLangtitude());
 
@@ -337,7 +353,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
             int height = 110;
             int width = 110;
-            BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.gas_station_button_icon);
+            BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.gas_station_button_icon);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
@@ -369,20 +385,20 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
             googleMap.animateCamera(cu);
 
-            double nearestRestComplexDistance = gpsTracker.getMinPlaceDistance()/1000;
+            double nearestRestComplexDistance = gpsTracker.getMinPlaceDistance() / 1000;
             String nearestRestComplexName = gpsTracker.getPlaceName();
             String restComplexDist = "";
-            if(nearestRestComplexDistance <= 5) {
+            if (nearestRestComplexDistance <= 5) {
                 restComplexDist = "کمتر از ۵ کیلومتر با شما فاصله دارد.";
-            } else if(nearestRestComplexDistance <= 10) {
+            } else if (nearestRestComplexDistance <= 10) {
                 restComplexDist = "کمتر از ۱۰ کیلومتر با شما فاصله دارد.";
-            } else if(nearestRestComplexDistance <= 20) {
+            } else if (nearestRestComplexDistance <= 20) {
                 restComplexDist = "کمتر از ۲۰ کیلومتر با شما فاصله دارد.";
-            } else if(nearestRestComplexDistance <= 30) {
+            } else if (nearestRestComplexDistance <= 30) {
                 restComplexDist = "کمتر از ۳۰ کیلومتر با شما فاصله دارد.";
-            } else if(nearestRestComplexDistance <= 50) {
+            } else if (nearestRestComplexDistance <= 50) {
                 restComplexDist = "کمتر از ۵۰ کیلومتر با شما فاصله دارد.";
-            } else if(nearestRestComplexDistance <= 80) {
+            } else if (nearestRestComplexDistance <= 80) {
                 restComplexDist = "کمتر از ۸۰ کیلومتر با شما فاصله دارد.";
             } else {
                 restComplexDist = "نزدیک ترین مجتمع رفاهی به شماست!";
@@ -397,7 +413,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
             alertMessageBox.setMinimumHeight(39);
 
         } else {
-            LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)             // Sets the center of the map to current location
                     .zoom(15.8f)                   // Sets the zoom
@@ -447,10 +463,9 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
                 googleMap.setMyLocationEnabled(true);
                 LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
-                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria,false));
+                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
-                if (location != null)
-                {
+                if (location != null) {
                     LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); ///15.4f
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -479,10 +494,9 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] != PackageManager.PERMISSION_GRANTED){
+        if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             // permission not granted
-        }
-        else {
+        } else {
             // permission granted
         }
     }
@@ -495,16 +509,20 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) { }
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onProviderDisabled(String provider) { }
+    public void onProviderDisabled(String provider) {
+    }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) { }
+    public void onAccuracyChanged(Sensor sensor, int i) {
+    }
 
 
     // Speedometer
@@ -573,38 +591,34 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         currentX = sensorEvent.values[0];
         currentY = sensorEvent.values[1];
         currentZ = sensorEvent.values[2];
-        if(several) {
+        if (several) {
 
             xDifference = Math.abs(lastX - currentX);
             yDifference = Math.abs(lastY - currentY);
             zDifference = Math.abs(lastZ - currentZ);
 
-            if((xDifference > 6f && yDifference > 6f)
+            if ((xDifference > 6f && yDifference > 6f)
                     || (xDifference > 6f && zDifference > 6f)
                     || (yDifference > 6f && zDifference > 6f)) {
-                Log.d("shake situation", ShakeSituation.veryHighShake.toString());
+//                Log.d("shake situation", ShakeSituation.veryHighShake.toString());
                 situation = ShakeSituation.veryHighShake;
-            }
-            else if ((xDifference > 5f && yDifference > 5f)
+            } else if ((xDifference > 5f && yDifference > 5f)
                     || (xDifference > 5f && zDifference > 5f)
                     || (yDifference > 5f && zDifference > 5f)) {
-                Log.d("shake situation", ShakeSituation.highShake.toString());
+//                Log.d("shake situation", ShakeSituation.highShake.toString());
                 situation = ShakeSituation.highShake;
-            }
-            else if ((xDifference > 3.9f && yDifference > 3.9f)
+            } else if ((xDifference > 3.9f && yDifference > 3.9f)
                     || (xDifference > 3.9f && zDifference > 3.9f)
                     || (yDifference > 3.9f && zDifference > 3.9f)) {
-                Log.d("shake situation", ShakeSituation.mediumShake.toString());
+//                Log.d("shake situation", ShakeSituation.mediumShake.toString());
                 situation = ShakeSituation.mediumShake;
-            }
-            else if ((xDifference > 2.8f && yDifference > 2.8f)
+            } else if ((xDifference > 2.8f && yDifference > 2.8f)
                     || (xDifference > 2.8f && zDifference > 2.8f)
                     || (yDifference > 2.8f && zDifference > 2.8f)) {
-                Log.d("shake situation", ShakeSituation.lowShake.toString());
+//                Log.d("shake situation", ShakeSituation.lowShake.toString());
                 situation = ShakeSituation.lowShake;
-            }
-            else {
-                Log.d("shake situation", ShakeSituation.noShake.toString());
+            } else {
+//                Log.d("shake situation", ShakeSituation.noShake.toString());
                 situation = ShakeSituation.noShake;
             }
         }
@@ -622,16 +636,16 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     protected void onResume() {
         super.onResume();
         isPaused = false;
-        if(MainActivity.getShowGuide()) {
+        if (MainActivity.getShowGuide()) {
             GuideManager.showGuide(this);
         }
-        if(isAccelerometerSensorAvailable) {
+        if (isAccelerometerSensorAvailable) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
     // Drawer
-    public void openDrawer(){
+    public void openDrawer() {
         mDrawer.openDrawer(GravityCompat.START);
     }
 
@@ -655,7 +669,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.back2home:
                 Intent i1 = new Intent(MainDrivingActivity.this, MainMenuActivity.class);
                 startActivity(i1);
@@ -672,13 +686,13 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         mDrawer.closeDrawers();
     }
 
-    private void setWeatherImage(String url){
+    private void setWeatherImage(String url) {
         runOnUiThread(() -> Picasso.get().load(url).into(weatherTypeImg));
     }
 
     private void callAlgorithmLogic() {
         double percentage = statusCalculator.calculatePercentageAlgorithm();
-        algorithmPercentageText.setText((((int)percentage) + "%").toString());
+        algorithmPercentageText.setText((((int) percentage) + "%").toString());
         algorithmStatusText.setText(statusCalculator.calculateStatusAlgorithm(percentage));
 
         ///setting weather type
@@ -699,19 +713,19 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         showAlertBox();
 
         int backgroundNumber = statusCalculator.calculateBackgroundAlgorithm(percentage);
-        if(backgroundNumber == 1) {
+        if (backgroundNumber == 1) {
             algorithmBackground.setImageResource(R.drawable.circle_gradient_green);
-        } else if(backgroundNumber == 2) {
+        } else if (backgroundNumber == 2) {
             algorithmBackground.setImageResource(R.drawable.circle_gradient_lightgreen);
-        } else if(backgroundNumber == 3) {
+        } else if (backgroundNumber == 3) {
             algorithmBackground.setImageResource(R.drawable.circle_gardient_yellow);
-        } else if(backgroundNumber == 4) {
+        } else if (backgroundNumber == 4) {
             algorithmBackground.setImageResource(R.drawable.circle_gradient_orange);
-        } else if(backgroundNumber == 5) {
+        } else if (backgroundNumber == 5) {
             algorithmBackground.setImageResource(R.drawable.circle_gradient_darkorange);
-        } else if(backgroundNumber == 6) {
+        } else if (backgroundNumber == 6) {
             algorithmBackground.setImageResource(R.drawable.circle_gradient_lightred);
-        } else if(backgroundNumber == 7) {
+        } else if (backgroundNumber == 7) {
             algorithmBackground.setImageResource(R.drawable.circle_gradient_red);
         }
 
@@ -734,7 +748,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     protected void onPause() {
         super.onPause();
         isPaused = true;
-        if(isAccelerometerSensorAvailable) {
+        if (isAccelerometerSensorAvailable) {
             sensorManager.unregisterListener(this);
         }
     }
@@ -748,5 +762,29 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     protected void onDestroy() {
         super.onDestroy();
         MainDrivingActivity.this.finish();
+    }
+
+    public void saveParking(View view) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        prefsEditor.putString("parkingLocation", String.valueOf(location.getLatitude())+','+String.valueOf(location.getLongitude()));
+        prefsEditor.apply();
+    }
+
+    public Location getParkingLocation(){
+        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
+        String latLang = mPrefs.getString("parkingLocation", null);
+        if (latLang==null || latLang.isEmpty()){
+            return null;
+        }
+        String[] tmp = latLang.split(",");
+        Location targetLocation = new Location("");
+        targetLocation.setLatitude(Float.valueOf(tmp[0]));
+        targetLocation.setLongitude(Float.valueOf(tmp[1]));
+        return targetLocation;
     }
 }
