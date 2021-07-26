@@ -75,7 +75,6 @@ public class Requester {
     }
 
     public Response RequestGetLoginCredentials(String token, String version){
-        System.out.println("ddddddd");
         OkHttpClient okHttpClient = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "LoginCredentials/" + token + "/" + version)
                 .newBuilder();

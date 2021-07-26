@@ -222,6 +222,7 @@ public class ThreadGenerator {
                 try {
                     String credentialsResponse = response.body().string();
 
+                    System.out.println(credentialsResponse);
                     JSONObject credentials = new JSONObject(credentialsResponse);
                     String loginState = credentials.getString("LoginState");
                     String username = credentials.getString("Username");

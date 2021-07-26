@@ -86,7 +86,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
+                        <Button
                             android:id="@+id/logout"
                             android:layout_width="23dp"
                             android:layout_height="22dp"
@@ -95,7 +95,7 @@
                             android:layout_marginBottom="40dp"
                             android:alpha="1"
                             android:fontFamily="@font/iran_sans"
-                            android:src="@drawable/logout_icon"
+                            android:background="@drawable/logout_icon"
                             android:textColor="#191919"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"

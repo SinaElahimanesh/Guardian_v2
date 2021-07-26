@@ -49,6 +49,8 @@ public class DrivingFragment extends Fragment {
     private TextView phoneNum;
     private TextView averageDescription;
 
+    private static boolean firstTime = true;
+
     public DrivingFragment() {
         // Required empty public constructor
     }
@@ -61,6 +63,12 @@ public class DrivingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setDriving();
     }
 
     @Override
@@ -85,7 +93,10 @@ public class DrivingFragment extends Fragment {
         averageDescription = view.findViewById(R.id.safetyStatus);
         progressBar = view.findViewById(R.id.progressBar);
 
-        requestUpdateData();
+        if(firstTime) {
+            requestUpdateData();
+            firstTime = false;
+        }
         Button updateDataButton = view.findViewById(R.id.updateDataButton);
         updateDataButton.setOnClickListener(v -> {
             requestUpdateData();

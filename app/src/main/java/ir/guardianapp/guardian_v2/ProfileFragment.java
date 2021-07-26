@@ -30,6 +30,10 @@ public class ProfileFragment extends Fragment {
     static ExecutorService executorService;
     private Handler handler;
 
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private EditText phoneNumEditText;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -50,9 +54,9 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        EditText usernameEditText = view.findViewById(R.id.usernameEditText);
-        EditText passwordEditText = view.findViewById(R.id.passwordEditText);
-        EditText phoneNumEditText = view.findViewById(R.id.phoneNumEditText);
+        usernameEditText = view.findViewById(R.id.usernameEditText);
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        phoneNumEditText = view.findViewById(R.id.phoneNumEditText);
         Button saveButton = view.findViewById(R.id.saveProfileButton);
         ProgressBar editProgress = view.findViewById(R.id.progressBar);
 
