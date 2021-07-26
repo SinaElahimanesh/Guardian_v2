@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,6 +68,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(DataBaseContract.TripsEntry.START_DATE, trip.getStartDate().toString());
         cv.put(DataBaseContract.TripsEntry.END_DATE, trip.getEndDate().toString());
         cv.put(DataBaseContract.TripsEntry.DISTANCE, trip.getDistanceInKM());
+        cv.put(DataBaseContract.TripsEntry.AVERAGE, trip.getAverage());
         final long[] insert = new long[1];
 
         executorService.submit(new Runnable() {
@@ -172,10 +177,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 do {
                     String source_name = cursor.getString(1);
                     String dest_name = cursor.getString(2);
-                    Date start_date = new Date(Date.parse(cursor.getString(3)));
-                    Date end_date = new Date(Date.parse(cursor.getString(4)));
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    Date start_date = new Date();
+                    Date end_date = new Date();
+                    try {
+                        start_date = format.parse((cursor.getString(3)));
+                        end_date = new Date(Date.parse(cursor.getString(4)));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     int distanceInKM = cursor.getInt(5);
-                    Trip trip = new Trip(source_name, dest_name, start_date, end_date, distanceInKM);
+                    int average = cursor.getInt(6);
+                    Trip trip = new Trip(source_name, dest_name, start_date, end_date, distanceInKM, average);
                     returnedList.add(trip);
                 } while (cursor.moveToNext());
                 Trip.addAllTrips(returnedList);

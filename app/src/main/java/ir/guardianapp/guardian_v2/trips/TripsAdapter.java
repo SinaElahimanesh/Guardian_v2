@@ -127,4 +127,12 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripViewHold
             mListener.onClick(v, getAdapterPosition());
         }
     }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
+    }
+
+    public void setTripsFull(List<Trip> tripsFull) {
+        this.tripsFull = tripsFull;
+    }
 }

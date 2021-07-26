@@ -68,7 +68,6 @@ public class DrivingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setDriving();
     }
 
     @Override

@@ -19,7 +19,7 @@
     <string name="login_linkToRegister">هنوز ثبت نام نکرده ام، ثبت نام</string>
 
     <!-- SEAT_BELT Page -->
-    <string name="fasteningSeatBelt_description">در ابتدا لطفا کمربند ایمنی <br /> خود را ببندید!</string>
+    <string name="fasteningSeatBelt_description">در ابتدا لطفا کمربند ایمنی\n خود را ببندید!</string>
 
     <!-- SLEEP_MANAGER Page -->
     <string name="sleep_input_request">لطفا برای سلامت خودتان میزان خواب خود را به دقت وارد کنید.</string>
@@ -112,5 +112,6 @@
     <string name="showcase_drivingbackground">در این قسمت 《درصد رانندگی سالم》 شما نشان داده می شود؛ که نشان می دهد در هر لحظه چقدر شرایط شما برای رانندگی مناسب است!</string>
     <string name="showcase_statistics">در هر لحظه میتوانید سرعت رانندگی خود، آب و هوای مسیر و اینکه چند دقیقه است که بدون توقف رانندگی می کنید را ملاحظه کنید.</string>
     <string name="showcase_menubutton">می توانید منوی برنامه را از این قسمت مشاهده کنید.</string>
+    <string name="trips_refresh_button">دریافت پنج سفر اخیر</string>
 
 </resources>

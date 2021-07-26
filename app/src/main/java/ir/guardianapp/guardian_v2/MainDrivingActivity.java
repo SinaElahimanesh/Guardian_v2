@@ -337,7 +337,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
             int height = 110;
             int width = 110;
-            BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.gas_station_button_icon);
+            BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.petrol);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 

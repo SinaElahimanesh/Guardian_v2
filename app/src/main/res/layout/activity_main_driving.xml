@@ -36,7 +36,7 @@
                     android:id="@+id/percentBox"
                     android:layout_width="168dp"
                     android:layout_height="215dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="34dp"
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="right">
 
@@ -220,7 +220,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="9.5dp"
                             android:fontFamily="@font/product_sans_bold"
                             android:lines="1"
                             android:paddingEnd="6dp"
@@ -233,7 +233,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="25dp"
+                            android:layout_marginTop="20dp"
+                            android:textAlignment="center"
+                            android:paddingEnd="5dp"
                             android:text="بسیار ایمن"
                             android:fontFamily="@font/sadgan_medium"
                             android:textSize="10.5sp"
@@ -245,7 +247,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="34dp"
                     android:alpha="1"
                     android:layoutDirection="ltr">
                     <ImageView
@@ -262,7 +264,7 @@
                         <Button
                             android:layout_width="22.5dp"
                             android:layout_height="22.5dp"
-                            android:layout_marginTop="9dp"
+                            android:layout_marginTop="5.5dp"
                             android:layout_marginStart="12dp"
                             android:background="@drawable/menu_icon"
                             style="?android:attr/borderlessButtonStyle"

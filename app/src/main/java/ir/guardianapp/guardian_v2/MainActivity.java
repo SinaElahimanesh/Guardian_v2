@@ -1,6 +1,7 @@
 package ir.guardianapp.guardian_v2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -9,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -113,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void startApp() {
         new CountDownTimer(TIME_OUT, TIME_OUT) {

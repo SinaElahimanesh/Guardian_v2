@@ -9,11 +9,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import ir.guardianapp.guardian_v2.MainActivity;
 import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
 import ir.guardianapp.guardian_v2.models.Driving;
+import ir.guardianapp.guardian_v2.models.Trip;
 import ir.guardianapp.guardian_v2.models.User;
+import ir.guardianapp.guardian_v2.trips.TripsAdapter;
 import okhttp3.Response;
 
 public class ThreadGenerator {
@@ -207,7 +214,52 @@ public class ThreadGenerator {
         return new Thread(new Runnable() {
             @Override
             public void run() {
+                Response response = Requester.getInstance().RequestGetRecentTrips(username, token, numberOfTrips);
+                try {
+                    String tripsResponse = response.body().string();
+                    Message message = new Message();
+                    if(tripsResponse.equalsIgnoreCase("Authentication failed!!")) {
+                        message.what = MessageResult.FAILED;
+                    } if(isJSONArrayValid(tripsResponse)) {
+                        message.what = MessageResult.SUCCESSFUL;
+                        JSONArray arr = new JSONArray(tripsResponse);
+                        ArrayList<Trip> trips = new ArrayList<>();
+                        for(int i = 0; i < arr.length() ;i++){
+                            JSONObject tripJSON = arr.getJSONObject(i);
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            Trip trip = new Trip(tripJSON.getString("source_name"),
+                                    tripJSON.getString("destination_name"),
+                                    format.parse(tripJSON.getString("start_time")),
+                                    format.parse(tripJSON.getString("arrival_time")),
+                                    tripJSON.getDouble("distance"),
+                                    tripJSON.getDouble("avg_driving"));
 
+                            trips.add(trip);
+                        }
+                        Trip.addAllTrips(trips);
+                    } else {
+                        message.what = MessageResult.FAILED;
+                    }
+                    handler.sendMessage(message);
+
+                } catch (IOException e) {
+                    Log.e("internet","response time out");
+                    e.printStackTrace();
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                } catch (NullPointerException e){
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                } catch (JSONException e) {
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

@@ -20,6 +20,7 @@ public final class DataBaseContract {
         public static final String START_DATE = "START";
         public static final String END_DATE = "END";
         public static final String DISTANCE = "DISTANCE";
+        public static final String AVERAGE = "AVERAGE";
     }
 
     final static String TRIPS_SQL_CREATE_TABLE = "CREATE TABLE " + TripsEntry.TRIPS_TABLE_NAME + " (" + TripsEntry._ID + " INTEGER PRIMARY KEY, "
@@ -27,7 +28,8 @@ public final class DataBaseContract {
             + TripsEntry.DEST_NAME + " TEXT, "
             + TripsEntry.START_DATE + " TEXT, "
             + TripsEntry.END_DATE + " TEXT, "
-            + TripsEntry.DISTANCE + " INTEGER)";
+            + TripsEntry.DISTANCE + " REAL, "
+            + TripsEntry.AVERAGE + " REAL)";
 
     public static final String TRIPS_SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TripsEntry.TRIPS_TABLE_NAME;

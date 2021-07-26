@@ -13,13 +13,15 @@ public class Trip {
     private Date startDate;
     private Date endDate;
     private double distanceInKM;
+    private double average;
 
-    public Trip(String sourceName, String destinationName, Date startDate, Date endDate, double distanceInKM) {
+    public Trip(String sourceName, String destinationName, Date startDate, Date endDate, double distanceInKM, double average) {
         this.sourceName = sourceName;
         this.destinationName = destinationName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.distanceInKM = distanceInKM;
+        this.average = average;
     }
 
     public String getSourceName() {
@@ -40,6 +42,10 @@ public class Trip {
 
     public double getDistanceInKM() {
         return distanceInKM;
+    }
+
+    public double getAverage() {
+        return average;
     }
 
     public static void deleteTrips(){
