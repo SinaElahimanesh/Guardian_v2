@@ -32,12 +32,6 @@ public class GPSAndInternetChecker {
             showInternetAlert(context, height, width);
             return false;
         }
-        String result = readFile("version.txt", context).toString();
-        if(result.length() >= 19 && result.charAt(19)=='*') {
-            String updateLink = result.substring(20);
-            showUpdateAlert(context, updateLink, height, width);
-            return false;
-        }
         return true;
     }
 

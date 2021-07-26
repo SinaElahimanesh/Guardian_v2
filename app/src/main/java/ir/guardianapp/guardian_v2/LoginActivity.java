@@ -28,7 +28,10 @@ import java.util.concurrent.Executors;
 
 import ir.guardianapp.guardian_v2.PasswordManager.AsteriskPasswordTransformationMethod;
 import ir.guardianapp.guardian_v2.PasswordManager.DoNothingTransformationMethod;
+import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
+import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
 import ir.guardianapp.guardian_v2.extras.Network;
+import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
 
@@ -126,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
+
                 if (Network.isNetworkAvailable(this)) {   // connected to internet
                     loginProgress.setVisibility(View.VISIBLE);
                     executorService.submit(ThreadGenerator.loginUser(phoneNumTextView.getText().toString(), passwordTextView.getText().toString(), handler));

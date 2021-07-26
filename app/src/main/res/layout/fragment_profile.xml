@@ -22,7 +22,7 @@
             <FrameLayout
                 android:id="@+id/frameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="140dp"
                 android:alpha="0.85"
                 android:background="@drawable/rectangle_box_main"
                 android:src="@drawable/rectangle_box_main"
@@ -88,8 +88,8 @@
 
                         <ImageView
                             android:id="@+id/logout"
-                            android:layout_width="25dp"
-                            android:layout_height="24dp"
+                            android:layout_width="23dp"
+                            android:layout_height="22dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="8dp"
                             android:layout_marginBottom="40dp"
@@ -224,6 +224,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/usernameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
@@ -243,6 +244,7 @@
 
 
                 <EditText
+                    android:id="@+id/passwordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="6dp"
@@ -261,6 +263,7 @@
                     android:textSize="14sp"/>
 
                 <EditText
+                    android:id="@+id/phoneNumEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="6dp"
@@ -274,7 +277,22 @@
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            app:layout_constraintBottom_toTopOf="@+id/saveProfileButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <Button
+            android:id="@+id/saveProfileButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"

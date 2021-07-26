@@ -73,4 +73,49 @@ public class Requester {
             return null;
         }
     }
+
+    public Response RequestGetLoginCredentials(String token, String version){
+        System.out.println("ddddddd");
+        OkHttpClient okHttpClient = new OkHttpClient();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "LoginCredentials/" + token + "/" + version)
+                .newBuilder();
+        String url = urlBuilder.build().toString();
+        final Request request = new Request.Builder().url(url).build();
+        try {
+            return okHttpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Response RequestLogoutUser(String username, String token){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "Logout/" + username + "/" + token)
+                .newBuilder();
+        String url = urlBuilder.build().toString();
+        final Request request = new Request.Builder().url(url).build();
+        try {
+            return okHttpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Response RequestEditUserProfile(String oldUsername, String oldPassword, String oldPhoneNum,
+                                           String token, String newUsername, String newPassword, String newPhoneNum){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "editProfile/" + oldUsername + "/" + oldPassword +"/"
+                + oldPhoneNum +"/" + token + "/" + newUsername + "/" + newPassword + "/" + newPhoneNum)
+                .newBuilder();
+        String url = urlBuilder.build().toString();
+        final Request request = new Request.Builder().url(url).build();
+        try {
+            return okHttpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

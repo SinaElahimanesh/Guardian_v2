@@ -16,18 +16,19 @@ public class Driving {
         return single_instance;
     }
 
-    private double sleep;
-    private double time;
-    private double speed;
-    private double tripDuration;
-    private double roadType;
-    private double traffic;
-    private double weather;
-    private double radius30KM;
-    private double vibration;
-    private double acceleration;
-    private double month;
-    private double average;
+    // -1 --> invalid data
+    private double sleep = -1;
+    private double time = -1;
+    private double speed = -1;
+    private double tripDuration = -1;
+    private double roadType = -1;
+    private double traffic = -1;
+    private double weather = -1;
+    private double radius30KM = -1;
+    private double vibration = -1;
+    private double acceleration = -1;
+    private double month = -1;
+    private double average = -1;
 
     public void setSleep(double sleep) {
         this.sleep = sleep;

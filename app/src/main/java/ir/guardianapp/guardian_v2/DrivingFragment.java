@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,8 +64,8 @@ public class DrivingFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_driving, container, false);
         withoutStopDriving = view.findViewById(R.id.withoutStopDriving);
@@ -101,23 +102,7 @@ public class DrivingFragment extends Fragment {
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar.setProgress(progressBar.getProgress());
 
-                    Driving driving = Driving.getInstance();
-                    withoutStopDriving.setText(EncodeDecode.withoutStopDecode(driving.getTripDuration()));
-                    speed.setText(EncodeDecode.speedDecode(driving.getSpeed()));
-                    sleep.setText(EncodeDecode.sleepDecode(driving.getSleep()));
-                    vibration.setText(EncodeDecode.vibrationDecode(driving.getVibration()));
-                    time.setText(EncodeDecode.timeDecode(driving.getTime()));
-                    acceleration.setText(EncodeDecode.accelerationDecode(driving.getAcceleration()));
-                    weather.setText(EncodeDecode.weatherDecode(driving.getWeather()));
-                    dangerZone.setText(EncodeDecode.nearCitiesDecode(driving.getRadius30KM()));
-                    month.setText(EncodeDecode.monthDecode(driving.getMonth()));
-                    roadType.setText(EncodeDecode.roadTypeDecode(driving.getRoadType()));
-                    average.setText(((Math.round(driving.getAverage() * 100.0) / 100.0) + "%").toString());
-                    averageDescription.setText(EncodeDecode.calculateStatusAlgorithm(driving.getAverage()));
-
-                    User user = User.getInstance();
-                    username.setText(user.getUsername());
-                    phoneNum.setText(user.getPhoneNum());
+                    setDriving();
 
                 } else if (msg.what == MessageResult.FAILED) {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -131,7 +116,83 @@ public class DrivingFragment extends Fragment {
         if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
             progressBar.setVisibility(View.VISIBLE);
             executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler));
-
+        } else {
+            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setDriving() {
+        Driving driving = Driving.getInstance();
+        if(driving.getTripDuration() != -1) {
+            withoutStopDriving.setText(EncodeDecode.withoutStopDecode(driving.getTripDuration()));
+        } else {
+            withoutStopDriving.setText("--");
+        }
+
+        if(driving.getSpeed() != -1) {
+            speed.setText(EncodeDecode.speedDecode(driving.getSpeed()));
+        } else {
+            speed.setText("--");
+        }
+
+        if(driving.getSleep() != -1) {
+            sleep.setText(EncodeDecode.sleepDecode(driving.getSleep()));
+        } else {
+            sleep.setText("--");
+        }
+
+        if(driving.getVibration() != -1) {
+            vibration.setText(EncodeDecode.vibrationDecode(driving.getVibration()));
+        } else {
+            vibration.setText("--");
+        }
+
+        if(driving.getTime() != -1) {
+            time.setText(EncodeDecode.timeDecode(driving.getTime()));
+        } else {
+            time.setText("--");
+        }
+
+        if(driving.getAcceleration() != -1) {
+            acceleration.setText(EncodeDecode.accelerationDecode(driving.getAcceleration()));
+        } else {
+            acceleration.setText("--");
+        }
+
+        if(driving.getWeather() != -1) {
+            weather.setText(EncodeDecode.weatherDecode(driving.getWeather()));
+        } else {
+            weather.setText("--");
+        }
+
+        if(driving.getRadius30KM() != -1) {
+            dangerZone.setText(EncodeDecode.nearCitiesDecode(driving.getRadius30KM()));
+        } else {
+            dangerZone.setText("--");
+        }
+
+        if(driving.getMonth() != -1) {
+            month.setText(EncodeDecode.monthDecode(driving.getMonth()));
+        } else {
+            month.setText("--");
+        }
+
+        if(driving.getRoadType() != -1) {
+            roadType.setText(EncodeDecode.roadTypeDecode(driving.getRoadType()));
+        } else {
+            roadType.setText("--");
+        }
+
+        if(driving.getAverage() != -1) {
+            average.setText(((Math.round(driving.getAverage() * 100.0) / 100.0) + "%").toString());
+            averageDescription.setText(EncodeDecode.calculateStatusAlgorithm(driving.getAverage()));
+        } else {
+            average.setText("100");
+            averageDescription.setText("اطلاعات ناموجود");
+        }
+
+        User user = User.getInstance();
+        username.setText(user.getUsername());
+        phoneNum.setText(user.getPhoneNum());
     }
 }
