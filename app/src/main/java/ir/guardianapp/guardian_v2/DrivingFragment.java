@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ir.guardianapp.guardian_v2.DrivingPercentage.EncodeDecode;
+import ir.guardianapp.guardian_v2.database.ImageSavingManager;
 import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.models.Driving;
 import ir.guardianapp.guardian_v2.models.User;
@@ -100,6 +101,8 @@ public class DrivingFragment extends Fragment {
         updateDataButton.setOnClickListener(v -> {
             requestUpdateData();
         });
+
+        ImageSavingManager.loadImageFromStorage(view.findViewById(R.id.imageView), getContext());
         return view;
     }
 

@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="25dp"
-                    android:fontFamily="@font/sadgan_medium"
+                    android:fontFamily="@font/iran_sans"
                     android:paddingBottom="4dp"
                     android:text="ساعت شروع سفر"
                     android:textAlignment="center"
@@ -138,9 +138,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="25dp"
-                    android:fontFamily="@font/sadgan_medium"
+                    android:fontFamily="@font/iran_sans"
                     android:paddingBottom="4dp"
-                    android:text="ساعت پایان سفر"
+                    android:text="ساعت پایان سفر "
                     android:textAlignment="center"
                     android:textColor="@color/blue_grey_active"
                     android:textSize="13sp"
@@ -188,7 +188,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/sadgan_medium"
+                    android:fontFamily="@font/iran_sans"
                     android:gravity="end"
                     android:paddingBottom="4dp"
                     android:text="ایمنی رانندگی"
@@ -230,13 +230,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="8dp"
+            android:layout_marginTop="5dp"
             android:paddingRight="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -255,9 +254,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:fontFamily="@font/sadgan_medium"
+                    android:fontFamily="@font/iran_sans"
                     android:paddingBottom="4dp"
-                    android:text="مسافت"
+                    android:text="    مسافت    "
+
                     android:textAlignment="center"
                     android:textColor="@color/blue_grey_active"
                     android:textSize="13sp"

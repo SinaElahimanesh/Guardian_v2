@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".DrivingFragment">
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layoutDirection="ltr"
@@ -73,27 +74,30 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="510dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginRight="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="54dp"
                 android:background="@drawable/item_background"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                app:layout_goneMarginTop="54dp"> <!-- 510dp -->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="75dp">
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageView"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="17dp"
                         android:layout_marginEnd="15dp"
                         android:src="@drawable/user_icon_circle"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="1.5dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,7 +114,6 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:textColor="@color/black"
                             android:id="@+id/usernameTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -119,10 +122,10 @@
                             android:paddingEnd="10dp"
                             android:text="سینا الهی منش"
                             android:textAlignment="center"
+                            android:textColor="@color/black"
                             android:textSize="16sp" />
 
                         <TextView
-                            android:textColor="@color/grey"
                             android:id="@+id/phoneNumberTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -131,6 +134,7 @@
                             android:paddingEnd="10dp"
                             android:text="۰۹۳۰۵۰۰۶۰۳۶"
                             android:textAlignment="center"
+                            android:textColor="@color/grey"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -147,23 +151,23 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
-                            android:textColor="@color/black"
                             android:id="@+id/average"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/product_sans_bold"
                             android:text="96%"
+                            android:textColor="@color/black"
                             android:textSize="16sp" />
 
                         <TextView
-                            android:textColor="@color/grey"
                             android:id="@+id/safetyStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/iran_sans"
                             android:text="بسیار ایمن"
+                            android:textColor="@color/grey"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -174,9 +178,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="361dp"
                     android:layoutDirection="rtl"
-                    android:paddingRight="15dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="15dp"
+                    android:paddingRight="15dp"
                     android:paddingBottom="2dp">
 
                     <LinearLayout
@@ -199,24 +203,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_speed"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/speed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="112 km/h"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -232,24 +236,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_without_stop"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/withoutStopDriving"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="3:15"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -278,24 +282,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_vibration"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/vibration"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="3/5"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -311,24 +315,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_sleep"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/sleep"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="6:30"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -357,24 +361,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_acceleration"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/acceleration"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="5 m/s2"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -390,24 +394,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_time"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="6:30"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -437,24 +441,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_danger_zones"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/danger_zone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="5 m/s2"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -470,24 +474,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_weather"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/weather"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="6:30"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -516,24 +520,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_road"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/road_type"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="5 m/s2"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -549,24 +553,24 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/sadgan_medium"
                                 android:paddingBottom="4dp"
                                 android:text="@string/driving_month"
+                                android:textColor="@color/black"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:textColor="@color/black"
                                 android:id="@+id/month"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/iran_sans"
                                 android:text="6:30"
+                                android:textColor="@color/black"
                                 android:textSize="13sp" />
 
                         </LinearLayout>
@@ -576,39 +580,38 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="11dp"
-                    android:layout_marginLeft="11dp"
-                    android:visibility="invisible"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:indeterminate="true"/>
-
-                <Button
-                    android:layout_gravity="center_horizontal"
-                    android:id="@+id/updateDataButton"
-                    android:paddingRight="7dp"
-                    android:paddingLeft="7dp"
-                    android:fontFamily="@font/iran_sans"
-                    android:textSize="14sp"
-                    android:layout_width="match_parent"
-                    android:layout_marginRight="11dp"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_height="45dp"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:background="@drawable/button_background"
-                    android:text="@string/driving_detail_button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:alpha="0.75"
-                    app:layout_constraintStart_toStartOf="parent" />
-
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/updateDataButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/updateDataButton"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="1dp"
+                android:alpha="0.92"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/iran_sans"
+                android:gravity="center"
+                android:text="@string/driving_detail_button"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

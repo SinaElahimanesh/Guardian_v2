@@ -81,6 +81,6 @@ dependencies {
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.github.Chrisvin:RubberPicker:v1.5'
     implementation 'com.squareup.okhttp3:okhttp:3.12.13'
-//    implementation 'org.conscrypt:conscrypt-android:2.2.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }
 //apply plugin: 'com.google.gms.google-services'

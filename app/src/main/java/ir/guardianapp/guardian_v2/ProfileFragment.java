@@ -1,6 +1,10 @@
 package ir.guardianapp.guardian_v2;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,17 +12,23 @@ import androidx.fragment.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import ir.guardianapp.guardian_v2.database.ImageSavingManager;
 import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MessageResult;
@@ -33,6 +43,8 @@ public class ProfileFragment extends Fragment {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText phoneNumEditText;
+
+    private static int RESULT_LOAD_IMAGE = 1;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -59,8 +71,6 @@ public class ProfileFragment extends Fragment {
         phoneNumEditText = view.findViewById(R.id.phoneNumEditText);
         Button saveButton = view.findViewById(R.id.saveProfileButton);
         ProgressBar editProgress = view.findViewById(R.id.progressBar);
-
-        setProfile(usernameEditText, passwordEditText, phoneNumEditText);
 
         User user = User.getInstance();
         final String[] userText = {user.getUsername(), user.getPassword(), user.getPhoneNum()};
@@ -164,7 +174,44 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_LONG).show();
             }
         });
+
+        Button profilePhotoSelectButton = view.findViewById(R.id.profilePhotoSelectButton);
+        profilePhotoSelectButton.setOnClickListener(v -> {
+            Intent i = new Intent(
+                    Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setProfile(usernameEditText, passwordEditText, phoneNumEditText);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            de.hdodenhof.circleimageview.CircleImageView imageView = getView().findViewById(R.id.imageView);
+            try (ParcelFileDescriptor pfd = getActivity().getContentResolver().openFileDescriptor(selectedImage, "r")) {
+                if (pfd != null) {
+                    imageView.setImageBitmap(BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor()));
+                    ImageSavingManager.saveToInternalStorage(BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor()), getContext());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void setProfile(EditText username, EditText password, EditText phone) {
@@ -172,5 +219,6 @@ public class ProfileFragment extends Fragment {
         username.setHint(user.getUsername());
         password.setHint(user.getPassword());
         phone.setHint(user.getPhoneNum());
+        ImageSavingManager.loadImageFromStorage(getView().findViewById(R.id.imageView), getContext());
     }
 }

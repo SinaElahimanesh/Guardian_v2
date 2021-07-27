@@ -38,7 +38,7 @@
             app:bt_colorInactive="@color/red_inactive"
             app:bt_icon="@drawable/ic_trip_menu"
             app:bt_shape="@drawable/transition_background_drawable"
-            app:bt_title="Trips" />
+            app:bt_title="سفرها" />
 
         <com.gauravk.bubblenavigation.BubbleToggleView
             android:id="@+id/l_item_search2"
@@ -49,7 +49,7 @@
             app:bt_colorInactive="@color/blue_inactive"
             app:bt_icon="@drawable/ic_driving_menu"
             app:bt_shape="@drawable/transition_background_drawable"
-            app:bt_title="Driving" />
+            app:bt_title="رانندگی" />
 
         <com.gauravk.bubblenavigation.BubbleToggleView
             android:id="@+id/l_item_profile_list"
@@ -60,7 +60,7 @@
             app:bt_active="true"
             app:bt_icon="@drawable/ic_home_menu"
             app:bt_shape="@drawable/transition_background_drawable"
-            app:bt_title="Home" />
+            app:bt_title="خانه" />
 
         <com.gauravk.bubblenavigation.BubbleToggleView
             android:id="@+id/l_item_notification1"
@@ -70,7 +70,7 @@
             app:bt_colorInactive="@color/green_inactive"
             app:bt_icon="@drawable/ic_settings_menu"
             app:bt_shape="@drawable/transition_background_drawable"
-            app:bt_title="Settings" />
+            app:bt_title="تنظیمات" />
 
         <com.gauravk.bubblenavigation.BubbleToggleView
             android:id="@+id/l_item_profile"
@@ -80,7 +80,7 @@
             app:bt_colorInactive="@color/purple_inactive"
             app:bt_icon="@drawable/ic_profile_menu"
             app:bt_shape="@drawable/transition_background_drawable"
-            app:bt_title="Profile" />
+            app:bt_title="پروفایل" />
     </com.gauravk.bubblenavigation.BubbleNavigationLinearView>
 
 

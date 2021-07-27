@@ -27,7 +27,8 @@
         <activity android:name=".SupportActivity" />
         <activity android:name=".MainDrivingActivity"
             android:launchMode="singleTask"/>
-        <activity android:name=".MainMenuActivity" />
+        <activity android:name=".MainMenuActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".SleepManagerActivity" />
         <activity android:name=".SeatBeltActivity" />
         <activity android:name=".RegisterActivity"

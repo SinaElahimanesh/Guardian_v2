@@ -76,12 +76,14 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="70dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="54dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="0dp"
+                android:paddingBottom="0dp"
                 android:background="@drawable/item_background"
                 android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
@@ -95,13 +97,13 @@
                     tools:layout_editor_absoluteX="5dp">
 
                     <TextView
-                        android:textColor="@color/black"
                         android:id="@+id/textView6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:paddingEnd="30dp"
                         android:text="@string/settings_general_title"
+                        android:textColor="@color/black"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -136,10 +138,10 @@
                         android:id="@+id/constraintLayout2"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
+                        android:layout_marginTop="6dp"
                         android:background="@drawable/factor_background"
                         android:orientation="vertical"
                         android:paddingLeft="20dp"
-                        android:layout_marginTop="6dp"
                         android:paddingRight="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -156,13 +158,13 @@
                             app:sb_show_indicator="false" />
 
                         <TextView
-                            android:textColor="@color/black"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:fontFamily="@font/sadgan_medium"
                             android:paddingBottom="4dp"
                             android:text="@string/settings_darkmode_title"
+                            android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -195,7 +197,6 @@
                             app:sb_show_indicator="false" />
 
                         <TextView
-                            android:textColor="@color/black"
                             android:id="@+id/textView5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -204,13 +205,13 @@
                             android:fontFamily="@font/sadgan_medium"
                             android:paddingBottom="4dp"
                             android:text="@string/settings_danger_title"
+                            android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:textColor="@color/grey"
                             android:id="@+id/safetyStatus2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -219,6 +220,7 @@
                             android:fontFamily="@font/iran_sans"
                             android:paddingEnd="80dp"
                             android:text="@string/settings_danger_subtitle"
+                            android:textColor="@color/grey"
                             android:textSize="11sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -262,7 +264,6 @@
 
 
                         <TextView
-                            android:textColor="@color/black"
                             android:id="@+id/textView4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -271,13 +272,13 @@
                             android:fontFamily="@font/sadgan_medium"
                             android:paddingBottom="4dp"
                             android:text="@string/settings_voice_title"
+                            android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:textColor="@color/grey"
                             android:id="@+id/safetyStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -285,6 +286,7 @@
                             android:layout_marginTop="5dp"
                             android:fontFamily="@font/iran_sans"
                             android:text="@string/settings_voice_subtitle"
+                            android:textColor="@color/grey"
                             android:textSize="11sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -294,29 +296,26 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <Button
-                    android:layout_gravity="center_horizontal"
-                    android:id="@+id/date"
-                    android:paddingRight="7dp"
-                    android:paddingLeft="7dp"
-                    android:fontFamily="@font/iran_sans"
-                    android:textSize="14sp"
-                    android:layout_width="match_parent"
-                    android:layout_marginRight="11dp"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="2dp"
-                    android:layout_height="45dp"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:background="@drawable/button_background"
-                    android:text="@string/settings_done_button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:alpha="0.75"
-                    app:layout_constraintStart_toStartOf="parent" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:layout_gravity="center_horizontal"
+                android:alpha="0.92"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/iran_sans"
+                android:gravity="center"
+                android:text="@string/settings_done_button"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
