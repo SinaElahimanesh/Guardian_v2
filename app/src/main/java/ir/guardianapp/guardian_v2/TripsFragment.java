@@ -97,6 +97,8 @@ public class TripsFragment extends Fragment {
         refreshButton.setOnClickListener(v -> {
             if(Trip.getTrips().size() == (numberOfTrips - 5)) {
                 getTrips();
+            } else {
+                Toast.makeText(getContext(), "سفر جدیدی برای نمایش وجود ندارد.", Toast.LENGTH_LONG).show();
             }
         });
 

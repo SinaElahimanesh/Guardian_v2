@@ -36,13 +36,13 @@
     <Button
         android:id="@+id/startButton"
         android:layout_width="match_parent"
-        android:layout_height="46.5dp"
+        android:layout_height="43dp"
         android:layout_gravity="bottom"
-        android:background="@color/blue_active"
+        android:background="@color/mapboxBlue"
         android:fontFamily="@font/iran_sans"
         android:text="شروع سفر"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="18.5sp" />
+        android:textSize="14.5sp" />
 
 </FrameLayout>
