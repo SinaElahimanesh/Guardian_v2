@@ -249,7 +249,7 @@
                             app:defaultThumbInsideColor="#51D367"
                             app:defaultThumbRadius="10dp"
                             app:elasticBehavior="cubic"
-                            app:highlightDefaultThumbOnTouchColor="#CD5D67"
+                            app:highlightDefaultThumbOnTouchColor="@color/white"
                             app:highlightTrackColor="#51D367"
                             app:highlightTrackWidth="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"

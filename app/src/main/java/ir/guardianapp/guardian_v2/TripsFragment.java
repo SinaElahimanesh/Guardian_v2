@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import ir.guardianapp.guardian_v2.database.DataBaseHelper;
 import ir.guardianapp.guardian_v2.extras.Network;
@@ -36,27 +32,19 @@ public class TripsFragment extends Fragment {
 
     private DataBaseHelper dataBaseHelper;
 
-    static final int DEFAULT_THREAD_POOL_SIZE = 5;
-    static ExecutorService executorService;
     private Handler handler;
     private ProgressBar progressBar;
     private TextView label;
     private int numberOfTrips = 5;
-    private static boolean firstTime = true;
+    private static boolean isFirstTime = true;
+    private static boolean canUpdate = true;
+    private static int requestLimit = 20;
 
     public TripsFragment(DataBaseHelper dataBaseHelper) {
         // Required empty public constructor
         this.dataBaseHelper = dataBaseHelper;
     }
 
-//    public static TripsFragment newInstance(String param1, String param2) {
-//        TripsFragment fragment = new TripsFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,11 +74,9 @@ public class TripsFragment extends Fragment {
         tripsRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         tripsRecyclerView.setAdapter(tripsAdapter);
 
-        executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
-
-        if(firstTime) {
+        if(isFirstTime) {
             getTrips();
-            firstTime = false;
+            isFirstTime = false;
         }
 
         Button refreshButton = view.findViewById(R.id.refreshButton);
@@ -98,7 +84,7 @@ public class TripsFragment extends Fragment {
             if(Trip.getTrips().size() == (numberOfTrips - 5)) {
                 getTrips();
             } else {
-                Toast.makeText(getContext(), "سفر جدیدی برای نمایش وجود ندارد.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "سفر جدیدی برای نمایش وجود ندارد.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -107,12 +93,12 @@ public class TripsFragment extends Fragment {
 
     private void getTrips() {
 
-        executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MessageResult.SUCCESSFUL) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    canUpdate = true;
                     progressBar.setProgress(progressBar.getProgress());
                     tripsAdapter.setTrips(Trip.getTrips());
                     tripsAdapter.setTripsFull(Trip.getTrips());
@@ -123,22 +109,30 @@ public class TripsFragment extends Fragment {
                         label.setEnabled(false);
                     }
 
-                } else if(msg.what == MessageResult.FAILED) {
+                } else if(msg.what == MessageResult.AUTHENTICATION_FAILED) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getContext(), "لطفا از حساب کاربری خود خارج شوید و دوباره ورود کنید.", Toast.LENGTH_LONG).show();
+                    canUpdate = true;
+                    Toast.makeText(getContext(), "لطفا از حساب کاربری خود خارج شوید و دوباره ورود کنید.", Toast.LENGTH_SHORT).show();
 
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_LONG).show();
+                    canUpdate = true;
+                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_SHORT).show();
                 }
             }
         };
         if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
-            progressBar.setVisibility(View.VISIBLE);
-            User user = User.getInstance();
-            executorService.submit(ThreadGenerator.getRecentTrips(user.getUsername(), user.getToken(), numberOfTrips, handler));
+            if(canUpdate && requestLimit!=0) {
+                canUpdate = false;
+                requestLimit--;
+                progressBar.setVisibility(View.VISIBLE);
+                User user = User.getInstance();
+                MainActivity.executorService.submit(ThreadGenerator.getRecentTrips(user.getUsername(), user.getToken(), numberOfTrips, handler));
+            } else if(requestLimit == 0) {
+                Toast.makeText(getContext(), "لطفا بعدا تلاش کنید!", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
         }
     }
 }

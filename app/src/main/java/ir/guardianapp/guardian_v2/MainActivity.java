@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int TIME_OUT = 3000;
     private static final String ONESIGNAL_APP_ID = "52708f3f-d26f-4739-9b0e-97093714a222";
 
-    public static String updateLink;
     private String version = "1.0.0";
     private boolean isLoggedIn = false;
 
-    static final int DEFAULT_THREAD_POOL_SIZE = 5;
-    static ExecutorService executorService;
+    public static final int DEFAULT_THREAD_POOL_SIZE = 5;
+    public static ExecutorService executorService;
     private Handler handler;
+    public static String updateLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

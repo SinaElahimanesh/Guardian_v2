@@ -1,6 +1,5 @@
 package ir.guardianapp.guardian_v2;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,13 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import ir.guardianapp.guardian_v2.DrivingPercentage.EncodeDecode;
 import ir.guardianapp.guardian_v2.database.ImageSavingManager;
@@ -30,9 +25,10 @@ import ir.guardianapp.guardian_v2.network.ThreadGenerator;
 
 public class DrivingFragment extends Fragment {
 
-    static final int DEFAULT_THREAD_POOL_SIZE = 5;
-    static ExecutorService executorService;
     private Handler handler;
+    private static boolean canUpdate = true;
+    private static int requestLimit = 10;
+    private static boolean isFirstTime = true;
 
     private ProgressBar progressBar;
     private TextView withoutStopDriving;
@@ -50,16 +46,10 @@ public class DrivingFragment extends Fragment {
     private TextView phoneNum;
     private TextView averageDescription;
 
-    private static boolean firstTime = true;
-
     public DrivingFragment() {
         // Required empty public constructor
     }
 
-    public static DrivingFragment newInstance(String param1, String param2) {
-        DrivingFragment fragment = new DrivingFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +59,7 @@ public class DrivingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setDriving();
     }
 
     @Override
@@ -93,10 +84,11 @@ public class DrivingFragment extends Fragment {
         averageDescription = view.findViewById(R.id.safetyStatus);
         progressBar = view.findViewById(R.id.progressBar);
 
-        if(firstTime) {
+        if(isFirstTime) {
             requestUpdateData();
-            firstTime = false;
+            isFirstTime = false;
         }
+
         Button updateDataButton = view.findViewById(R.id.updateDataButton);
         updateDataButton.setOnClickListener(v -> {
             requestUpdateData();
@@ -107,30 +99,37 @@ public class DrivingFragment extends Fragment {
     }
 
     private void requestUpdateData() {
-        executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MessageResult.SUCCESSFUL) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    canUpdate = true;
                     progressBar.setProgress(progressBar.getProgress());
-
                     setDriving();
 
                 } else if (msg.what == MessageResult.FAILED) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_LONG).show();
+                    canUpdate = true;
+                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_SHORT).show();
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_LONG).show();
+                    canUpdate = true;
+                    Toast.makeText(getContext(), "لطفا دوباره تلاش کنید.", Toast.LENGTH_SHORT).show();
                 }
             }
         };
         if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
-            progressBar.setVisibility(View.VISIBLE);
-            executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler));
+            if(canUpdate && requestLimit!=0) {
+                canUpdate = false;
+                requestLimit--;
+                progressBar.setVisibility(View.VISIBLE);
+                MainActivity.executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler));
+            } else if(requestLimit == 0) {
+                Toast.makeText(getContext(), "لطفا بعدا تلاش کنید!", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
         }
     }
 

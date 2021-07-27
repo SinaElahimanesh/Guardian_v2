@@ -37,9 +37,8 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar registerProgress;
     private boolean hidePassword = true;
 
-    static final int DEFAULT_THREAD_POOL_SIZE = 5;
-    static ExecutorService executorService;
     private Handler handler;
+    private static boolean canUpdate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,12 +109,12 @@ public class RegisterActivity extends AppCompatActivity {
                 messageTextRegister.setText("شماره همراه وارد شده صحیح نمی باشد.");
                 messageTextRegister.setTextColor(this.getResources().getColor(R.color.colorNegativeError));
             } else {
-                executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
                 handler = new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == MessageResult.SUCCESSFUL) {
                             registerProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             registerProgress.setProgress(registerProgress.getProgress());
                             messageTextRegister.setText("لطفا چند لحظه منتظر بمانید.");
                             messageTextRegister.setTextColor(RegisterActivity.this.getResources().getColor(R.color.colorPositiveError));
@@ -125,26 +124,33 @@ public class RegisterActivity extends AppCompatActivity {
                             finish();
                         } else if(msg.what == MessageResult.USERNAME_IS_NOT_UNIQUE) {
                             registerProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextRegister.setText("نام کاربری وارد شده تکراری می باشد.");
                             messageTextRegister.setTextColor(RegisterActivity.this.getResources().getColor(R.color.colorNegativeError));
                         } else if(msg.what == MessageResult.PHONE_IS_NOT_UNIQUE) {
                             registerProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextRegister.setText("شماره همراه وارد شده تکراری می باشد.");
                             messageTextRegister.setTextColor(RegisterActivity.this.getResources().getColor(R.color.colorNegativeError));
                         } else if(msg.what == MessageResult.FAILED) {
                             registerProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextRegister.setText("لطفا دوباره تلاش کنید.");
                             messageTextRegister.setTextColor(RegisterActivity.this.getResources().getColor(R.color.colorNegativeError));
                         } else {
                             registerProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextRegister.setText("سرور پاسخگو نمی باشد؛ لطفا چند دقیقه دیگر تلاش کنید.");
                             messageTextRegister.setTextColor(RegisterActivity.this.getResources().getColor(R.color.colorNegativeError));
                         }
                     }
                 };
                 if (Network.isNetworkAvailable(this)) {   // connected to internet
-                    registerProgress.setVisibility(View.VISIBLE);
-                    executorService.submit(ThreadGenerator.registerUser(usernameTextView.getText().toString(), phoneNumTextView.getText().toString(), passwordTextView.getText().toString(), handler));
+                    if(canUpdate) {
+                        canUpdate = false;
+                        registerProgress.setVisibility(View.VISIBLE);
+                        MainActivity.executorService.submit(ThreadGenerator.registerUser(usernameTextView.getText().toString(), phoneNumTextView.getText().toString(), passwordTextView.getText().toString(), handler));
+                    }
                 } else {
                     messageTextRegister.setText("اتصال شما به اینترنت برقرار نمی باشد.");
                     messageTextRegister.setTextColor(RegisterActivity.this.getResources().getColor(R.color.colorNegativeError));

@@ -43,6 +43,6 @@
         android:text="شروع سفر"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="14.5sp" />
+        android:textSize="15sp" />
 
 </FrameLayout>

@@ -1,7 +1,7 @@
 package ir.guardianapp.guardian_v2.network;
 
 public class MessageResult {
-    // the whole
+    // all
     public static final int SUCCESSFUL = 1;
     public static final int FAILED = 2;
 
@@ -18,4 +18,6 @@ public class MessageResult {
     public static final int LOGGED_OUT = 8;
     public static final int LOGGED_IN = 9;
 
+    // Authentication
+    public static final int AUTHENTICATION_FAILED = 10;
 }

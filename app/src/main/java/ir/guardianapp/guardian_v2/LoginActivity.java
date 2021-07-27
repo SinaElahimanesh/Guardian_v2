@@ -42,9 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loginProgress;
     private boolean hidePassword = true;
 
-    static final int DEFAULT_THREAD_POOL_SIZE = 5;
-    static ExecutorService executorService;
     private Handler handler;
+    private static boolean canUpdate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +96,12 @@ public class LoginActivity extends AppCompatActivity {
                 messageTextLogin.setText("رمز عبور نمی تواند خالی باشد.");
                 messageTextLogin.setTextColor(this.getResources().getColor(R.color.colorNegativeError));
             } else {
-                executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
                 handler = new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         if (msg.what == MessageResult.SUCCESSFUL) {
                             loginProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             loginProgress.setProgress(loginProgress.getProgress());
                             messageTextLogin.setText("لطفا چند لحظه منتظر بمانید.");
                             messageTextLogin.setTextColor(LoginActivity.this.getResources().getColor(R.color.colorPositiveError));
@@ -112,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         } else if(msg.what == MessageResult.THIS_PHONE_NOT_REGISTERED) {
                             loginProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextLogin.setText("شماره همراه صحیح نمی باشد.");
                             messageTextLogin.setTextColor(LoginActivity.this.getResources().getColor(R.color.colorNegativeError));
                         } else if(msg.what == MessageResult.PHONE_AND_PASSWORD_DOES_NOT_MATCH) {
@@ -120,10 +120,12 @@ public class LoginActivity extends AppCompatActivity {
                             messageTextLogin.setTextColor(LoginActivity.this.getResources().getColor(R.color.colorNegativeError));
                         } else if(msg.what == MessageResult.FAILED) {
                             loginProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextLogin.setText("لطفا دوباره تلاش کنید.");
                             messageTextLogin.setTextColor(LoginActivity.this.getResources().getColor(R.color.colorNegativeError));
                         }  else {
                             loginProgress.setVisibility(View.INVISIBLE);
+                            canUpdate = true;
                             messageTextLogin.setText("سرور پاسخگو نمی باشد؛ لطفا چند دقیقه دیگر تلاش کنید.");
                             messageTextLogin.setTextColor(LoginActivity.this.getResources().getColor(R.color.colorNegativeError));
                         }
@@ -131,8 +133,11 @@ public class LoginActivity extends AppCompatActivity {
                 };
 
                 if (Network.isNetworkAvailable(this)) {   // connected to internet
-                    loginProgress.setVisibility(View.VISIBLE);
-                    executorService.submit(ThreadGenerator.loginUser(phoneNumTextView.getText().toString(), passwordTextView.getText().toString(), handler));
+                    if(canUpdate) {
+                        canUpdate = false;
+                        loginProgress.setVisibility(View.VISIBLE);
+                        MainActivity.executorService.submit(ThreadGenerator.loginUser(phoneNumTextView.getText().toString(), passwordTextView.getText().toString(), handler));
+                    }
                 } else {
                     messageTextLogin.setText("اتصال شما به اینترنت برقرار نمی باشد.");
                     messageTextLogin.setTextColor(LoginActivity.this.getResources().getColor(R.color.colorNegativeError));

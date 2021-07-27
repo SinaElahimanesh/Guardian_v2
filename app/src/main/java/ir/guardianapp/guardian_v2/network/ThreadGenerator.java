@@ -219,7 +219,7 @@ public class ThreadGenerator {
                     String tripsResponse = response.body().string();
                     Message message = new Message();
                     if(tripsResponse.equalsIgnoreCase("Authentication failed!!")) {
-                        message.what = MessageResult.FAILED;
+                        message.what = MessageResult.AUTHENTICATION_FAILED;
                     } if(isJSONArrayValid(tripsResponse)) {
                         message.what = MessageResult.SUCCESSFUL;
                         JSONArray arr = new JSONArray(tripsResponse);
@@ -334,7 +334,7 @@ public class ThreadGenerator {
                         SharedPreferencesManager.deleteFromSharedPreferences("TOKEN");
                         User.getInstance().setToken("");
                     } else if(logoutResponse.equalsIgnoreCase("Authentication failed!!")) {
-                        message.what = MessageResult.FAILED;
+                        message.what = MessageResult.AUTHENTICATION_FAILED;
                     } else {
                         message.what = MessageResult.FAILED;
                     }
@@ -371,7 +371,7 @@ public class ThreadGenerator {
                         user.setPassword(newPassword);
                         user.setPhoneNum(newPhoneNum);
                     } else if(editResponse.equalsIgnoreCase("Authentication failed!!")) {
-                        message.what = MessageResult.FAILED;
+                        message.what = MessageResult.AUTHENTICATION_FAILED;
                     } else if(editResponse.equalsIgnoreCase("this username has already exists.")) {
                         message.what = MessageResult.USERNAME_IS_NOT_UNIQUE;
                     } else if(editResponse.equalsIgnoreCase("this phone number has already exists.")) {
