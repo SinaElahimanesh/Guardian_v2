@@ -60,7 +60,7 @@ public class SupportActivity extends AppCompatActivity {
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
-            Intent i = new Intent(SupportActivity.this, MainDrivingActivity.class);
+            Intent i = new Intent(SupportActivity.this, MainNavigationActivity.class);
             startActivity(i);
             finish();
         });

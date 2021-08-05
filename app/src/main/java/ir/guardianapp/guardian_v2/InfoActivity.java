@@ -32,7 +32,7 @@ public class InfoActivity extends AppCompatActivity {
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
-            Intent i = new Intent(InfoActivity.this, MainDrivingActivity.class);
+            Intent i = new Intent(InfoActivity.this, MainNavigationActivity.class);
             startActivity(i);
             finish();
         });

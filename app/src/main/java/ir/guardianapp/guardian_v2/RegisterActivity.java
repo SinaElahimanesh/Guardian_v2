@@ -45,19 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-//        if(TokenChecker.tokenIsValid()){
-//            MainActivity.setShowGuide(false);
-//            if(SleepManagerActivity.isSleepDataRecordedToday(this) == false  && SleepManagerActivity.isItTimeToRecord()){
-//                Intent intent = new Intent(RegisterActivity.this, SleepManagerActivity.class);
-//                startActivity(intent);
-//                finish();
-//            } else {
-//                Intent i = new Intent(RegisterActivity.this, MainMenuActivity.class);
-//                startActivity(i);
-//                finish();
-//            }
-//        }
-
         // MAKE IT FULL SCREEN
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = this.getWindow();

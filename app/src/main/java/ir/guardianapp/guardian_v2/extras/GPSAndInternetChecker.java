@@ -35,6 +35,26 @@ public class GPSAndInternetChecker {
         return true;
     }
 
+    public static void showParkingAlert(final Context context){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_parking, null);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setView(view, 0, 0, 0, 0);
+        alertDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+        lp.copyFrom(alertDialog.getWindow().getAttributes());
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        lp.x= 0;
+        lp.y= 0;
+        alertDialog.getWindow().setAttributes(lp);
+
+        Button parkButton = view.findViewById(R.id.parkButton);
+        parkButton.setOnClickListener(v -> alertDialog.dismiss());
+    }
 
     public static void showUpdateAlert(final Context context, String updateLink, double height, double width){
 

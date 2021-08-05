@@ -9,17 +9,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -33,18 +34,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Message;
 import android.speech.RecognizerIntent;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,32 +61,30 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 import ir.guardianapp.guardian_v2.DrivingPercentage.DriveAlertHandler;
 import ir.guardianapp.guardian_v2.DrivingPercentage.StatusCalculator;
 import ir.guardianapp.guardian_v2.DrivingStatus.ShakeSituation;
 import ir.guardianapp.guardian_v2.DrivingStatus.location.GPSTracker;
-import ir.guardianapp.guardian_v2.DrivingStatus.location.LocationService;
+import ir.guardianapp.guardian_v2.DrivingStatus.location.MapLocationService;
 import ir.guardianapp.guardian_v2.DrivingStatus.weather.Weather;
+import ir.guardianapp.guardian_v2.database.JSONManager;
+import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
+import ir.guardianapp.guardian_v2.extras.BitmapHelper;
+import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
 import ir.guardianapp.guardian_v2.extras.GuideManager;
+import ir.guardianapp.guardian_v2.extras.Network;
+import ir.guardianapp.guardian_v2.extras.NumberHandler;
+import ir.guardianapp.guardian_v2.models.User;
+import ir.guardianapp.guardian_v2.network.MessageResult;
+import ir.guardianapp.guardian_v2.network.ThreadGenerator;
 
-public class MainDrivingActivity extends AppCompatActivity implements SensorEventListener, OnMapReadyCallback, LocationListener {
+public class MainMapActivity extends AppCompatActivity implements SensorEventListener, OnMapReadyCallback, LocationListener {
 
     // Sensors
     private SensorManager sensorManager;
@@ -93,7 +94,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     private ShakeSituation situation = ShakeSituation.noShake;
 
     // Speedometer
-    public LocationService myService;
+    public MapLocationService myService;
     private static boolean status;
     private LocationManager locationManager;
     public static long startTime, endTime;
@@ -125,6 +126,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     private StatusCalculator statusCalculator;
     public static TextView speedText;
     public static TextView driveText;
+    private ImageButton parkingButton;
 
     // Permission
     private final int REQ_CODE = 100;
@@ -138,11 +140,11 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_driving);
+        setContentView(R.layout.activity_main_map);
 
         // FIND_VIEWS
-        Button restButton = findViewById(R.id.restButton);
-        Button back2mapButton = findViewById(R.id.back2mapButton);
+        ImageButton restButton = findViewById(R.id.restButton);
+        ImageButton back2mapButton = findViewById(R.id.back2mapButton);
         //
         weatherTypeImg = findViewById(R.id.WeatherTypeImage);
         weatherTypeTxt = findViewById(R.id.WeatherTypeTextView);
@@ -155,6 +157,8 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         alertMessageText = findViewById(R.id.alertMessageText);
         alertMessageBox = findViewById(R.id.alertMessageBox);
         alertMessageImage = findViewById(R.id.alertMessageImage);
+        parkingButton = findViewById(R.id.parkingButton);
+        parkingButton.setOnClickListener(v -> saveParking());
         statusCalculator = new StatusCalculator(this);
         statusCalculator.setSleepData(this);
 
@@ -210,10 +214,10 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
             //Here, the Location Service gets bound and the GPS Speedometer gets Active.
             bindService();
         if (firstTime) {
-            locate = new ProgressDialog(MainDrivingActivity.this);
+            locate = new ProgressDialog(MainMapActivity.this);
             locate.setIndeterminate(true);
             locate.setCancelable(false);
-            locate.setMessage("Getting Location...");
+            locate.setMessage("در حال دریافت موقعیت مکانی...");
             locate.show();
             firstTime = false;
         }
@@ -241,12 +245,12 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         }, 30000);
 
         // Guide
-        if (MainActivity.getShowGuide()) {
-            GuideManager.showGuide(this);
-        }
+//        if (MainActivity.getShowGuide()) {
+//            GuideManager.showGuide(this);
+//        }
     }
 
-    private void activateRestButton(Button restButton, Button back2mapButton) {
+    private void activateRestButton(ImageButton restButton, ImageButton back2mapButton) {
         // REST
         back2mapButton.setOnClickListener(v -> {
             restComplex = false;
@@ -255,7 +259,8 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
             animation.setDuration(500);
             animation.start();
 
-            mapMarker.remove();
+            if(mapMarker != null)
+                mapMarker.remove();
             if (mapLocation != null && mMap != null)
                 updateCameraBearing(mMap, mapLocation);
 
@@ -353,7 +358,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
             int height = 110;
             int width = 110;
-            BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.petrol);
+            BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.petrol);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
@@ -448,6 +453,13 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        // theme of map
+        if(SettingsFragment.getMapStyle(this) != null)
+            mMap.setMapStyle(SettingsFragment.getMapStyle(this));
+        // settings of map
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission
                     (this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -489,6 +501,16 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
         locationButton.post(() -> locationButton.performClick());
         setUpMapIfNeeded();
+
+        showParkingLocation(this, mMap);
+
+        View mapView = findViewById(R.id.map);
+        View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp2 = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp2.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp2.setMargins(0, 0, 90, 30);
     }
 
     @Override
@@ -529,7 +551,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     private ServiceConnection sc = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+            MapLocationService.LocalBinder binder = (MapLocationService.LocalBinder) service;
             myService = binder.getService();
             status = true;
             myService.setStatusCalculator(statusCalculator);
@@ -544,7 +566,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     void bindService() {
         if (status == true)
             return;
-        Intent i = new Intent(getApplicationContext(), LocationService.class);
+        Intent i = new Intent(getApplicationContext(), MapLocationService.class);
         bindService(i, sc, BIND_AUTO_CREATE);
         status = true;
         startTime = System.currentTimeMillis();
@@ -553,7 +575,7 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     void unbindService() {
         if (status == false)
             return;
-        Intent i = new Intent(getApplicationContext(), LocationService.class);
+        Intent i = new Intent(getApplicationContext(), MapLocationService.class);
         unbindService(sc);
         status = false;
     }
@@ -642,6 +664,34 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         if (isAccelerometerSensorAvailable) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
+
+        if (mMap != null)
+            showParkingLocation(this, mMap);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (Network.isNetworkAvailable(this)) {   // connected to internet
+            Handler handler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    if (msg.what == MessageResult.SUCCESSFUL) {
+                       //
+                    } else {
+                        try {
+                            JSONManager.writeJSONArrIntoJSONFile(MainMapActivity.this);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            MainActivity.executorService.submit(ThreadGenerator.postDrivingDetails(User.getInstance().getUsername(),
+                    User.getInstance().getToken(), JSONManager.getDrivingJSONArray(), handler));
+        } else {
+            Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Drawer
@@ -671,15 +721,15 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         // Create a new fragment and specify the fragment to show based on nav item clicked
         switch (menuItem.getItemId()) {
             case R.id.back2home:
-                Intent i1 = new Intent(MainDrivingActivity.this, MainMenuActivity.class);
+                Intent i1 = new Intent(MainMapActivity.this, MainMenuActivity.class);
                 startActivity(i1);
                 break;
             case R.id.support:
-                Intent i2 = new Intent(MainDrivingActivity.this, SupportActivity.class);
+                Intent i2 = new Intent(MainMapActivity.this, SupportActivity.class);
                 startActivity(i2);
                 break;
             case R.id.info:
-                Intent i3 = new Intent(MainDrivingActivity.this, InfoActivity.class);
+                Intent i3 = new Intent(MainMapActivity.this, InfoActivity.class);
                 startActivity(i3);
                 break;
         }
@@ -692,7 +742,32 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
     private void callAlgorithmLogic() {
         double percentage = statusCalculator.calculatePercentageAlgorithm();
-        algorithmPercentageText.setText((((int) percentage) + "%").toString());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        } else {
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+            statusCalculator.staticAverageLatitude = location.getLatitude();
+            statusCalculator.staticAverageLongitude = location.getLongitude();
+        }
+        int lastPercentage = 0;
+        if(NumberHandler.isNumeric(algorithmPercentageText.getText().toString().substring(0, 2))) {
+            lastPercentage = Integer.parseInt(algorithmPercentageText.getText().toString().substring(0, 2));
+        } else if(NumberHandler.isNumeric(algorithmPercentageText.getText().toString().substring(0, 1))) {
+            lastPercentage = Integer.parseInt(algorithmPercentageText.getText().toString().substring(0, 1));
+        }
+
+        int counter = (int) Math.floor(percentage);
+        ValueAnimator animator = new ValueAnimator();
+        animator.setObjectValues(lastPercentage, counter);// here you set the range, from 0 to "count" value
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+//                algorithmPercentageText.setText(((counter) + "%").toString());
+                algorithmPercentageText.setText(String.valueOf(animation.getAnimatedValue()) + "%");
+            }
+        });
+        animator.setDuration(500); // here you set the duration of the anim
+        animator.start();
+
         algorithmStatusText.setText(statusCalculator.calculateStatusAlgorithm(percentage));
 
         ///setting weather type
@@ -731,6 +806,11 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
 
         // pass cycle
         DriveAlertHandler.passCycle();
+
+        // parking
+        if(Integer.parseInt(speedText.getText().toString()) >= 20) {
+            deleteParkingLocation();
+        }
     }
 
     @Override
@@ -761,23 +841,22 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainDrivingActivity.this.finish();
+        MainMapActivity.this.finish();
     }
 
-    public void saveParking(View view) {
+    public void saveParking() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        prefsEditor.putString("parkingLocation", String.valueOf(location.getLatitude())+','+String.valueOf(location.getLongitude()));
-        prefsEditor.apply();
+        SharedPreferencesManager.writeToSharedPreferences("parkingLocation",  String.valueOf(location.getLatitude())+','+String.valueOf(location.getLongitude()));
+//        Toast.makeText(this,"محل پارک خودروی شما به موفقیت ذخیره شد.", Toast.LENGTH_SHORT).show();
+        GPSAndInternetChecker.showParkingAlert(this);
+        MainMapActivity.showParkingLocation(this, mMap);
     }
 
-    public Location getParkingLocation(){
-        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
-        String latLang = mPrefs.getString("parkingLocation", null);
+    public static Location getParkingLocation(){
+        String latLang = SharedPreferencesManager.readFromSharedPreferences("parkingLocation");
         if (latLang==null || latLang.isEmpty()){
             return null;
         }
@@ -786,5 +865,27 @@ public class MainDrivingActivity extends AppCompatActivity implements SensorEven
         targetLocation.setLatitude(Float.valueOf(tmp[0]));
         targetLocation.setLongitude(Float.valueOf(tmp[1]));
         return targetLocation;
+    }
+
+    public static void showParkingLocation(Context context, GoogleMap mMap) {
+        Location location = getParkingLocation();
+        if(location != null) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            // Setting the position for the marker
+            markerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+            markerOptions.title("آخرین محل پارک خودروی شما");
+            Drawable d = context.getResources() .getDrawable(R.drawable.ic_car_parking, context.getTheme());
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(d)));
+            markerOptions.zIndex(10000);
+            Marker source_marker = mMap.addMarker(markerOptions);
+            source_marker.showInfoWindow();
+
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(15f).build(); ///15.4f
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+    public static void deleteParkingLocation() {
+        SharedPreferencesManager.deleteFromSharedPreferences("parkingLocation");
     }
 }

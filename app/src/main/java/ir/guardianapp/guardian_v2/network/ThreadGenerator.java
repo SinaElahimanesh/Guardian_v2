@@ -13,7 +13,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import ir.guardianapp.guardian_v2.MainActivity;
 import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
@@ -224,19 +226,25 @@ public class ThreadGenerator {
                         message.what = MessageResult.SUCCESSFUL;
                         JSONArray arr = new JSONArray(tripsResponse);
                         ArrayList<Trip> trips = new ArrayList<>();
+                        //
+                        String inputPattern = "yyyy-MM-dd hh:mm:ss";
+                        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
+
                         for(int i = 0; i < arr.length() ;i++){
                             JSONObject tripJSON = arr.getJSONObject(i);
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                             Trip trip = new Trip(tripJSON.getString("source_name"),
                                     tripJSON.getString("destination_name"),
-                                    format.parse(tripJSON.getString("start_time")),
-                                    format.parse(tripJSON.getString("arrival_time")),
+                                    inputFormat.parse(tripJSON.getString("start_time")),
+//                                    tripJSON.getString("start_time"),
+                                    inputFormat.parse(tripJSON.getString("arrival_time")),
+//                                    tripJSON.getString("arrival_time"),
                                     tripJSON.getDouble("distance"),
                                     tripJSON.getDouble("avg_driving"));
 
                             trips.add(trip);
                         }
                         Trip.addAllTrips(trips);
+                        Log.d("DATEE", trips.get(0).getStartDate().toString());
                     } else {
                         message.what = MessageResult.FAILED;
                     }
@@ -376,6 +384,105 @@ public class ThreadGenerator {
                         message.what = MessageResult.USERNAME_IS_NOT_UNIQUE;
                     } else if(editResponse.equalsIgnoreCase("this phone number has already exists.")) {
                         message.what = MessageResult.PHONE_IS_NOT_UNIQUE;
+                    } else {
+                        message.what = MessageResult.FAILED;
+                    }
+                    handler.sendMessage(message);
+
+                } catch (IOException e) {
+                    Log.e("internet","response time out");
+                    e.printStackTrace();
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                } catch (NullPointerException e){
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    public static Thread postDrivingDetails(String username, String token, JSONArray drivingJSONArr, Handler handler){
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = Requester.getInstance().RequestPostDrivingDetails(username, token, drivingJSONArr, drivingJSONArr.length());
+                try {
+                    String logoutResponse = response.body().string();
+                    Message message = new Message();
+                    if(logoutResponse.equalsIgnoreCase("successful")) {
+                        message.what = MessageResult.SUCCESSFUL;
+                    } else if(logoutResponse.equalsIgnoreCase("Authentication failed!!")) {
+                        message.what = MessageResult.AUTHENTICATION_FAILED;
+                    } else {
+                        message.what = MessageResult.FAILED;
+                    }
+                    handler.sendMessage(message);
+
+                } catch (IOException e) {
+                    Log.e("internet","response time out");
+                    e.printStackTrace();
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                } catch (NullPointerException e){
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    public static Thread postATripInformation(String username, String token,
+                                              String sourceName, double sourceLongitude, double sourceLatitude,
+                                              String destName, double destLongitude, double destLatitude,
+                                              double duration, String startTime, String endTime, double average, double distance
+                                            , Handler handler){
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // 2021-07-26 10:00:00
+//                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+//                String startDate;
+//                String endDate;
+//                //
+//                Date today = new Date();
+//                today.setHours(0);
+//                startDate = today.toString();
+//                endDate = today.toString();
+//
+//                String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+//                String outputPattern = "yyyy-MM-dd hh:mm:ss";
+//
+//                SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
+//                SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.ENGLISH);
+//                Date date = null;
+//                String str = null;
+//                try {
+//                    date = inputFormat.parse(startTime.toString());
+//                    startDate = outputFormat.format(date);
+//
+//                    date = inputFormat.parse(endTime.toString());
+//                    endDate = outputFormat.format(date);
+////                    startDate = format.parse(startTime.toString()).toString();
+////                    endDate = format.parse(endTime.toString()).toString();
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+                Response response = Requester.getInstance().RequestPostATrip(username, token,
+                        sourceName, sourceLongitude, sourceLatitude,
+                        destName, destLongitude, destLatitude,
+                        duration, startTime, endTime, average, distance);
+                try {
+                    String logoutResponse = response.body().string();
+                    Message message = new Message();
+                    if(logoutResponse.equalsIgnoreCase("successful")) {
+                        message.what = MessageResult.SUCCESSFUL;
+                    } else if(logoutResponse.equalsIgnoreCase("Authentication failed!!")) {
+                        message.what = MessageResult.AUTHENTICATION_FAILED;
                     } else {
                         message.what = MessageResult.FAILED;
                     }

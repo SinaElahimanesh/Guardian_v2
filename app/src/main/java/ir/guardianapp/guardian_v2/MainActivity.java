@@ -28,9 +28,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import com.onesignal.OneSignal;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import ir.guardianapp.guardian_v2.database.JSONManager;
 import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
 import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
 import ir.guardianapp.guardian_v2.models.User;
@@ -50,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     public static ExecutorService executorService;
     private Handler handler;
     public static String updateLink;
+    private boolean intentEnable = false;
+    private boolean checkDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +92,20 @@ public class MainActivity extends AppCompatActivity {
             handler = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
+                    checkDone = true;
                     if (msg.what == MessageResult.VERSION_IS_LESS_THAN_MINIMUM) {
                         GPSAndInternetChecker.showUpdateAlert(MainActivity.this, updateLink, height, width);
                     } else if (msg.what == MessageResult.LOGGED_OUT) {
                         //
                     } else if (msg.what == MessageResult.LOGGED_IN) {
                         isLoggedIn = true;
+                        MainActivity.setShowGuide(false);
                         User.getInstance().setToken(SharedPreferencesManager.getToken(MainActivity.this));
                     } else if (msg.what == MessageResult.FAILED) {
                         //
+                    }
+                    if(intentEnable) {
+                        startNextActivity();
                     }
                 }
             };
@@ -115,6 +127,13 @@ public class MainActivity extends AppCompatActivity {
                 retryButton.setVisibility(View.INVISIBLE);
             }
         });
+
+        // Driving JSON
+        try {
+            JSONManager.setDrivingJSONArray(JSONManager.readJSONArrFromJSONFile(this));
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void startApp() {
@@ -135,16 +154,27 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                if (isLoggedIn) {
-                    startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
-                } else {
-                    startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                intentEnable = true;
+                if(checkDone) {
+                    startNextActivity();
                 }
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
             }
 
         }.start();
+    }
+
+    private void startNextActivity() {
+        if (isLoggedIn) {
+            if(!SleepManagerActivity.isSleepDataRecordedToday(MainActivity.this) && SleepManagerActivity.isItTimeToRecord()){
+                startActivity(new Intent(MainActivity.this, SleepManagerActivity.class));
+            } else {
+                startActivity(new Intent(MainActivity.this, MainMenuActivity.class));
+            }
+        } else {
+            startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+        }
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
 

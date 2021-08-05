@@ -51,7 +51,8 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripViewHold
         holder.startTime.setText(String.valueOf(trip.getStartDate().getHours() + ":" + trip.getStartDate().getMinutes()));
         holder.endTime.setText(String.valueOf(trip.getEndDate().getHours() + ":" + trip.getEndDate().getMinutes()));
         holder.distance.setText(String.valueOf(trip.getDistanceInKM() + " km"));
-        holder.date.setText(String.valueOf(trip.getStartDate().getDay() + Month.getPersianMonth((new PersianCalender.SolarCalendar(trip.getStartDate()).month))));
+        holder.average.setText(String.valueOf(trip.getAverage() + "%"));
+        holder.date.setText(String.valueOf((new PersianCalender.SolarCalendar(trip.getStartDate()).date) + Month.getPersianMonth((new PersianCalender.SolarCalendar(trip.getStartDate()).month))));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +110,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripViewHold
         private TextView endTime;
         private TextView distance;
         private TextView date;
+        private TextView average;
 
         public TripViewHolder(@NonNull View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -120,6 +122,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripViewHold
             endTime = itemView.findViewById(R.id.end_time);
             distance = itemView.findViewById(R.id.distance);
             date = itemView.findViewById(R.id.trip_date);
+            average = itemView.findViewById(R.id.average);
         }
 
         @Override

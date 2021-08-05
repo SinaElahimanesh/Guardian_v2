@@ -76,6 +76,24 @@
     <string name="support_contact_title">راه های ارتباطی پیشتیبانی گاردین</string>
     <string name="support_contact_subtitle">اگر هرگونه مشکلی در استفاده از برنامه یا قابلیت های آن داشتید، می توانید با پشتیبانی گاردین در ارتباط باشید.</string>
 
+    <!-- MAIN_DRIVING Page -->
+    <string name="main_driving_first_box_text1">سرعت:</string>
+    <string name="main_driving_first_box_text2">km/h</string>
+    <string name="driving_second_box_text1">رانندگی بدون توقف:</string>
+    <string name="driving_third_box_text1">آب و هوا:</string>
+    <string name="driving_average_percent_title">درصد رانندگی سالم</string>
+
+    <!-- TRIP Page -->
+    <string name="trips_title">سفر ها</string>
+    <string name="trips_doesnt_have_any_trips">هنوز با گاردین سفری نرفته اید!</string>
+    <string name="trips_refresh_button">دریافت پنج سفر اخیر</string>
+
+    <!-- TRIP Item -->
+    <string name="item_trip_start_trip_title">ساعت شروع سفر</string>
+    <string name="item_trip_end_trip_title">ساعت پایان سفر</string>
+    <string name="item_trip_average_title">ایمنی رانندگی</string>
+    <string name="item_trip_distance_title">مسافت رانندگی</string>
+
     <!-- GPS Dialog -->
     <string name="gps_subtitle">برای استفاده از گاردین لطفا GPS تلفن همراه خود را روشن نمایید.</string>
     <string name="gps_button">موقعیت مکانی GPS</string>
@@ -103,15 +121,15 @@
     <string name="update_subtitle">نسخه ی برنامه ی شما به روز نیست. لطفا با کلیک روی دکمه ی زیر آن را به روزرسانی کنید!</string>
     <string name="update_button">به روزرسانی گاردین</string>
 
-
-
-
+    <!-- GUIDE MESSAGES -->
     <string name="showcase_restbutton">با استفاده از این دکمه می توانید نزدیک ترین مجتمع رفاهی یا پمپ بنزین به خود را در هر لحظه مشاهده کنید!</string>
+    <string name="showcase_parkingbutton">هنگامی که توقف می کنید کافیست این دکمه را فشار دهید تا گاردین محل پارک خودرویتان را به خاطر بسپارد و بتوانید به راحتی جای پارک کردنتان را بعدا با گاردین پیدا کنید!</string>
     <string name="showcase_alertmessagetext">این قسمت در هر لحظه به شما نشان می دهد که وضعیت رانندگی شما چگونه است و کمک می کند که سفری ایمن تر داشته باشید!
 و گاردین به صورت صوتی این موارد را به شما گزارش خواهد داد.</string>
     <string name="showcase_drivingbackground">در این قسمت 《درصد رانندگی سالم》 شما نشان داده می شود؛ که نشان می دهد در هر لحظه چقدر شرایط شما برای رانندگی مناسب است!</string>
     <string name="showcase_statistics">در هر لحظه میتوانید سرعت رانندگی خود، آب و هوای مسیر و اینکه چند دقیقه است که بدون توقف رانندگی می کنید را ملاحظه کنید.</string>
     <string name="showcase_menubutton">می توانید منوی برنامه را از این قسمت مشاهده کنید.</string>
-    <string name="trips_refresh_button">دریافت پنج سفر اخیر</string>
+    <string name="parking_subtitle">محل پارک خودرویتان ذخیره شد. بعدا با باز کردن اپلیکیشن می توانید محل پارکتان را پیدا کنید!</string>
+    <string name="parking_button">باشه!</string>
 
 </resources>

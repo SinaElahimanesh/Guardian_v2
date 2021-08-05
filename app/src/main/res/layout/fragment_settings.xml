@@ -148,7 +148,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.suke.widget.SwitchButton
-                            android:id="@+id/switch_button"
+                            android:id="@+id/defaultColorSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -163,7 +163,8 @@
                             android:layout_gravity="center"
                             android:fontFamily="@font/sadgan_medium"
                             android:paddingBottom="4dp"
-                            android:text="@string/settings_darkmode_title"
+                            android:text="رنگ پیش فرض نقشه"
+                            android:letterSpacing="0.25"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
@@ -187,7 +188,7 @@
                         tools:layout_editor_absoluteX="15dp">
 
                         <com.suke.widget.SwitchButton
-                            android:id="@+id/switch_button2"
+                            android:id="@+id/dayNightSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14dp"
@@ -204,7 +205,8 @@
                             android:layout_marginTop="14dp"
                             android:fontFamily="@font/sadgan_medium"
                             android:paddingBottom="4dp"
-                            android:text="@string/settings_danger_title"
+                            android:text="حالت روز/شب"
+                            android:letterSpacing="0.25"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
@@ -219,7 +221,7 @@
                             android:layout_marginTop="3dp"
                             android:fontFamily="@font/iran_sans"
                             android:paddingEnd="80dp"
-                            android:text="@string/settings_danger_subtitle"
+                            android:text="در صورت فعال کردن این قسمت می توانید حالت نقشه را روی حالت روز و در غیر این صورت روی حالت شب قرار دهید."
                             android:textColor="@color/grey"
                             android:textSize="11sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -299,7 +301,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
-                android:id="@+id/saveButton"
+                android:id="@+id/locationConfirmButton"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
                 android:layout_gravity="center_horizontal"

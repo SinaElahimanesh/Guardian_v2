@@ -7,42 +7,386 @@
     android:background="@color/white"
     tools:context=".HomeFragment">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/gifImageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="0.53"
-        android:alpha="0.68"
-        android:src="@drawable/main_tip"/>
-
-    <TextView
-        android:textColor="#99000000"
-        android:id="@+id/tipText"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="110dp"
-        android:fontFamily="@font/iran_sans"
-        android:paddingLeft="44dp"
-        android:paddingRight="44dp"
-        android:text="گاردین تا ۳۰ درصد به سلامت رانندگی شما کمک می کند!"
-        android:textAlignment="center"
-        android:textSize="13.5sp"
-        app:layout_constraintTop_toBottomOf="@+id/gifImageView" />
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/selectMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="28dp"
+            android:background="@drawable/edit_text_background"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/cancelButton"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/ic_cancel_icon" />
+
+            <EditText
+                android:id="@+id/searchText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="left"
+                android:fontFamily="@font/iran_sans"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="48dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="لطفا مبدأ سفر را انتخاب کنید."
+                android:paddingLeft="7dp"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/speakButton"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:src="@drawable/mic_icon" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:text="مبدأ"
+            android:id="@+id/locationTag"
+            android:fontFamily="@font/iran_sans"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:background="@color/appTheme5Color"
+            android:textColor="@color/black"
+            android:src="@drawable/ic_location_source"
+            app:layout_constraintBottom_toTopOf="@+id/confirm_address_map_custom_marker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/confirm_address_map_custom_marker"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_location_source"
+            app:layout_constraintBottom_toTopOf="@+id/locationConfirmButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintVertical_bias="0.393" />
+
+        <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
+            android:id="@+id/buttonGroup"
+            android:layout_width="180dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/white"
+            android:elevation="1.5dp"
+            app:borderColor="@color/appThemeColor"
+            app:borderWidth="1dp"
+            app:divider="@color/grey_active"
+            app:dividerPadding="10dp"
+            app:dividerWidth="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/routingInfoLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:position="1"
+            app:radius="30dp"
+            app:ripple="true"
+            app:rippleColor="@color/appThemeColor"
+            app:selectedBackground="@color/appThemeColor">
+
+            <com.addisonelliott.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                app:drawableGravity="top"
+                app:selectedTextColor="@color/black"
+                app:text="نقشه"
+                app:textColor="@color/black" />
+
+            <com.addisonelliott.segmentedbutton.SegmentedButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                app:drawableGravity="top"
+                app:selectedTextColor="@color/black"
+                app:text="مسیریابی"
+                app:textColor="@color/black" />
 
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_gravity="bottom"
-        android:background="@color/mapboxBlue"
-        android:fontFamily="@font/iran_sans"
-        android:text="شروع سفر"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+        </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
+
+
+        <FrameLayout
+            android:id="@+id/routingInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:visibility="invisible"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:alpha="0.95"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/instruction_background"
+            app:layout_constraintBottom_toTopOf="@+id/locationConfirmButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:text="مسافت"
+                        android:textColor="#ffffff"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/sadgan_medium"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout10"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:alpha="0.9"
+                        android:background="@drawable/gas_station_circle_background"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+
+                        <ImageView
+                            android:id="@+id/distanceImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/ic_trip_distance" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/distanceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="10 Km"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/iran_sans"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/linearLayout13"
+                    app:layout_constraintStart_toStartOf="@+id/linearLayout13"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
+
+
+                <LinearLayout
+                    android:id="@+id/linearLayout14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout13"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout15"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:text="زمان سفر"
+                        android:textColor="#ffffff"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/sadgan_medium"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout11"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:alpha="0.9"
+                        android:background="@drawable/gas_station_circle_background"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+
+                        <ImageView
+                            android:id="@+id/durationImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/ic_trip_duration" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/durationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="25 min"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/iran_sans"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/linearLayout14"
+                    app:layout_constraintStart_toStartOf="@+id/linearLayout14"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
+
+
+
+                <LinearLayout
+                    android:id="@+id/linearLayout15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:text="ساعت رسیدن"
+                        android:textColor="#ffffff"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/sadgan_medium"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout3"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:alpha="0.9"
+                        android:background="@drawable/gas_station_circle_background"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+
+                        <ImageView
+                            android:id="@+id/timeImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="8dp"
+                            android:background="@drawable/ic_trip_time" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/arrivalTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="23:15"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/iran_sans"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/linearLayout15"
+                    app:layout_constraintStart_toStartOf="@+id/linearLayout15"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/locationConfirmButton"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_gravity="center_horizontal"
+            android:alpha="0.92"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/iran_sans"
+            android:gravity="center"
+            android:text="تایید مبدأ"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

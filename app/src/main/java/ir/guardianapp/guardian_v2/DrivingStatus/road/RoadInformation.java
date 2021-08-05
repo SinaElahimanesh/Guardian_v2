@@ -75,6 +75,9 @@ public class RoadInformation extends AppCompatActivity {
 
     public int GetLanes(String xml) {
         int lanesResult = 0;
+        if(xml == null) {
+            return 2;
+        }
         String[] lines = xml.split(System.getProperty("line.separator"));
         for(counter = 0; counter < lines.length; counter++) {
             if(lines[counter].contains("lanes")) {
@@ -91,6 +94,9 @@ public class RoadInformation extends AppCompatActivity {
 
     public RoadType RoadType(String xml) {
         RoadType tagResult = RoadType.road;
+        if(xml == null) {
+            return RoadType.road;
+        }
         String[] lines = xml.split(System.getProperty("line.separator"));
         for(counter = 0; counter < lines.length; counter++) {
             if(lines[counter].contains("highway")) {
@@ -127,6 +133,9 @@ public class RoadInformation extends AppCompatActivity {
     }
 
     public boolean IsOneway(String xml) {
+        if(xml == null) {
+            return false;
+        }
         String[] lines = xml.split(System.getProperty("line.separator"));
         for(counter = 0; counter < lines.length; counter++) {
             if(lines[counter].contains("oneway")) {

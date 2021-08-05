@@ -7,16 +7,9 @@
     android:background="@color/white"
     tools:context=".TripsFragment">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layoutDirection="ltr"
-        android:fillViewport="true"
-        tools:context=".MyDrive">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
@@ -32,7 +25,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginRight="14dp"
+                    android:layout_marginEnd="14dp"
                     android:alpha="1"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/iran_sans"
@@ -50,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/iran_sans"
-                    android:text="سفر ها"
+                    android:text="@string/trips_title"
                     android:textColor="#ffffff"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -64,7 +57,7 @@
                     android:layout_height="30dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="14dp"
-                    android:background="@drawable/ic_settings_menu"
+                    android:background="@drawable/ic_trip_menu"
                     android:padding="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +89,7 @@
                     android:orientation="horizontal"
                     android:overScrollMode="ifContentScrolls"
                     android:paddingLeft="4dp"
-                    android:paddingTop="11.5dp"
+                    android:paddingTop="6dp"
                     android:paddingRight="4dp"
                     android:paddingBottom="50dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -114,7 +107,7 @@
                     android:fontFamily="@font/sadgan_medium"
                     android:letterSpacing="0.15"
                     android:paddingBottom="100dp"
-                    android:text="هنوز با گاردین سفری نرفته اید!"
+                    android:text="@string/trips_doesnt_have_any_trips"
                     android:textColor="@color/blue_active"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -155,7 +148,5 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </ScrollView>
 
 </FrameLayout>

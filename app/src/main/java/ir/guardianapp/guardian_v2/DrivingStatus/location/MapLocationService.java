@@ -18,9 +18,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import ir.guardianapp.guardian_v2.DrivingPercentage.StatusCalculator;
-import ir.guardianapp.guardian_v2.MainDrivingActivity;
+import ir.guardianapp.guardian_v2.MainMapActivity;
 
-public class LocationService extends Service implements
+public class MapLocationService extends Service implements
         LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -111,7 +111,7 @@ public class LocationService extends Service implements
 
     @Override
     public void onLocationChanged(Location location) {
-        MainDrivingActivity.locate.dismiss();
+        MainMapActivity.locate.dismiss();
         mCurrentLocation = location;
         if (lStart == null) {
             lStart = mCurrentLocation;
@@ -133,8 +133,8 @@ public class LocationService extends Service implements
 
     public class LocalBinder extends Binder {
 
-        public LocationService getService() {
-            return LocationService.this;
+        public MapLocationService getService() {
+            return MapLocationService.this;
         }
 
 
@@ -142,12 +142,12 @@ public class LocationService extends Service implements
 
     //The live feed of Distance and Speed are being set in the method below .
     private double updateUI() {
-        if (MainDrivingActivity.p == 0) {
-            MainDrivingActivity.locate.dismiss();
+        if (MainMapActivity.p == 0) {
+            MainMapActivity.locate.dismiss();
             distance = distance + (lStart.distanceTo(lEnd) / 1000.00);
-            MainDrivingActivity.endTime = System.currentTimeMillis();
-            endingTime = TimeUnit.MILLISECONDS.toMinutes(MainDrivingActivity.endTime);
-            long diff = MainDrivingActivity.endTime - MainDrivingActivity.startTime;
+            MainMapActivity.endTime = System.currentTimeMillis();
+            endingTime = TimeUnit.MILLISECONDS.toMinutes(MainMapActivity.endTime);
+            long diff = MainMapActivity.endTime - MainMapActivity.startTime;
             diff = TimeUnit.MILLISECONDS.toMinutes(diff);
             //Log.d("time", "Total Time: " + diff + " minutes");
             StatusCalculator.totalDrive = diff - totalRest;
@@ -157,16 +157,16 @@ public class LocationService extends Service implements
             }
             nonStopDrivingShow = endingTime - firstSpeedStart;
             Log.d("non stop driving", String.valueOf(nonStopDrivingShow));
-            MainDrivingActivity.driveText.setText(String.valueOf(nonStopDrivingShow));
+            MainMapActivity.driveText.setText(String.valueOf(nonStopDrivingShow));
             StatusCalculator.nonStop = nonStopDrivingShow;
             if (speed >= 0.0) {
                 Log.d("speed", "Current speed: " + new DecimalFormat("#.##").format(speed) + " km/hr");
 //                StatusCalculator.staticUserSpeed = speed;
                 statusCalculator.singleSpeedCall(speed);
                 if(speed >= 4.5) {
-                    MainDrivingActivity.speedText.setText(new DecimalFormat("#.#").format(speed));
+                    MainMapActivity.speedText.setText(new DecimalFormat("#.#").format(speed));
                 } else {
-                    MainDrivingActivity.speedText.setText("0");
+                    MainMapActivity.speedText.setText("0");
                 }
 
 
@@ -220,14 +220,14 @@ public class LocationService extends Service implements
 
             } else {
                 Log.d("speed", ".......");
-                MainDrivingActivity.speedText.setText("...");
+                MainMapActivity.speedText.setText("...");
             }
             Log.d("distination", new DecimalFormat("#.###").format(distance) + " Km's.");
 
             lStart = lEnd;
 
             speedArray.add(counter , speed);
-            timeSaving.add(counter, MainDrivingActivity.endTime);
+            timeSaving.add(counter, MainMapActivity.endTime);
             MeasureAcceleration(speedArray, timeSaving);
 
             if (firstArray) {

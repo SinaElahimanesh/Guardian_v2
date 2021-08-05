@@ -1,15 +1,19 @@
 package ir.guardianapp.guardian_v2.network;
 
+import org.json.JSONArray;
+
 import java.io.IOException;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Requester {
 
     private static Requester requester;
-    private final static String URI_PREFIX = "http://185.239.107.187/";
+    private final static String URI_PREFIX = "https://guardianapp-api.ir/";
 
     private Requester(){}
 
@@ -107,6 +111,42 @@ public class Requester {
         OkHttpClient okHttpClient = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "editProfile/" + oldUsername + "/" + oldPassword +"/"
                 + oldPhoneNum +"/" + token + "/" + newUsername + "/" + newPassword + "/" + newPhoneNum)
+                .newBuilder();
+        String url = urlBuilder.build().toString();
+        final Request request = new Request.Builder().url(url).build();
+        try {
+            return okHttpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Response RequestPostDrivingDetails(String username, String token, JSONArray drivingJSONArr, int numberOfItems){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, String.valueOf(drivingJSONArr));
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "driverMultiInfoInsertion/" + username + "/" + token + "/" + numberOfItems)
+                .newBuilder();
+        String url = urlBuilder.build().toString();
+        final Request request = new Request.Builder().url(url).post(body).build();
+        try {
+            return okHttpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Response RequestPostATrip(String username, String token,
+                                     String sourceName, double sourceLongitude, double sourceLatitude,
+                                     String destName, double destLongitude, double destLatitude,
+                                     double duration, String startTime, String endTime, double average, double distance){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "PostTripInformation/" + username + "/" + token
+                + "/" + sourceName + "/" + sourceLongitude + "/" + sourceLatitude
+                + "/" + destName + "/" + destLongitude + "/" + destLatitude
+                + "/" + duration + "/" + startTime + "/" + endTime + "/" + average + "/" + distance)
                 .newBuilder();
         String url = urlBuilder.build().toString();
         final Request request = new Request.Builder().url(url).build();

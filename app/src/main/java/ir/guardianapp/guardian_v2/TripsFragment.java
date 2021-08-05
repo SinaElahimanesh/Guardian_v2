@@ -121,18 +121,18 @@ public class TripsFragment extends Fragment {
                 }
             }
         };
-        if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
-            if(canUpdate && requestLimit!=0) {
-                canUpdate = false;
-                requestLimit--;
-                progressBar.setVisibility(View.VISIBLE);
-                User user = User.getInstance();
-                MainActivity.executorService.submit(ThreadGenerator.getRecentTrips(user.getUsername(), user.getToken(), numberOfTrips, handler));
-            } else if(requestLimit == 0) {
-                Toast.makeText(getContext(), "لطفا بعدا تلاش کنید!", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
-        }
+//        if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
+//            if(canUpdate && requestLimit!=0) {
+//                canUpdate = false;
+//                requestLimit--;
+//                progressBar.setVisibility(View.VISIBLE);
+//                User user = User.getInstance();
+//                MainActivity.executorService.submit(ThreadGenerator.getRecentTrips(user.getUsername(), user.getToken(), numberOfTrips, handler));
+//            } else if(requestLimit == 0) {
+//                Toast.makeText(getContext(), "لطفا بعدا تلاش کنید!", Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+//        }
     }
 }

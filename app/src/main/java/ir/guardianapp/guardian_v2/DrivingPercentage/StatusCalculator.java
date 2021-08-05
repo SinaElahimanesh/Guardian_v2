@@ -2,7 +2,11 @@ package ir.guardianapp.guardian_v2.DrivingPercentage;
 
 import android.content.Context;
 import android.util.Log;
+
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +20,7 @@ import ir.guardianapp.guardian_v2.DrivingStatus.time.Time;
 import ir.guardianapp.guardian_v2.DrivingStatus.weather.Weather;
 import ir.guardianapp.guardian_v2.SleepManagerActivity;
 import ir.guardianapp.guardian_v2.SleepSpeedManager.SleepData;
+import ir.guardianapp.guardian_v2.database.JSONManager;
 
 public class StatusCalculator {
 
@@ -74,7 +79,7 @@ public class StatusCalculator {
         Date now = Calendar.getInstance().getTime();
         if(sleepData == null) {
             Log.d("sleepdata", "NULL --> handled!");
-            minutes = 360;
+            minutes = 420;
             awakeMin = 100;
             staticUserSleep = minutes;
             staticUserAwake = awakeMin;
@@ -850,10 +855,14 @@ public class StatusCalculator {
     private double rest_factor = 0;
     private double rest_factor_copy = 0;
 
-    public double calculatePercentageAlgorithm() {
+    public double staticAverageLatitude;
+    public double staticAverageLongitude;
 
-        Log.d("vib", "" + vibration);
-        //Morteza for location
+    private double averageLatitude;
+    private double averageLongitude;
+
+    public double calculatePercentageAlgorithm() {
+        // location
         GPSTracker gps = new GPSTracker(context.getApplicationContext());
         if(gps.canGetLocation()) {
             latitude = gps.getLatitude();
@@ -864,22 +873,18 @@ public class StatusCalculator {
         else {
             gps.ShowGPSAlertDialog();
         }
-        //end Morteza for location
+        //
 
-        //Morteza calling roadInformation class
+        // roadInformation
         RoadInformation roadInformation = new RoadInformation();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String xml = roadInformation.getXmlFromUrl(latitude, latitude + 0.0002, longtitude, longtitude + 0.0002);
-                speedLimit = roadInformation.GetSpeedLimit(xml);
-                lanes = roadInformation.GetLanes(xml);
-                oneway = roadInformation.IsOneway(xml);
-                highwayType = roadInformation.RoadType(xml);
-            }
-        });
-        thread.start();
-        //Morteza calling roadInformation class
+        new Thread(() -> {
+            String xml = roadInformation.getXmlFromUrl(latitude, latitude + 0.0002, longtitude, longtitude + 0.0002);
+            speedLimit = roadInformation.GetSpeedLimit(xml);
+            lanes = roadInformation.GetLanes(xml);
+            oneway = roadInformation.IsOneway(xml);
+            highwayType = roadInformation.RoadType(xml);
+        }).start();
+        //
 
         setWeather_factor();
         double sleep_factor = sleepCalculator(staticUserSleep, staticUserAwake) * 3;
@@ -979,6 +984,11 @@ public class StatusCalculator {
             average = 100;
         }
 
+        if(cycle == 5) {
+            averageLatitude = staticAverageLatitude;
+            averageLongitude = staticAverageLongitude;
+        }
+
         if(cycle == 10) {
             double sleep_save = calculateAverage(sleep_data);
             double speed_save = calculateAverage(speed_data);
@@ -993,12 +1003,14 @@ public class StatusCalculator {
             double roadType_save = calculateAverage(roadType_data);
 
             // Should save data
-//            DataSender sender = new DataSender();
-//            sender.execute(
-//                    SignIn.getToken(),Double.toString(sleep_save),Double.toString(time_save),Double.toString(speed_save)
-//                    ,Double.toString(withoutStop_save),Double.toString(roadType_save),Double.toString(traffic_save),Double.toString(weather_save),Double.toString(nearCities_save)
-//                    ,Double.toString(vibration_save),Double.toString(acceleration_save),Double.toString(month_save),Double.toString(average)
-//            );
+            try {
+                JSONManager.addJSONObject2JSONArray(JSONManager.createDrivingJSONObject(sleep_save,
+                        time_save, speed_save, withoutStop_save, roadType_save, traffic_save, weather_save,
+                        nearCities_save, vibration_save, acceleration_save, month_save,
+                        average, new Date(), averageLongitude, averageLatitude));
+            } catch (JSONException | ParseException e) {
+                e.printStackTrace();
+            }
 
             sleep_data.clear();
             speed_data.clear();

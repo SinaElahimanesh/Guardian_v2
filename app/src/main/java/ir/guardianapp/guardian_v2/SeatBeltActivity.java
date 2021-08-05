@@ -17,6 +17,7 @@ import android.widget.TextView;
 public class SeatBeltActivity extends AppCompatActivity {
 
     private static final int TIME_OUT = 3000;
+    public static boolean navigationMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,12 @@ public class SeatBeltActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                Intent i = new Intent(SeatBeltActivity.this, MainDrivingActivity.class);
+                Intent i;
+                if(navigationMode) {
+                    i = new Intent(SeatBeltActivity.this, MainNavigationActivity.class);
+                } else {
+                    i = new Intent(SeatBeltActivity.this, MainMapActivity.class);
+                }
                 startActivity(i);
                 finish();
             }

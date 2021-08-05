@@ -16,10 +16,10 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Speedometer extends AppCompatActivity {
+public class NavigationSpeedometer extends AppCompatActivity {
 
 
-    LocationService myService;
+    NavigationLocationService myService;
     static boolean status;
     LocationManager locationManager;
     static long startTime, endTime;
@@ -29,7 +29,7 @@ public class Speedometer extends AppCompatActivity {
     private ServiceConnection sc = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LocationService.LocalBinder binder = (LocationService.LocalBinder) service;
+            NavigationLocationService.LocalBinder binder = (NavigationLocationService.LocalBinder) service;
             myService = binder.getService();
             status = true;
         }
@@ -43,7 +43,7 @@ public class Speedometer extends AppCompatActivity {
     void bindService() {
         if (status == true)
             return;
-        Intent i = new Intent(getApplicationContext(), LocationService.class);
+        Intent i = new Intent(getApplicationContext(), NavigationLocationService.class);
         bindService(i, sc, BIND_AUTO_CREATE);
         status = true;
         startTime = System.currentTimeMillis();
@@ -52,7 +52,7 @@ public class Speedometer extends AppCompatActivity {
     void unbindService() {
         if (status == false)
             return;
-        Intent i = new Intent(getApplicationContext(), LocationService.class);
+        Intent i = new Intent(getApplicationContext(), NavigationLocationService.class);
         unbindService(sc);
         status = false;
     }
@@ -108,7 +108,7 @@ public class Speedometer extends AppCompatActivity {
         if (status == false)
             //Here, the Location Service gets bound and the GPS Speedometer gets Active.
             bindService();
-        locate = new ProgressDialog(Speedometer.this);
+        locate = new ProgressDialog(NavigationSpeedometer.this);
         locate.setIndeterminate(true);
         locate.setCancelable(false);
         locate.setMessage("Getting Location...");
