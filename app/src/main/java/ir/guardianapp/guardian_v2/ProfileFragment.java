@@ -2,7 +2,6 @@ package ir.guardianapp.guardian_v2;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,14 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import ir.guardianapp.guardian_v2.database.ImageSavingManager;
 import ir.guardianapp.guardian_v2.extras.Network;
@@ -214,7 +209,7 @@ public class ProfileFragment extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            de.hdodenhof.circleimageview.CircleImageView imageView = getView().findViewById(R.id.imageView);
+            de.hdodenhof.circleimageview.CircleImageView imageView = getView().findViewById(R.id.overviewButton);
             try (ParcelFileDescriptor pfd = getActivity().getContentResolver().openFileDescriptor(selectedImage, "r")) {
                 if (pfd != null) {
                     imageView.setImageBitmap(BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor()));
@@ -231,6 +226,6 @@ public class ProfileFragment extends Fragment {
         username.setHint(user.getUsername());
         password.setHint(user.getPassword());
         phone.setHint(user.getPhoneNum());
-        ImageSavingManager.loadImageFromStorage(getView().findViewById(R.id.imageView), getContext());
+        ImageSavingManager.loadImageFromStorage(getView().findViewById(R.id.overviewButton), getContext());
     }
 }

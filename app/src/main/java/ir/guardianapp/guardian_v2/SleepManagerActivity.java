@@ -70,23 +70,8 @@ public class SleepManagerActivity extends AppCompatActivity {
     }
 
     public String getTotalSleepTime(Date wakeUpDate, Date sleepDate) {
-        int minutes;
-//        if (wakeUpDate.getDay() == sleepDate.getDay()) {
-//            minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() - sleepDate.getHours() * 60 - sleepDate.getMinutes();
-//        } else {
-//            minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() + 24 * 60 - sleepDate.getHours() * 60 - sleepDate.getMinutes();
-//        }
-//        if(minutes<0) minutes=minutes*-1;
-//        if(minutes%60 == 0) {
-//            return minutes / 60 + " ساعت ";
-//        }
-        if (wakeUpDate.getDay() == sleepDate.getDay()) {
-            minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() - sleepDate.getHours() * 60 - sleepDate.getMinutes();
-        } else {
-            minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() + 24 * 60 - sleepDate.getHours() * 60 - sleepDate.getMinutes();
-        }
+        int minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() - sleepDate.getHours() * 60 - sleepDate.getMinutes();
         if(minutes<0) minutes=minutes*-1;
-
         return minutes / 60 + " ساعت و " + minutes % 60 + " دقیقه ";
     }
 

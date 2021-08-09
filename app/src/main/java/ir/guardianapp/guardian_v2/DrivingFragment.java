@@ -94,7 +94,7 @@ public class DrivingFragment extends Fragment {
             requestUpdateData();
         });
 
-        ImageSavingManager.loadImageFromStorage(view.findViewById(R.id.imageView), getContext());
+        ImageSavingManager.loadImageFromStorage(view.findViewById(R.id.overviewButton), getContext());
         return view;
     }
 

@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import ir.guardianapp.guardian_v2.OSRM.OSRMParser;
 import ir.guardianapp.guardian_v2.R;
 import ir.guardianapp.guardian_v2.extras.AnimationHandler;
 import ir.guardianapp.guardian_v2.map.RoutingInformation;
@@ -128,7 +129,6 @@ public class MapThreadGenerator {
                             routingInformationBox.setVisibility(View.VISIBLE);
                             AnimationHandler.slideUp(routingInformationBox);
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
                         }
                     });
 
@@ -170,11 +170,73 @@ public class MapThreadGenerator {
                     thisTripData.setAverage(100);
                     thisTripData.setEnable(true);
 
+//                    OSRMParser.setJSONString(routeString);
+//                    System.out.println(routeString);
                     Message message = new Message();
                     message.what = MessageResult.SUCCESSFUL;
                     handler.sendMessage(message);
 
                 } catch (JSONException | IOException e) {
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public static Thread getBestRoute2(double source_latitude, double source_longitude, double dest_latitude, double dest_longitude, Handler handler){
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = MapRequester.getInstance().RequestBestRoute2(source_latitude, source_longitude, dest_latitude, dest_longitude);
+                try {
+                    if(response==null) {
+                        Message message = new Message();
+                        message.what = MessageResult.FAILED;
+                        handler.sendMessage(message);
+                        return;
+                    }
+                    routeString = response.body().string();
+
+                    OSRMParser.setJSONString(routeString);
+                    System.out.println(routeString);
+                    Message message = new Message();
+                    message.what = MessageResult.SUCCESSFUL;
+                    handler.sendMessage(message);
+
+                } catch (IOException e) {
+                    Message message = new Message();
+                    message.what = MessageResult.FAILED;
+                    handler.sendMessage(message);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public static Thread getBestTreePointsRoute(double source_latitude, double source_longitude, double mid_latitude, double mid_longitude, double dest_latitude, double dest_longitude, Handler handler){
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = MapRequester.getInstance().RequestBestThreePointsRoute(source_latitude, source_longitude, mid_latitude, mid_longitude, dest_latitude, dest_longitude);
+                try {
+                    if(response==null) {
+                        Message message = new Message();
+                        message.what = MessageResult.FAILED;
+                        handler.sendMessage(message);
+                        return;
+                    }
+                    routeString = response.body().string();
+
+                    OSRMParser.setJSONString(routeString);
+                    System.out.println(routeString);
+                    Message message = new Message();
+                    message.what = MessageResult.SUCCESSFUL;
+                    handler.sendMessage(message);
+
+                } catch (IOException e) {
                     Message message = new Message();
                     message.what = MessageResult.FAILED;
                     handler.sendMessage(message);

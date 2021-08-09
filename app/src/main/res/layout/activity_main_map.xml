@@ -298,10 +298,21 @@
                             android:text="@string/driving_average_percent_title"
                             android:textColor="#191919"
                             android:textStyle="bold"
-                            android:layout_gravity="center"
-                            android:textSize="16sp"
+                            android:layout_gravity="left|center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:textSize="15.5sp"
                             android:fontFamily="@font/iran_sans"
                             android:alpha="1" />
+
+
+                        <ImageButton
+                            android:id="@+id/moreButton"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="right|bottom"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/ic_arrow_up" />
 
                     </FrameLayout>
 

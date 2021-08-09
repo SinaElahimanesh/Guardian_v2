@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     tools:context=".MainNavigationActivity"
     android:layoutDirection="ltr"
     android:background="@color/white"
@@ -14,7 +15,9 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layoutDirection="ltr" />
+        android:layoutDirection="ltr"
+        map:cameraTilt="40"
+        map:uiRotateGestures="true"/>
 
 
     <RelativeLayout
@@ -71,7 +74,7 @@
                                 android:fontFamily="@font/iran_sans"
                                 android:gravity="center_horizontal"
                                 android:paddingStart="17dp"
-                                android:text="105"
+                                android:text="0"
                                 android:textAlignment="textStart"
                                 tools:ignore="RtlCompat"
                                 android:textColor="#000000"
@@ -130,7 +133,7 @@
                                 android:alpha="0.94"
                                 android:fontFamily="@font/iran_sans"
                                 android:paddingLeft="4dp"
-                                android:text="2:34"
+                                android:text="0"
                                 android:textColor="#000000"
                                 android:textSize="13sp" />
 
@@ -287,6 +290,7 @@
                         android:layout_gravity="right|center_vertical">
 
                         <TextView
+                            android:id="@+id/stepDistanceTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="بعد از ۲۰۰ متر به چپ بپیچید"
@@ -297,7 +301,7 @@
                             android:textColor="@color/white"/>
 
                         <ImageView
-                            android:id="@+id/imageView3"
+                            android:id="@+id/turnImageView"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_gravity="center"
@@ -328,26 +332,34 @@
                             android:paddingRight="0dp">
 
                             <TextView
+                                android:id="@+id/stepNamee"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="خیابان آزادی"
                                 android:textColor="#191919"
                                 android:textStyle="bold"
                                 android:layout_marginRight="3dp"
-                                android:textSize="16sp"
+                                android:textSize="15.5sp"
                                 android:fontFamily="@font/iran_sans"
                                 android:alpha="1" />
 
-                            <ImageView
-                                android:id="@+id/imageView4"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_road_straight_line_top_view" />
+<!--                            <ImageView-->
+<!--                                android:id="@+id/imageView4"-->
+<!--                                android:layout_width="20dp"-->
+<!--                                android:layout_height="20dp"-->
+<!--                                android:layout_gravity="center"-->
+<!--                                android:src="@drawable/ic_road_straight_line_top_view" />-->
 
                         </LinearLayout>
 
-
+                        <ImageButton
+                            android:id="@+id/moreButton"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="right|bottom"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/ic_arrow_up" />
 
                     </FrameLayout>
 
@@ -512,45 +524,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="45dp"
-                    android:layout_height="60dp"
+                <ImageButton
+                    android:id="@+id/overviewButton"
+                    android:layout_width="25dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="start"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="16dp"
                     android:paddingTop="17dp"
                     android:paddingBottom="17dp"
-                    android:src="@drawable/ic_front_car"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/ic_map_overview"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/remainingTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10"
+                    android:text="30"
+                    android:layout_marginLeft="10dp"
                     android:textColor="#ffffff"
-                    android:textSize="22sp"
+                    android:textSize="19.5sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/overviewButton"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/remainingTimeTextView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="5dp"
                     android:text="min"
                     android:textColor="#ffffff"
                     android:textSize="16sp"
+                    android:layout_marginTop="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView"
+                    app:layout_constraintStart_toEndOf="@+id/remainingTimeTextView"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/arrivalTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -559,18 +574,18 @@
                     android:textColor="#ffffff"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textView4"
-                    app:layout_constraintStart_toEndOf="@+id/textView2"
+                    app:layout_constraintEnd_toStartOf="@+id/remainingDistanceTextView"
+                    app:layout_constraintStart_toEndOf="@+id/remainingTimeTextView2"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/remainingDistanceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:text="64"
                     android:textColor="#ffffff"
-                    android:textSize="22sp"
+                    android:textSize="21sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView3"
@@ -606,6 +621,7 @@
                         android:src="@drawable/arrow_circle_background" />
 
                     <ImageView
+                        android:id="@+id/showCurrentLocationImageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"

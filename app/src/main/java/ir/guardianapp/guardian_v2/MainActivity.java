@@ -79,8 +79,11 @@ public class MainActivity extends AppCompatActivity {
 
         // sharedPreferences
         SharedPreferencesManager.initializeSharedPreferences(this);
-        String token = SharedPreferencesManager.getToken(this);
-        Log.d("TOKEN", token);
+        String token  = "";
+        if(SharedPreferencesManager.hasToken(this)) {
+            token = SharedPreferencesManager.getToken(this);
+        }
+
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
             version = pInfo.versionName;
@@ -110,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             executorService.submit(ThreadGenerator.userCredentials(token, version, handler));
+        } else {
+            isLoggedIn = false;
+            checkDone = true;
         }
 
         // Enable verbose OneSignal logging to debug issues if needed.

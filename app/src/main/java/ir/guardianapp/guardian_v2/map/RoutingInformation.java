@@ -53,6 +53,46 @@ public class RoutingInformation {
         }
     }
 
+    public String calculateHourDuration(double duration){
+        int day = 0;
+        int durationInMin = (int)(duration/60);
+        if(durationInMin >= 1440) {
+            day += (int)(durationInMin/1440);
+            durationInMin = (durationInMin%1440);
+        }
+
+        int hourPlus = (int) (durationInMin/60);
+        int minPlus = (int) (durationInMin%60);
+
+        String hourStr = String.valueOf(hourPlus);
+        String minStr = String.valueOf(minPlus);
+
+        if(day == 0){
+            return (hourStr + "hr");
+        }
+        return "";
+    }
+
+    public String calculateMinutesDuration(double duration){
+        int day = 0;
+        int durationInMin = (int)(duration/60);
+        if(durationInMin >= 1440) {
+            day += (int)(durationInMin/1440);
+            durationInMin = (durationInMin%1440);
+        }
+
+        int hourPlus = (int) (durationInMin/60);
+        int minPlus = (int) (durationInMin%60);
+
+        String hourStr = String.valueOf(hourPlus);
+        String minStr = String.valueOf(minPlus);
+
+        if(day == 0){
+            return (minStr + "min");
+        }
+        return "";
+    }
+
     public String calculateArrivalTime(double duration){
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.getTime().getHours();

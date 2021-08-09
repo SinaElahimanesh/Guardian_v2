@@ -19,6 +19,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -37,8 +38,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.speech.RecognizerIntent;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -58,13 +61,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -74,14 +80,24 @@ import ir.guardianapp.guardian_v2.DrivingStatus.ShakeSituation;
 import ir.guardianapp.guardian_v2.DrivingStatus.location.GPSTracker;
 import ir.guardianapp.guardian_v2.DrivingStatus.location.NavigationLocationService;
 import ir.guardianapp.guardian_v2.DrivingStatus.weather.Weather;
+import ir.guardianapp.guardian_v2.OSRM.Line;
+import ir.guardianapp.guardian_v2.OSRM.OSRMParseFinished;
+import ir.guardianapp.guardian_v2.OSRM.OSRMParser;
+import ir.guardianapp.guardian_v2.OSRM.RoutingHelper;
+import ir.guardianapp.guardian_v2.OSRM.Step;
 import ir.guardianapp.guardian_v2.database.JSONManager;
 import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
 import ir.guardianapp.guardian_v2.extras.BitmapHelper;
+import ir.guardianapp.guardian_v2.extras.BoxAnimationState;
 import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
 import ir.guardianapp.guardian_v2.extras.GuideManager;
 import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.extras.NumberHandler;
+import ir.guardianapp.guardian_v2.extras.TipHandler;
+import ir.guardianapp.guardian_v2.map.RoutingInformation;
+import ir.guardianapp.guardian_v2.models.ThisTripData;
 import ir.guardianapp.guardian_v2.models.User;
+import ir.guardianapp.guardian_v2.network.MapThreadGenerator;
 import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
 
@@ -128,9 +144,14 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     public static TextView speedText;
     public static TextView driveText;
     private ImageButton parkingButton;
+    private ImageButton overviewButton;
+    private ImageButton moreButton;
 
     // Permission
     private final int REQ_CODE = 100;
+
+    // gas station
+    private AlertDialog alertDialog;
 
     // onCreate VARS
     private Handler algorithmCallerHandler;
@@ -138,14 +159,18 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     private boolean isPaused = false;
     private static boolean firstTime = true;
 
+    // routing OSRM Vars
+    private boolean isMapReady = false;
+    private LatLng reroutePivot; // TODO: Get this from the user
+    TextView stepName, stepDistanceTextView, remainingTimeTextView, remainingTimeTextView2, remainingDistanceTextView, arrivalTimeTextView;
+    ImageView showCurrentLocationImageView, rerouteImageView, turnImageView;
+    private volatile LatLng lastKnownLatLng = new LatLng(HomeFragment.source_location.latitude, HomeFragment.source_location.longitude);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_navigation);
 
-        // FIND_VIEWS
-        ImageButton restButton = findViewById(R.id.restButton);
-        ImageButton back2mapButton = findViewById(R.id.restButton);
         //
         weatherTypeImg = findViewById(R.id.WeatherTypeImage);
         weatherTypeTxt = findViewById(R.id.WeatherTypeTextView);
@@ -159,6 +184,10 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         alertMessageBox = findViewById(R.id.alertMessageBox);
         alertMessageImage = findViewById(R.id.alertMessageImage);
         parkingButton = findViewById(R.id.parkingButton);
+        overviewButton = findViewById(R.id.overviewButton);
+        moreButton = findViewById(R.id.moreButton);
+        moreButton.setOnClickListener(v -> percentBoxAnimation());
+        overviewButton.setOnClickListener(v -> overview());
         parkingButton.setOnClickListener(v -> saveParking());
         statusCalculator = new StatusCalculator(this);
         statusCalculator.setSleepData(this);
@@ -186,9 +215,6 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-        // REST
-        activateRestButton(restButton, back2mapButton);
 
         // Vibration
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -219,7 +245,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             locate.setIndeterminate(true);
             locate.setCancelable(false);
             locate.setMessage("در حال دریافت موقعیت مکانی...");
-            locate.show();
+//            locate.show();
             firstTime = false;
         }
 
@@ -249,55 +275,63 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
 //        if (MainActivity.getShowGuide()) {
 //            GuideManager.showGuide(this);
 //        }
+
+        findViewsAndSetListeners();
     }
 
-    private void activateRestButton(ImageButton restButton, ImageButton back2mapButton) {
-        // REST
-        back2mapButton.setOnClickListener(v -> {
-            restComplex = false;
-            FrameLayout percentBox = findViewById(R.id.percentBox);
-            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
-            animation.setDuration(500);
-            animation.start();
+    private void findViewsAndSetListeners() {
+        findViewsByID();
+        setListeners();
+    }
 
-            mapMarker.remove();
-            if (mapLocation != null && mMap != null)
-                updateCameraBearing(mMap, mapLocation);
+    private void findViewsByID() {
+        stepName = findViewById(R.id.stepNamee);
+        stepDistanceTextView = findViewById(R.id.stepDistanceTextView);
+        remainingTimeTextView = findViewById(R.id.remainingTimeTextView);
+        remainingTimeTextView2 = findViewById(R.id.remainingTimeTextView2);
+        remainingDistanceTextView = findViewById(R.id.remainingDistanceTextView);
+        arrivalTimeTextView = findViewById(R.id.arrivalTimeTextView);
+        showCurrentLocationImageView = findViewById(R.id.showCurrentLocationImageView);
+        rerouteImageView = findViewById(R.id.restButton);
+        turnImageView = findViewById(R.id.turnImageView);
+    }
 
-            back2mapButton.setVisibility(View.INVISIBLE);
-            restButton.setVisibility(View.VISIBLE);
-            showAlertBox();
-        });
-        restButton.setOnClickListener((View.OnClickListener) v -> {
-            restComplex = true;
-            FrameLayout percentBox = findViewById(R.id.percentBox);
-            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -300);
-            animation.setDuration(750);
-            animation.start();
+    private void setListeners() {
+        showCurrentLocationImageView.setOnClickListener(view -> centerOnCurrentLocation());
+        rerouteImageView.setOnClickListener(view -> restButtonClicked());
+    }
 
-            if (mapLocation != null && mMap != null)
-                updateCameraBearing(mMap, mapLocation);
+    public void showProgressDialog() {
+        ProgressDialog.Builder builder = new ProgressDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_routing_progress, null);
 
-            back2mapButton.setVisibility(View.VISIBLE);
-            restButton.setVisibility(View.INVISIBLE);
+        alertDialog = builder.create();
+        alertDialog.setView(view, 0, 0, 0, 0);
+        alertDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(() -> {
-                restComplex = false;
-                ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
-                animation1.setDuration(500);
-                animation1.start();
+        lp.copyFrom(alertDialog.getWindow().getAttributes());
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        lp.x= 0;
+        lp.y= 0;
+        alertDialog.getWindow().setAttributes(lp);
 
-                mapMarker.remove();
-                if (mapLocation != null && mMap != null)
-                    updateCameraBearing(mMap, mapLocation);
+        TextView tipText = view.findViewById(R.id.tipText);
+        TipHandler tipHandler = new TipHandler();
+        tipText.setText(tipHandler.getTip());
+        final Handler ha = new Handler();
+        ha.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tipText.setText(tipHandler.getTip());
+                ha.postDelayed(this, 10000);
+            }
+        }, 10000);
+    }
 
-                back2mapButton.setVisibility(View.INVISIBLE);
-                restButton.setVisibility(View.VISIBLE);
-
-                showAlertBox();
-            }, 10000);
-        });
+    public void dismissProgressDialog() {
+        alertDialog.dismiss();
     }
 
     private void showAlertBox() {
@@ -449,6 +483,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     }
 
 
+    private Marker m;
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -460,31 +495,31 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission
-                    (this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    &&
-                    ActivityCompat.checkSelfPermission
-                            (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                }, 1);
-                //return;
-            } else {
-                googleMap.setMyLocationEnabled(true);
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                Criteria criteria = new Criteria();
-                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-                if (location != null) {
-                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); ///15.4f
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-            }
-        }
-        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ActivityCompat.checkSelfPermission
+//                    (this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                    &&
+//                    ActivityCompat.checkSelfPermission
+//                            (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                requestPermissions(new String[]{
+//                        Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_FINE_LOCATION
+//                }, 1);
+//                //return;
+//            } else {
+//                googleMap.setMyLocationEnabled(true);
+//                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//                Criteria criteria = new Criteria();
+//                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+//
+//                if (location != null) {
+//                    LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); ///15.4f
+//                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                }
+//            }
+//        }
+//        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
 
         //
         locationButton = ((View) findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -503,6 +538,60 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         setUpMapIfNeeded();
 
         showParkingLocation(this, mMap);
+
+        isMapReady = true;
+        OSRMParser.startParsing(new OSRMParseFinished() {
+            @Override
+            public void finished() {
+                runOnUiThread(() -> {
+                    drawPolyline();
+
+                    android.location.Location targetLocation = new android.location.Location("");//provider name is unnecessary
+                    targetLocation.setLatitude(HomeFragment.source_location.latitude);//your coords of course
+                    targetLocation.setLongitude(HomeFragment.source_location.longitude);
+                    populateTextViews(targetLocation);
+
+                    moveMapMarker(targetLocation);
+                    centerOnCurrentLocation();
+
+                });
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "بزن بریم", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void error() {
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "خطا", Toast.LENGTH_SHORT).show());
+            }
+        });
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        // Setting the position for the marker
+        markerOptions.position(new LatLng(HomeFragment.dest_location.latitude, HomeFragment.dest_location.longitude));
+        Drawable d = getResources().getDrawable(R.drawable.ic_location_dest_withoutground, this.getTheme());
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(d)));
+        mMap.addMarker(markerOptions);
+    }
+
+    private void moveMapMarker(Location targetLocation) {
+        m = mMap.addMarker(new MarkerOptions()
+                .flat(true)
+                .icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(getResources().getDrawable(R.drawable.ic_navigation_arrow, getTheme()))))
+                .rotation(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude())).getBearing())
+                .anchor(0.5f, 0.5f)
+                .position(
+                        new LatLng(targetLocation.getLatitude(), targetLocation
+                                .getLongitude())));
+
+//                    animateMarker(m, targetLocation);
+        // animation
+
+//                    mMap.setPadding(0, 200, 0, 0);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                .bearing(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude())).getBearing())
+                .target(new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()))
+                .zoom(17.1f)
+                .tilt(40)
+                .build()), 400 /*duration of "set bearing and tilt" animation */, null);
     }
 
 
@@ -646,10 +735,15 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         statusCalculator.singleVibrateCall(situation);
     }
 
+    private double dist = 0;
 
     @Override
     protected void onResume() {
         super.onResume();
+//        if(mMap != null)
+//            mMap.clear();
+//        if(polyline != null)
+//            polyline.remove();
         isPaused = false;
         if (MainActivity.getShowGuide()) {
             GuideManager.showGuide(this);
@@ -658,13 +752,34 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        if (mMap != null)
-            showParkingLocation(this, mMap);
+//        if (mMap != null)
+//            showParkingLocation(this, mMap);
+
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, location -> {
+            runOnUiThread(() -> {
+                dist += RoutingHelper.distanceBetween(new LatLng(location.getLatitude(), location.getLongitude()), lastKnownLatLng);
+                lastKnownLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                if (isMapReady) if (setCameraOfTheMap(location)) return;
+                if (OSRMParser.isParsingFinished()) populateTextViews(location);
+                if(m != null) {
+                    m.remove();
+                    moveMapMarker(location);
+                }
+            });
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if(mMap != null)
+            mMap.clear();
+        if(polyline != null)
+            polyline.remove();
         if (Network.isNetworkAvailable(this)) {   // connected to internet
             Handler handler = new Handler(Looper.getMainLooper()) {
                 @Override
@@ -880,5 +995,224 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
 
     public static void deleteParkingLocation() {
         SharedPreferencesManager.deleteFromSharedPreferences("parkingLocation");
+    }
+
+    private void restButtonClicked() {
+        //
+        showProgressDialog();
+        GPSTracker gpsTracker = new GPSTracker(this);
+        LatLng latLng = new LatLng(gpsTracker.getNearestPlaceLatitude(), gpsTracker.getNearestPlaceLangtitude());
+
+        Handler gasStationHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                dismissProgressDialog();
+                if (msg.what == MessageResult.SUCCESSFUL) {
+                    if(polyline != null)
+                        polyline.remove();
+                    OSRMParser.clearData();
+                    restComplex = true;
+                    FrameLayout percentBox = findViewById(R.id.percentBox);
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -600);
+                    animation.setDuration(750);
+                    animation.start();
+
+                    if (mapLocation != null && mMap != null)
+                        updateCameraBearing(mMap, mapLocation);
+
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(() -> {
+                        restComplex = false;
+                        ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
+                        animation1.setDuration(500);
+                        animation1.start();
+
+                        if(mapMarker != null)
+                            mapMarker.remove();
+                        if (mapLocation != null && mMap != null)
+//                            updateCameraBearing(mMap, mapLocation);
+
+                        showAlertBox();
+                    }, 15000);
+
+//                    ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+//                    ArrayList<Line> lines = OSRMParser.getLines();
+//                    latLngArrayList.add(lines.get(0).getBeginning());
+//                    for (Line line : lines) {
+//                        latLngArrayList.add(line.getEnd());
+//                    }
+//                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//                    for (int z = 0; z < latLngArrayList.size(); z++) {
+//                        LatLng point = latLngArrayList.get(z);
+//                        builder.include(latLngArrayList.get(z));
+//                    }
+//                    LatLngBounds bounds = builder.build();
+//                    mMap.setPadding(140, 450, 140, 480);
+//                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+//                    mMap.animateCamera(cu);
+                    reroute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "لطفا بعدا تلاش کنید", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        if (Network.isNetworkAvailable(this)) {   // connected to internet
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)));
+            MainActivity.executorService.submit(MapThreadGenerator.getBestRoute2(lastKnownLatLng.latitude, lastKnownLatLng.longitude,
+                    latLng.latitude, latLng.longitude, gasStationHandler));
+        }
+    }
+
+    // TODO: Attach this to the onClick of a button
+    public void reroute() {
+
+//        OSRMParser.setJSONString("");
+        OSRMParser.startParsing(new OSRMParseFinished() {
+            @Override
+            public void finished() {
+                runOnUiThread(() -> {
+                    drawPolyline();
+                });
+            }
+
+            @Override
+            public void error() {
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "لطفا دوباره تلاش کنید", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void requestAfterReroute() {
+        OSRMParser.setJSONString(""); // TODO: JSON got from going from reroutePivot to the destination using the same methods as where the initial JSON is loaded
+        OSRMParser.startParsing(new OSRMParseFinished() {
+            @Override
+            public void finished() {
+                runOnUiThread(() -> {
+                    drawPolyline();
+                });
+            }
+
+            @Override
+            public void error() {
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "خطا", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void centerOnCurrentLocation() {
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                .bearing(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(lastKnownLatLng.latitude, lastKnownLatLng.longitude)).getBearing())
+                .target(new LatLng(lastKnownLatLng.latitude, lastKnownLatLng.longitude))
+                .zoom(17.1f)
+                .tilt(40)
+                .build()), 400 /*duration of "set bearing and tilt" animation */, null);
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastKnownLatLng, 17f));
+    }
+
+    private boolean setCameraOfTheMap(android.location.Location location) {
+        LatLng currentPlace = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPlace));
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//        if (RoutingHelper.distanceBetween(latLng, reroutePivot) <= 100) {
+//            requestAfterReroute();
+//            return true;
+//        }
+        return false;
+    }
+
+    Step lastStep;
+    private void populateTextViews(android.location.Location location) {
+        Step minStep = RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(location.getLatitude(), location.getLongitude()));
+        if(lastStep != null) {
+            if(!minStep.getName().equalsIgnoreCase(lastStep.getName()) && minStep.getDistance()!=lastStep.getDistance()) {
+                dist = 0;
+            }
+        }
+        lastStep = minStep;
+        if (minStep == null) return;
+        stepName.setText(minStep.getName());
+        stepDistanceTextView.setText(RoutingHelper.getStepText(minStep, dist));
+        double remainedTime = RoutingHelper.remainingTime(minStep);
+        if(RoutingHelper.round(remainedTime / 60, 1) < 60) {
+            remainingTimeTextView.setText(String.valueOf(RoutingHelper.round(remainedTime / 60, 1)));
+        } else {
+            remainingTimeTextView.setText(RoutingInformation.getInstance().calculateHourDuration(remainedTime));
+            remainingTimeTextView2.setText(RoutingInformation.getInstance().calculateMinutesDuration(remainedTime));
+        }
+        remainingDistanceTextView.setText(String.valueOf(RoutingHelper.round(RoutingHelper.remainingDistance(minStep) / 1000, 1)));
+        turnImageView.setImageResource(RoutingHelper.getStepImage(minStep));
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            arrivalTimeTextView.setText(LocalDateTime.now().plusSeconds((long) remainedTime).format(formatter));
+        }
+    }
+    private Polyline polyline;
+
+    private void drawPolyline() {
+        ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+        ArrayList<Line> lines = OSRMParser.getLines();
+        latLngArrayList.add(lines.get(0).getBeginning());
+        for (Line line : lines) {
+            latLngArrayList.add(line.getEnd());
+        }
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (int z = 0; z < latLngArrayList.size(); z++) {
+            builder.include(latLngArrayList.get(z));
+        }
+        LatLngBounds bounds = builder.build();
+        mMap.setPadding(140, 450, 140, 480);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        mMap.animateCamera(cu);
+        if(polyline != null)
+            polyline.remove();
+        polyline = mMap.addPolyline(new PolylineOptions().addAll(latLngArrayList).color(Color.rgb(254, 168, 28)).width(17));
+    }
+
+    private void overview() {
+        ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+        ArrayList<Line> lines = OSRMParser.getLines();
+        latLngArrayList.add(lines.get(0).getBeginning());
+        for (Line line : lines) {
+            latLngArrayList.add(line.getEnd());
+        }
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (int z = 0; z < latLngArrayList.size(); z++) {
+            builder.include(latLngArrayList.get(z));
+        }
+        LatLngBounds bounds = builder.build();
+        mMap.setPadding(140, 400, 300, 500);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        mMap.animateCamera(cu);
+        //
+        FrameLayout percentBox = findViewById(R.id.percentBox);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -650);
+        animation.setDuration(500);
+        animation.start();
+        boxAnimationState = BoxAnimationState.CLOSE;
+        moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
+    }
+
+    private BoxAnimationState boxAnimationState = BoxAnimationState.OPEN;
+    private void percentBoxAnimation() {
+        FrameLayout percentBox = findViewById(R.id.percentBox);
+        if(boxAnimationState == BoxAnimationState.OPEN) {
+            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -230);
+            animation.setDuration(500);
+            animation.start();
+            boxAnimationState = BoxAnimationState.MID;
+        } else if(boxAnimationState == BoxAnimationState.MID) {
+            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -650);
+            animation.setDuration(500);
+            animation.start();
+            boxAnimationState = BoxAnimationState.CLOSE;
+            moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
+        } else if(boxAnimationState == BoxAnimationState.CLOSE) {
+            ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
+            animation1.setDuration(500);
+            animation1.start();
+            boxAnimationState = BoxAnimationState.OPEN;
+            moreButton.setBackgroundResource(R.drawable.ic_arrow_up);
+        }
     }
 }

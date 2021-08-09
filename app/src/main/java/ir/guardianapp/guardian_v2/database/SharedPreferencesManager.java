@@ -34,4 +34,8 @@ public class SharedPreferencesManager {
     public static String getToken(Activity activity) {
         return SharedPreferencesManager.readFromSharedPreferences("TOKEN");
     }
+
+    public static boolean hasToken(Activity activity) {
+        return sharedPref.contains("TOKEN");
+    }
 }

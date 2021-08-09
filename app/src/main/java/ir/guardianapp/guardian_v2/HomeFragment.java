@@ -66,10 +66,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private static GoogleMap mMap;
     private static SourceDest sourceDest = SourceDest.SOURCE;
-    private static LatLng source_location = null;
-    private static Marker source_marker = null;
-    private static LatLng dest_location = null;
-    private static Marker dest_marker = null;
+    public static LatLng source_location = null;
+    public static Marker source_marker = null;
+    public static LatLng dest_location = null;
+    public static Marker dest_marker = null;
 
     private static double cameraLatitude;
     private static double cameraLongitude;
@@ -279,7 +279,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
                 rlp.setMargins(0, 0, 30, 140);
 
-                MainNavigationActivity.showParkingLocation(getContext(), mMap);
+//                MainNavigationActivity.showParkingLocation(getContext(), mMap);
             }
         }
 
@@ -291,7 +291,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 //        mMap.setOnMapClickListener(latLng -> addMarker(latLng));
 
         //
-        MainNavigationActivity.showParkingLocation(getContext(), mMap);
+//        MainNavigationActivity.showParkingLocation(getContext(), mMap);
     }
 
     private void removeLocation() {
@@ -418,6 +418,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 MainActivity.executorService.submit(MapThreadGenerator.getBestRoute(getActivity(), mMap,
                         source_location.latitude, source_location.longitude,
                         dest_location.latitude, dest_location.longitude, handler));
+                Handler handler4 = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == MessageResult.SUCCESSFUL) {
+                            if(msg.obj != null) {
+                                ThisTripData.getInstance().setDestName(msg.obj.toString());
+                            }
+                        } else {
+                            ThisTripData.getInstance().setSourceName("مقصد");
+                        }
+                    }
+                };
+
+                MainActivity.executorService.submit(MapThreadGenerator.getBestRoute2(
+                        source_location.latitude, source_location.longitude,
+                        dest_location.latitude, dest_location.longitude, handler4));
 
                 MainActivity.executorService.submit(MapThreadGenerator.getPlaceFromCoordinates(source_location.latitude, source_location.longitude, handler2));
 

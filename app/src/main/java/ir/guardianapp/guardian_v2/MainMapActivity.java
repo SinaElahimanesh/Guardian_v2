@@ -76,6 +76,7 @@ import ir.guardianapp.guardian_v2.DrivingStatus.weather.Weather;
 import ir.guardianapp.guardian_v2.database.JSONManager;
 import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
 import ir.guardianapp.guardian_v2.extras.BitmapHelper;
+import ir.guardianapp.guardian_v2.extras.BoxAnimationState;
 import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
 import ir.guardianapp.guardian_v2.extras.GuideManager;
 import ir.guardianapp.guardian_v2.extras.Network;
@@ -127,6 +128,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
     public static TextView speedText;
     public static TextView driveText;
     private ImageButton parkingButton;
+    private ImageButton moreButton;
 
     // Permission
     private final int REQ_CODE = 100;
@@ -158,6 +160,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         alertMessageBox = findViewById(R.id.alertMessageBox);
         alertMessageImage = findViewById(R.id.alertMessageImage);
         parkingButton = findViewById(R.id.parkingButton);
+        moreButton = findViewById(R.id.moreButton);
         parkingButton.setOnClickListener(v -> saveParking());
         statusCalculator = new StatusCalculator(this);
         statusCalculator.setSleepData(this);
@@ -271,7 +274,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         restButton.setOnClickListener((View.OnClickListener) v -> {
             restComplex = true;
             FrameLayout percentBox = findViewById(R.id.percentBox);
-            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -300);
+            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -600);
             animation.setDuration(750);
             animation.start();
 
@@ -665,8 +668,8 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        if (mMap != null)
-            showParkingLocation(this, mMap);
+//        if (mMap != null)
+//            showParkingLocation(this, mMap);
     }
 
     @Override
@@ -887,5 +890,28 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
 
     public static void deleteParkingLocation() {
         SharedPreferencesManager.deleteFromSharedPreferences("parkingLocation");
+    }
+
+    private BoxAnimationState boxAnimationState = BoxAnimationState.OPEN;
+    private void percentBoxAnimation() {
+        FrameLayout percentBox = findViewById(R.id.percentBox);
+        if(boxAnimationState == BoxAnimationState.OPEN) {
+            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -230);
+            animation.setDuration(500);
+            animation.start();
+            boxAnimationState = BoxAnimationState.MID;
+        } else if(boxAnimationState == BoxAnimationState.MID) {
+            ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -650);
+            animation.setDuration(500);
+            animation.start();
+            boxAnimationState = BoxAnimationState.CLOSE;
+            moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
+        } else if(boxAnimationState == BoxAnimationState.CLOSE) {
+            ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
+            animation1.setDuration(500);
+            animation1.start();
+            boxAnimationState = BoxAnimationState.OPEN;
+            moreButton.setBackgroundResource(R.drawable.ic_arrow_up);
+        }
     }
 }

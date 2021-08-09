@@ -46,7 +46,7 @@
 
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/remainingTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/iran_sans"
@@ -90,7 +90,7 @@
                     android:layout_height="75dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imageView"
+                        android:id="@+id/overviewButton"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginTop="17dp"
@@ -110,7 +110,7 @@
                         android:orientation="vertical"
                         android:paddingEnd="6dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView"
+                        app:layout_constraintEnd_toStartOf="@+id/overviewButton"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
