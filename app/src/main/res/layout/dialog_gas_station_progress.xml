@@ -13,7 +13,7 @@
         android:background="@color/appThemeColor"
         android:fontFamily="@font/iran_sans"
         android:gravity="center"
-        android:text="در حال یافتن مسیر به نزدیک ترین پمپ بنزین..."
+        android:text="در حال یافتن نزدیک ترین پمپ بنزین"
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:textSize="15sp"
@@ -33,6 +33,7 @@
 
     <TextView
         android:id="@+id/tipText"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -49,7 +50,21 @@
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
 
-
-
+    <TextView
+        android:id="@+id/tipText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/iran_sans"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:text="در حال یافتن بهترین مسیر به نزدیک ترین پمپ بنزین..."
+        android:textAlignment="center"
+        android:textColor="@color/grey"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
