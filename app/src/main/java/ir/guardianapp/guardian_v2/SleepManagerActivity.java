@@ -30,10 +30,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 import ir.guardianapp.guardian_v2.SleepSpeedManager.SleepData;
@@ -70,9 +74,14 @@ public class SleepManagerActivity extends AppCompatActivity {
     }
 
     public String getTotalSleepTime(Date wakeUpDate, Date sleepDate) {
-        int minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() - sleepDate.getHours() * 60 - sleepDate.getMinutes();
-        if(minutes<0) minutes=minutes*-1;
-        return minutes / 60 + " ساعت و " + minutes % 60 + " دقیقه ";
+        long diff = wakeUpDate.getTime() - sleepDate.getTime();
+        if(diff<0) diff*=-1;
+        long diffMinutes = (diff / (60 * 1000))%60;
+        long diffHours = diff / (60 * 60 * 1000);
+
+//        int minutes = wakeUpDate.getHours() * 60 + wakeUpDate.getMinutes() - sleepDate.getHours() * 60 - sleepDate.getMinutes();
+//        if(minutes<0) minutes=minutes*-1;
+        return diffHours + " ساعت و " + diffMinutes + " دقیقه ";
     }
 
     public ArrayList<Date> generateToDate(int timeStart, int timeEnd) {
@@ -210,8 +219,29 @@ public class SleepManagerActivity extends AppCompatActivity {
     }
 
     public void changeTexts() {
-        sleepTime.setText("ساعت خواب:  " + sleepTimeDate.getHours() + "H:" + sleepTimeDate.getMinutes() + "M");
-        wakeUpTime.setText("ساعت بیدارشدن:  " + wakeUpTimeDate.getHours() + "H:" + wakeUpTimeDate.getMinutes() + "M");
+        System.out.println(sleepTimeDate.toString());
+        DateFormat readFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        DateFormat writeFormat = new SimpleDateFormat( "HH:mm", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = readFormat.parse(sleepTimeDate.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date != null) {
+            sleepTime.setText(("ساعت خواب:  " + writeFormat.format(date)));
+        }
+        //
+        try {
+            date = readFormat.parse(wakeUpTimeDate.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date != null) {
+            wakeUpTime.setText(("ساعت بیدار شدن:  " + writeFormat.format(date)));
+        }
+//        sleepTime.setText("ساعت خواب:  " + sleepTimeDate.getHours() + "H:" + sleepTimeDate.getMinutes() + "M");
+//        wakeUpTime.setText("ساعت بیدارشدن:  " + wakeUpTimeDate.getHours() + "H:" + wakeUpTimeDate.getMinutes() + "M");
         totalSleep.setText(getTotalSleepTime(sleepTimeDate, wakeUpTimeDate));
     }
 
@@ -237,8 +267,8 @@ public class SleepManagerActivity extends AppCompatActivity {
             randomSleep.setHours(sleepHour);
             randomSleep.setMinutes(Math.abs(rand.nextInt(59)));
 
-            Log.d("shigaraki sleep",randomSleep.toString());
-            Log.d("shigaraki wake",randomWake.toString());
+            Log.d("sleep",randomSleep.toString());
+            Log.d("wake",randomWake.toString());
             if(randomWake.getDate()!=randomSleep.getDate()){
                 if(randomSleep.getHours()<=randomWake.getHours())
                     randomSleep.setDate(randomWake.getDate());
@@ -248,8 +278,8 @@ public class SleepManagerActivity extends AppCompatActivity {
         }
         setSleepTimeDate(randomSleep);
         setWakeUpTimeDate(randomWake);
-        Log.d("shigaraki sleep",randomSleep.toString());
-        Log.d("shigaraki wake",randomWake.toString());
+        Log.d("sleep",randomSleep.toString());
+        Log.d("wake",randomWake.toString());
         changeTexts();
         // 10 to 1
         // 6 to 8

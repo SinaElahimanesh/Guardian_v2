@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -20,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -36,14 +39,18 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.speech.RecognizerIntent;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -52,10 +59,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -66,14 +75,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.maps.android.PolyUtil;
 import com.squareup.picasso.Picasso;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
-
 import ir.guardianapp.guardian_v2.DrivingPercentage.DriveAlertHandler;
 import ir.guardianapp.guardian_v2.DrivingPercentage.StatusCalculator;
 import ir.guardianapp.guardian_v2.DrivingStatus.ShakeSituation;
@@ -95,11 +103,13 @@ import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.extras.NumberHandler;
 import ir.guardianapp.guardian_v2.extras.TipHandler;
 import ir.guardianapp.guardian_v2.map.RoutingInformation;
-import ir.guardianapp.guardian_v2.models.ThisTripData;
+import ir.guardianapp.guardian_v2.marker_animation.LatLngInterpolator;
+import ir.guardianapp.guardian_v2.marker_animation.MarkerAnimation;
 import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MapThreadGenerator;
 import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
+import ir.guardianapp.guardian_v2.routing_steps.StepsAdapter;
 
 public class MainNavigationActivity extends AppCompatActivity implements SensorEventListener, OnMapReadyCallback, LocationListener {
 
@@ -159,17 +169,26 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     private boolean isPaused = false;
     private static boolean firstTime = true;
 
+    //
+    private boolean parkingMode = false;
+    private boolean overviewMode = false;
+
     // routing OSRM Vars
     private boolean isMapReady = false;
     private LatLng reroutePivot; // TODO: Get this from the user
     TextView stepName, stepDistanceTextView, remainingTimeTextView, remainingTimeTextView2, remainingDistanceTextView, arrivalTimeTextView;
     ImageView showCurrentLocationImageView, rerouteImageView, turnImageView;
     private volatile LatLng lastKnownLatLng = new LatLng(HomeFragment.source_location.latitude, HomeFragment.source_location.longitude);
+    private Location lastKnownLocation = new Location("");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_navigation);
+
+        //
+        lastKnownLocation.setLatitude(HomeFragment.source_location.latitude);
+        lastKnownLocation.setLongitude(HomeFragment.source_location.longitude);
 
         //
         weatherTypeImg = findViewById(R.id.WeatherTypeImage);
@@ -179,11 +198,11 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         //
         algorithmPercentageText = findViewById(R.id.driving_percentage);
         algorithmStatusText = findViewById(R.id.driving_status);
-        algorithmBackground = findViewById(R.id.driving_background);
+        algorithmBackground = findViewById(R.id.driving_background3);
         alertMessageText = findViewById(R.id.alertMessageText);
-        alertMessageBox = findViewById(R.id.alertMessageBox);
+        alertMessageBox = findViewById(R.id.alertMessageBox2);
         alertMessageImage = findViewById(R.id.alertMessageImage);
-        parkingButton = findViewById(R.id.parkingButton);
+        parkingButton = findViewById(R.id.parkingButton2);
         overviewButton = findViewById(R.id.overviewButton);
         moreButton = findViewById(R.id.moreButton);
         moreButton.setOnClickListener(v -> percentBoxAnimation());
@@ -254,7 +273,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         nvDrawer = findViewById(R.id.nvView);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
-        Button button = findViewById(R.id.menuButton);
+        Button button = findViewById(R.id.menuButton2);
         button.setOnClickListener(v -> openDrawer());
 
         // first time calling algorithm
@@ -292,7 +311,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         remainingDistanceTextView = findViewById(R.id.remainingDistanceTextView);
         arrivalTimeTextView = findViewById(R.id.arrivalTimeTextView);
         showCurrentLocationImageView = findViewById(R.id.showCurrentLocationImageView);
-        rerouteImageView = findViewById(R.id.restButton);
+        rerouteImageView = findViewById(R.id.restButton2);
         turnImageView = findViewById(R.id.turnImageView);
     }
 
@@ -303,7 +322,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
 
     public void showProgressDialog() {
         ProgressDialog.Builder builder = new ProgressDialog.Builder(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_routing_progress, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_gas_station_progress, null);
 
         alertDialog = builder.create();
         alertDialog.setView(view, 0, 0, 0, 0);
@@ -334,6 +353,41 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         alertDialog.dismiss();
     }
 
+    AlertDialog reroutingAlertDialog;
+    public void showReroutingProgressDialog() {
+        ProgressDialog.Builder builder = new ProgressDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_rerouting_progress, null);
+
+        reroutingAlertDialog = builder.create();
+        reroutingAlertDialog.setView(view, 0, 0, 0, 0);
+        reroutingAlertDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+        lp.copyFrom(reroutingAlertDialog.getWindow().getAttributes());
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        lp.x= 0;
+        lp.y= 0;
+        reroutingAlertDialog.getWindow().setAttributes(lp);
+
+        TextView tipText = view.findViewById(R.id.tipText);
+        TipHandler tipHandler = new TipHandler();
+        tipText.setText(tipHandler.getTip());
+        final Handler ha = new Handler();
+        ha.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tipText.setText(tipHandler.getTip());
+                ha.postDelayed(this, 10000);
+            }
+        }, 10000);
+    }
+
+    public void dismissReroutingProgressDialog() {
+        reroutingAlertDialog.dismiss();
+    }
+
+    private BoxAnimationState alertState = BoxAnimationState.CLOSE;
     private void showAlertBox() {
         if (!restComplex) {
             String toShowAlert = DriveAlertHandler.toShowAlert();
@@ -342,14 +396,41 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
                 alertMessageBox.setBackgroundResource(R.drawable.rectangle_alert_background_green);
 //            alertMessageText.setTextColor(Color.BLACK);
                 alertMessageImage.setImageResource(R.drawable.warning_white);
+                if(alertState == BoxAnimationState.OPEN) {
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(alertMessageBox, "translationY", +200);
+                    animation.setDuration(500);
+                    animation.start();
+                    alertState = BoxAnimationState.CLOSE;
+                    ObjectAnimator alphaAnimation = ObjectAnimator.ofFloat(alertMessageBox, View.ALPHA, 1, 0);
+                    alphaAnimation.setDuration(500);
+                    alphaAnimation.start();
+                }
             } else if (DriveAlertHandler.getCurrentAlertType() == DriveAlertHandler.Type.REST_AREA) {
                 alertMessageText.setText(toShowAlert);
                 alertMessageBox.setBackgroundResource(R.drawable.rectangle_alert_background_orange);
                 alertMessageImage.setImageResource(R.drawable.coffee_white);
+                if(alertState == BoxAnimationState.CLOSE) {
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(alertMessageBox, "translationY", 0);
+                    animation.setDuration(500);
+                    animation.start();
+                    alertState = BoxAnimationState.OPEN;
+                    ObjectAnimator alphaAnimation = ObjectAnimator.ofFloat(alertMessageBox, View.ALPHA, 0, 1);
+                    alphaAnimation.setDuration(500);
+                    alphaAnimation.start();
+                }
             } else {
                 alertMessageText.setText(toShowAlert);
                 alertMessageBox.setBackgroundResource(R.drawable.rectangle_alert_background_red);
                 alertMessageImage.setImageResource(R.drawable.alert_icon);
+                if(alertState == BoxAnimationState.CLOSE) {
+                    ObjectAnimator animation = ObjectAnimator.ofFloat(alertMessageBox, "translationY", 0);
+                    animation.setDuration(500);
+                    animation.start();
+                    alertState = BoxAnimationState.OPEN;
+                    ObjectAnimator alphaAnimation = ObjectAnimator.ofFloat(alertMessageBox, View.ALPHA, 0, 1);
+                    alphaAnimation.setDuration(500);
+                    alphaAnimation.start();
+                }
             }
         }
         alertMessageBox.getLayoutParams().height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -358,18 +439,18 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     }
 
     // MAP
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-//                mMarker = mMap.addMarker(new MarkerOptions().position(loc));
-            mapLocation = location;
-            if (mMap != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.8f));
-                updateCameraBearing(mMap, location);
-            }
-        }
-    };
+//    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+//        @Override
+//        public void onMyLocationChange(Location location) {
+//            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+////                mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+//            mapLocation = location;
+//            if (mMap != null) {
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.8f));
+//                updateCameraBearing(mMap, location);
+//            }
+//        }
+//    };
 
     private void updateCameraBearing(GoogleMap googleMap, Location location) {
         if (googleMap == null) return;
@@ -537,8 +618,6 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         locationButton.post(() -> locationButton.performClick());
         setUpMapIfNeeded();
 
-        showParkingLocation(this, mMap);
-
         isMapReady = true;
         OSRMParser.startParsing(new OSRMParseFinished() {
             @Override
@@ -551,9 +630,21 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
                     targetLocation.setLongitude(HomeFragment.source_location.longitude);
                     populateTextViews(targetLocation);
 
+                    if(m != null)
+                        m.remove();
                     moveMapMarker(targetLocation);
                     centerOnCurrentLocation();
 
+                    if(!GuideManager.showedGuide) {
+                        StepsAdapter stepsAdapter = new StepsAdapter(OSRMParser.getSteps(), MainNavigationActivity.this);
+                        BottomSheetLayout bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+                        bottomSheet.showWithSheetView(LayoutInflater.from(MainNavigationActivity.this).inflate(R.layout.bottom_sheet, bottomSheet, false));
+                        RecyclerView stepsRecyclerView = bottomSheet.findViewById(R.id.steps_recyclerview);
+                        stepsRecyclerView.setLayoutManager(new LinearLayoutManager(MainNavigationActivity.this, LinearLayoutManager.VERTICAL, false));
+                        stepsRecyclerView.setAdapter(stepsAdapter);
+                        stepsAdapter.setSteps(OSRMParser.getSteps());
+                        stepsAdapter.notifyDataSetChanged();
+                    }
                 });
                 runOnUiThread(() -> Toast.makeText(getApplicationContext(), "بزن بریم", Toast.LENGTH_SHORT).show());
             }
@@ -570,28 +661,52 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         Drawable d = getResources().getDrawable(R.drawable.ic_location_dest_withoutground, this.getTheme());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(d)));
         mMap.addMarker(markerOptions);
+
+        if (mMap != null) {
+            parkingMode = true;
+        }
+        if(getParkingLocation() == null) {
+            parkingMode = false;
+        }
+
+        if(parkingMode) {
+            showParkingLocation(this, mMap);
+            Handler parkingHandler = new Handler(Looper.getMainLooper());
+            parkingHandler.postDelayed(algorithmCallerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    parkingMode = false;
+                    centerOnCurrentLocation();
+                }
+            }, 10000);
+        }
     }
 
     private void moveMapMarker(Location targetLocation) {
-        m = mMap.addMarker(new MarkerOptions()
-                .flat(true)
-                .icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(getResources().getDrawable(R.drawable.ic_navigation_arrow, getTheme()))))
-                .rotation(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude())).getBearing())
-                .anchor(0.5f, 0.5f)
-                .position(
-                        new LatLng(targetLocation.getLatitude(), targetLocation
-                                .getLongitude())));
-
+        if(lastKnownLocation == null) {
+            m = mMap.addMarker(new MarkerOptions()
+                    .flat(true)
+                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(getResources().getDrawable(R.drawable.ic_navigation_arrow, getTheme()))))
+                    .rotation(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude())).getBearing())
+                    .anchor(0.5f, 0.5f)
+                    .position(
+                            new LatLng(targetLocation.getLatitude(), targetLocation
+                                    .getLongitude())));
+        } else {
+            m = mMap.addMarker(new MarkerOptions()
+                    .flat(true)
+                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(getResources().getDrawable(R.drawable.ic_navigation_arrow, getTheme()))))
+                    .rotation(targetLocation.bearingTo(lastKnownLocation))
+                    .anchor(0.5f, 0.5f)
+                    .position(
+                            new LatLng(targetLocation.getLatitude(), targetLocation
+                                    .getLongitude())));
+        }
 //                    animateMarker(m, targetLocation);
         // animation
 
 //                    mMap.setPadding(0, 200, 0, 0);
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                .bearing(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude())).getBearing())
-                .target(new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude()))
-                .zoom(17.1f)
-                .tilt(40)
-                .build()), 400 /*duration of "set bearing and tilt" animation */, null);
+        centerOnCurrentLocation();
     }
 
 
@@ -607,9 +722,65 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
 
     @Override
     public void onLocationChanged(Location location) {
-        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); //15.2
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+//        CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); //15.2
+//        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        if(!parkingMode && !overviewMode) {
+//            moveMapMarker(location);
+            populateTextViews(location);
+            if(latLngArrayList != null) {
+                if(!isOnThePath(new LatLng(location.getLatitude(), location.getLongitude()), latLngArrayList)) {
+                    showReroutingProgressDialog();
+                    Handler reroutingStationHandler = new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            dismissProgressDialog();
+                            if (msg.what == MessageResult.SUCCESSFUL) {
+                                if(polyline != null)
+                                    polyline.remove();
+                                OSRMParser.clearData();
+                                overviewMode = true;
+                                restComplex = true;
+                                FrameLayout percentBox = findViewById(R.id.percentBox);
+                                ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -600);
+                                animation.setDuration(750);
+                                animation.start();
+                                boxAnimationState = BoxAnimationState.CLOSE;
+                                moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
+
+                                if (mapLocation != null && mMap != null)
+                                    updateCameraBearing(mMap, mapLocation);
+
+                                final Handler handler = new Handler(Looper.getMainLooper());
+                                handler.postDelayed(() -> {
+                                    overviewMode = false;
+                                    restComplex = false;
+                                    ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
+                                    animation1.setDuration(500);
+                                    animation1.start();
+                                    boxAnimationState = BoxAnimationState.OPEN;
+                                    moreButton.setBackgroundResource(R.drawable.ic_arrow_up);
+
+                                    if(mapMarker != null)
+                                        mapMarker.remove();
+                                    if (mapLocation != null && mMap != null)
+//                            updateCameraBearing(mMap, mapLocation);
+
+                                        showAlertBox();
+                                }, 15000);
+                                reroute();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "لطفا بعدا تلاش کنید", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+                    if (Network.isNetworkAvailable(this)) {   // connected to internet
+                        MainActivity.executorService.submit(MapThreadGenerator.getBestRoute2(location.getLatitude(), location.getLongitude(),
+                                HomeFragment.dest_location.latitude, HomeFragment.dest_location.longitude, reroutingStationHandler));
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -736,6 +907,10 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     }
 
     private double dist = 0;
+    private double timeDistance = 0;
+    private long duration = 0;
+    private long lastTime = 0;
+    private float bearing;
 
     @Override
     protected void onResume() {
@@ -745,15 +920,13 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
 //        if(polyline != null)
 //            polyline.remove();
         isPaused = false;
+        GuideManager.showedGuide = MainActivity.getShowGuide();
         if (MainActivity.getShowGuide()) {
-            GuideManager.showGuide(this);
+            GuideManager.showNavigationGuide(this);
         }
         if (isAccelerometerSensorAvailable) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
-
-//        if (mMap != null)
-//            showParkingLocation(this, mMap);
 
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -761,13 +934,79 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, location -> {
             runOnUiThread(() -> {
-                dist += RoutingHelper.distanceBetween(new LatLng(location.getLatitude(), location.getLongitude()), lastKnownLatLng);
+                dist += location.distanceTo(lastKnownLocation);
+                if(lastTime==0) lastTime = System.currentTimeMillis();
+                duration = (System.currentTimeMillis() - lastTime);
+                lastTime = System.currentTimeMillis();
+                lastKnownLocation = location;
                 lastKnownLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 if (isMapReady) if (setCameraOfTheMap(location)) return;
                 if (OSRMParser.isParsingFinished()) populateTextViews(location);
-                if(m != null) {
-                    m.remove();
-                    moveMapMarker(location);
+//                if(m != null) {
+//                    m.remove();
+//                    moveMapMarker(location);
+//                }
+                if(!parkingMode && !overviewMode) {
+//                    moveMapMarker(location);
+                    if(duration==0) duration = 100;
+                    bearing = lastKnownLocation.bearingTo(location);
+                    if(m == null) {
+                        moveMapMarker(location);
+                    }
+                    MarkerAnimation.animateMarkerToHC(m, new LatLng(location.getLatitude(), location.getLongitude()), new LatLngInterpolator.Linear(), duration);
+                    MarkerAnimation.rotateMarker(m, bearing , duration);
+                    centerOnCurrentLocation();
+                    populateTextViews(location);
+                    if(latLngArrayList != null) {
+                        if(!isOnThePath(new LatLng(location.getLatitude(), location.getLongitude()), latLngArrayList)) {
+                            showReroutingProgressDialog();
+                            Handler reroutingStationHandler = new Handler(Looper.getMainLooper()) {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    dismissReroutingProgressDialog();
+                                    if (msg.what == MessageResult.SUCCESSFUL) {
+                                        if(polyline != null)
+                                            polyline.remove();
+                                        OSRMParser.clearData();
+                                        restComplex = true;
+                                        FrameLayout percentBox = findViewById(R.id.percentBox);
+                                        ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -600);
+                                        animation.setDuration(750);
+                                        animation.start();
+                                        boxAnimationState = BoxAnimationState.CLOSE;
+                                        moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
+
+                                        if (mapLocation != null && mMap != null)
+                                            updateCameraBearing(mMap, mapLocation);
+
+                                        final Handler handler = new Handler(Looper.getMainLooper());
+                                        handler.postDelayed(() -> {
+                                            restComplex = false;
+                                            ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
+                                            animation1.setDuration(500);
+                                            animation1.start();
+                                            boxAnimationState = BoxAnimationState.OPEN;
+                                            moreButton.setBackgroundResource(R.drawable.ic_arrow_up);
+
+                                            if(mapMarker != null)
+                                                mapMarker.remove();
+                                            if (mapLocation != null && mMap != null)
+//                            updateCameraBearing(mMap, mapLocation);
+
+                                                showAlertBox();
+                                        }, 15000);
+                                        reroute();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "لطفا بعدا تلاش کنید", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            };
+                            if (Network.isNetworkAvailable(this)) {   // connected to internet
+                                MainActivity.executorService.submit(MapThreadGenerator.getBestRoute2(location.getLatitude(), location.getLongitude(),
+                                        HomeFragment.dest_location.latitude, HomeFragment.dest_location.longitude, reroutingStationHandler));
+                            }
+                        }
+                    }
                 }
             });
         });
@@ -916,7 +1155,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         DriveAlertHandler.passCycle();
 
         // parking
-        if(Integer.parseInt(speedText.getText().toString()) >= 20) {
+        if(Double.parseDouble(speedText.getText().toString()) >= 20) {
             deleteParkingLocation();
         }
     }
@@ -957,10 +1196,8 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             return;
         }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-        SharedPreferencesManager.writeToSharedPreferences("parkingLocation",  String.valueOf(location.getLatitude())+','+String.valueOf(location.getLongitude()));
 //        Toast.makeText(this,"محل پارک خودروی شما به موفقیت ذخیره شد.", Toast.LENGTH_SHORT).show();
-        GPSAndInternetChecker.showParkingAlert(this);
-        MainNavigationActivity.showParkingLocation(this, mMap);
+        GPSAndInternetChecker.showParkingAlert(this, mMap, location);
     }
 
     public static Location getParkingLocation(){
@@ -1016,7 +1253,8 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
                     ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -600);
                     animation.setDuration(750);
                     animation.start();
-
+                    boxAnimationState = BoxAnimationState.CLOSE;
+                    moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
                     if (mapLocation != null && mMap != null)
                         updateCameraBearing(mMap, mapLocation);
 
@@ -1026,6 +1264,8 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
                         ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
                         animation1.setDuration(500);
                         animation1.start();
+                        boxAnimationState = BoxAnimationState.OPEN;
+                        moreButton.setBackgroundResource(R.drawable.ic_arrow_up);
 
                         if(mapMarker != null)
                             mapMarker.remove();
@@ -1072,6 +1312,16 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             public void finished() {
                 runOnUiThread(() -> {
                     drawPolyline();
+//                    centerOnCurrentLocation();
+
+//                    StepsAdapter stepsAdapter = new StepsAdapter(OSRMParser.getSteps(), MainNavigationActivity.this);
+//                    BottomSheetLayout bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+//                    bottomSheet.showWithSheetView(LayoutInflater.from(MainNavigationActivity.this).inflate(R.layout.bottom_sheet, bottomSheet, false));
+//                    RecyclerView stepsRecyclerView = bottomSheet.findViewById(R.id.steps_recyclerview);
+//                    stepsRecyclerView.setLayoutManager(new LinearLayoutManager(MainNavigationActivity.this, LinearLayoutManager.VERTICAL, false));
+//                    stepsRecyclerView.setAdapter(stepsAdapter);
+//                    stepsAdapter.setSteps(OSRMParser.getSteps());
+//                    stepsAdapter.notifyDataSetChanged();
                 });
             }
 
@@ -1100,10 +1350,13 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     }
 
     private void centerOnCurrentLocation() {
+        parkingMode = false;
+        overviewMode = false;
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                .bearing(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(lastKnownLatLng.latitude, lastKnownLatLng.longitude)).getBearing())
+                .bearing(bearing)
+//                .bearing(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(lastKnownLatLng.latitude, lastKnownLatLng.longitude)).getBearing())
                 .target(new LatLng(lastKnownLatLng.latitude, lastKnownLatLng.longitude))
-                .zoom(17.1f)
+                .zoom(15.5f)
                 .tilt(40)
                 .build()), 400 /*duration of "set bearing and tilt" animation */, null);
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastKnownLatLng, 17f));
@@ -1126,13 +1379,15 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         if(lastStep != null) {
             if(!minStep.getName().equalsIgnoreCase(lastStep.getName()) && minStep.getDistance()!=lastStep.getDistance()) {
                 dist = 0;
+                timeDistance = 0;
             }
         }
         lastStep = minStep;
         if (minStep == null) return;
         stepName.setText(minStep.getName());
         stepDistanceTextView.setText(RoutingHelper.getStepText(minStep, dist));
-        double remainedTime = RoutingHelper.remainingTime(minStep);
+        double remainedTime = RoutingHelper.remainingTime(minStep) * ((minStep.getDistance()-dist)/minStep.getDistance());// - duration;
+        if(remainedTime<0) remainedTime = 0;
         if(RoutingHelper.round(remainedTime / 60, 1) < 60) {
             remainingTimeTextView.setText(String.valueOf(RoutingHelper.round(remainedTime / 60, 1)));
         } else {
@@ -1148,9 +1403,13 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         }
     }
     private Polyline polyline;
+    private ArrayList<LatLng> latLngArrayList;
+    private boolean isOnThePath(LatLng latLng, ArrayList<LatLng> mPointsOfRoute) {
+        return PolyUtil.isLocationOnPath(latLng, mPointsOfRoute, true, 150);
+    }
 
     private void drawPolyline() {
-        ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+        latLngArrayList = new ArrayList<>();
         ArrayList<Line> lines = OSRMParser.getLines();
         latLngArrayList.add(lines.get(0).getBeginning());
         for (Line line : lines) {
@@ -1170,6 +1429,17 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
     }
 
     private void overview() {
+        overviewMode = true;
+        //
+        StepsAdapter stepsAdapter = new StepsAdapter(OSRMParser.getSteps(), this);
+        BottomSheetLayout bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+        bottomSheet.showWithSheetView(LayoutInflater.from(this).inflate(R.layout.bottom_sheet, bottomSheet, false));
+        RecyclerView stepsRecyclerView = bottomSheet.findViewById(R.id.steps_recyclerview);
+        stepsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        stepsRecyclerView.setAdapter(stepsAdapter);
+        stepsAdapter.setSteps(OSRMParser.getSteps());
+        stepsAdapter.notifyDataSetChanged();
+        //
         ArrayList<LatLng> latLngArrayList = new ArrayList<>();
         ArrayList<Line> lines = OSRMParser.getLines();
         latLngArrayList.add(lines.get(0).getBeginning());

@@ -25,7 +25,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -50,7 +52,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import ir.guardianapp.guardian_v2.extras.AnimationHandler;
@@ -58,9 +64,12 @@ import ir.guardianapp.guardian_v2.extras.BitmapHelper;
 import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.extras.TipHandler;
 import ir.guardianapp.guardian_v2.map.SourceDest;
+import ir.guardianapp.guardian_v2.map.search.SearchPlaces;
 import ir.guardianapp.guardian_v2.models.ThisTripData;
+import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MapThreadGenerator;
 import ir.guardianapp.guardian_v2.network.MessageResult;
+import ir.guardianapp.guardian_v2.network.ThreadGenerator;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
@@ -101,6 +110,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission
+                    (getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    &&
+                    ActivityCompat.checkSelfPermission
+                            (getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                }, 1);
+                //return;
+            }
+        }
+        //
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.selectMap);
         //getActivity().getSupportFragmentManager().findFragmentById(R.id.selectMap);
@@ -158,14 +182,31 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             removeLocation();
         });
 
-        searchText.setOnFocusChangeListener((view1, hasFocus) -> {
-            if (hasFocus) {
-                Intent intent = new Intent(getActivity(), SearchPlacesActivity.class);
-                startActivity(intent);
-            } else {
-//                    Toast.makeText(getApplicationContext(), "Lost the focus", Toast.LENGTH_LONG).show();
+//        searchText.clearFocus();
+
+//        if(searchText.requestFocus()) {
+//            Intent intent = new Intent(getActivity(), SearchPlacesActivity.class);
+//            startActivity(intent);
+//        }
+        searchText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+            Intent intent = new Intent(getActivity(), SearchPlacesActivity.class);
+            startActivity(intent);
+
+                return true; // return is important...
             }
         });
+//        searchText.setOnFocusChangeListener((view1, hasFocus) -> {
+//            System.out.println("hasfocus" + hasFocus);
+//            if (hasFocus) {
+//                Intent intent = new Intent(getActivity(), SearchPlacesActivity.class);
+//                startActivity(intent);
+//            } else {
+////                    Toast.makeText(getApplicationContext(), "Lost the focus", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         return view;
     }
@@ -174,6 +215,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         voiceSearch();
+        if(searchText!=null)
+            searchText.setText("");
 
         try {
             if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -184,7 +227,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         if(searchLatitude != -1 && searchLongitude != -1) {
-            CameraUpdate point = CameraUpdateFactory.newLatLngZoom(new LatLng(searchLatitude, searchLongitude), 14.0f);
+//            searchText.clearFocus();
+            CameraUpdate point = CameraUpdateFactory.newLatLngZoom(new LatLng(searchLatitude, searchLongitude), 15.5f);
             mMap.moveCamera(point);
             mMap.animateCamera(point);
 //            addLocation(searchLatitude, searchLongitude);
@@ -212,6 +256,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 Toast.makeText(getContext(), "دستگاه شما از قابلیت صوتی پشتیبانی نمی کند!", Toast.LENGTH_SHORT).show();
             }
         });
+        SearchPlacesActivity.setSearchText(searchText.getText().toString());
+                if(!searchText.getText().toString().equalsIgnoreCase("")) {
+        Intent intent2 = new Intent(getActivity(), SearchPlacesActivity.class);
+        startActivity(intent2);
+                }
     }
 
     @Override
@@ -234,6 +283,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        mMap.getUiSettings().setCompassEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission
@@ -260,7 +310,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 if (location != null) {
                     LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15f).build(); ///15.4f
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(16.5f).build(); ///15.4f
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
 
@@ -284,10 +334,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         // Setting a click event handler for the map
-        mMap.setOnMapClickListener(latLng -> {
-                if(sourceDest != SourceDest.DONE) {
-                    addLocation(cameraLatitude, cameraLongitude);
-                }});
+//        mMap.setOnMapClickListener(latLng -> {
+//                if(sourceDest != SourceDest.DONE) {
+//                    addLocation(cameraLatitude, cameraLongitude);
+//                }});
 //        mMap.setOnMapClickListener(latLng -> addMarker(latLng));
 
         //
@@ -330,6 +380,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private boolean h2 = false;
+    private boolean h3 = false;
     private void addLocation(double latitude, double longitude) {
         if (sourceDest == SourceDest.SOURCE) {
             source_location = new LatLng(latitude, longitude);
@@ -373,7 +425,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             //
             showProgressDialog();
 
-            boolean h1 = false;
             boolean h2 = false;
             boolean h3 = false;
             Handler handler = new Handler(Looper.getMainLooper()) {
@@ -396,6 +447,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     if (msg.what == MessageResult.SUCCESSFUL) {
                         if(msg.obj != null) {
                             ThisTripData.getInstance().setSourceName(msg.obj.toString());
+                            HomeFragment.this.h2 = true;
+                            if(HomeFragment.this.h3) {
+                                HomeFragment.this.h2 = false;
+                                postTrip();
+                            }
                         }
                     } else {
                         ThisTripData.getInstance().setSourceName("مبدأ");
@@ -408,6 +464,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     if (msg.what == MessageResult.SUCCESSFUL) {
                         if(msg.obj != null) {
                             ThisTripData.getInstance().setDestName(msg.obj.toString());
+                            HomeFragment.this.h3 = true;
+                            if(HomeFragment.this.h2) {
+                                HomeFragment.this.h3 = false;
+                                postTrip();
+                            }
                         }
                     } else {
                         ThisTripData.getInstance().setSourceName("مقصد");
@@ -421,13 +482,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 Handler handler4 = new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
-                        if (msg.what == MessageResult.SUCCESSFUL) {
-                            if(msg.obj != null) {
-                                ThisTripData.getInstance().setDestName(msg.obj.toString());
-                            }
-                        } else {
-                            ThisTripData.getInstance().setSourceName("مقصد");
-                        }
+                       //
                     }
                 };
 
@@ -445,6 +500,43 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             SeatBeltActivity.navigationMode = true;
             startActivity(new Intent(getActivity(), SeatBeltActivity.class));
         }
+    }
+
+    private void postTrip() {
+        Handler handler2 = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                //
+            }
+        };
+        DateFormat readFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = readFormat.parse((new Date()).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String startDate = "";
+        String endDate = "";
+        if (date != null) {
+            startDate = writeFormat.format(date);
+        }
+        //
+        try {
+            date = readFormat.parse((new Date()).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date != null) {
+            endDate = writeFormat.format(date);
+        }
+        ThisTripData thisTripData = ThisTripData.getInstance();
+        MainActivity.executorService.submit(ThreadGenerator.postATripInformation(User.getInstance().getUsername(), User.getInstance().getToken(),
+                thisTripData.getSourceName(), thisTripData.getSourceLongitude(), thisTripData.getSourceLatitude(),
+                thisTripData.getDestName(), thisTripData.getDestLongitude(), thisTripData.getDestLatitude(),
+                thisTripData.getDuration(), startDate, endDate,
+                thisTripData.getAverage(), thisTripData.getDistance(), handler2));
     }
 
     public void showProgressDialog() {

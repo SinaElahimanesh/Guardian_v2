@@ -13,7 +13,19 @@ public class EncodeDecode {
         int hour = (int) Math.round(input / 60);
         int minute = (int) Math.round(input % 60);
 
-        return String.format("%dH:%dM", hour, minute);
+        String hourStr = "";
+        String minuteStr = "";
+        if(hour<10) {
+            hourStr = "0" + hour;
+        } else {
+            hourStr = String.valueOf(hour);
+        }
+        if(minute<10) {
+            minuteStr = "0" + minute;
+        } else {
+            minuteStr = String.valueOf(minute);
+        }
+        return String.format(hourStr + ":" + minuteStr);
     }
 
     public static double speedEncode(double userSpeed) {
@@ -103,29 +115,29 @@ public class EncodeDecode {
         input = Math.round(input);
         String monthOutput = "";
         if (input == 1) {
-            monthOutput = "فروردین";
+            monthOutput = "فروردین ماه";
         } else if (input == 2) {
-            monthOutput = "اردیبهشت";
+            monthOutput = "اردیبهشت ماه";
         } else if (input == 3) {
-            monthOutput = "خرداد";
+            monthOutput = "خرداد ماه";
         } else if (input == 4) {
-            monthOutput = "تیر";
+            monthOutput = "تیر ماه";
         } else if (input == 5) {
-            monthOutput = "مرداد";
+            monthOutput = "مرداد ماه";
         } else if (input == 6) {
-            monthOutput = "شهریور";
+            monthOutput = "شهریور ماه";
         } else if (input == 7) {
-            monthOutput = "مهر";
+            monthOutput = "مهر ماه";
         } else if (input == 8) {
-            monthOutput = "آبان";
+            monthOutput = "آبان ماه";
         } else if (input == 9) {
-            monthOutput = "آذر";
+            monthOutput = "آذر ماه";
         } else if (input == 10) {
-            monthOutput = "دی";
+            monthOutput = "دی ماه";
         } else if (input == 11) {
-            monthOutput = "بهمن";
+            monthOutput = "بهمن ماه";
         } else if (input == 12) {
-            monthOutput = "اسفند";
+            monthOutput = "اسفند ماه";
         }
         return String.format("%s", monthOutput);
     }
@@ -194,7 +206,19 @@ public class EncodeDecode {
         int hour = (int) Math.round(input / 60);
         int minute = (int) Math.round(input % 60);
 
-        return String.format("%dH:%dM", hour, minute);
+        String hourStr = "";
+        String minuteStr = "";
+        if(hour<10) {
+            hourStr = "0" + hour;
+        } else {
+            hourStr = String.valueOf(hour);
+        }
+        if(minute<10) {
+            minuteStr = "0" + minute;
+        } else {
+            minuteStr = String.valueOf(minute);
+        }
+        return String.format(hourStr + ":" + minuteStr);
     }
 
     public static double roadTypeEncode(RoadType roadType) {

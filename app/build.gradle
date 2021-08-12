@@ -83,5 +83,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.13'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.addisonelliott:SegmentedButton:3.1.8'
+    implementation 'io.github.ParkSangGwon:tedpermission:2.3.0'
+    implementation 'com.flipboard:bottomsheet-core:1.5.3'
+    implementation 'com.flipboard:bottomsheet-commons:1.5.3' // optional
 }
 //apply plugin: 'com.google.gms.google-services'

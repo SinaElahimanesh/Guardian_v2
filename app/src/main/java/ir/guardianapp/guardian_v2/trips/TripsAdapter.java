@@ -2,6 +2,7 @@ package ir.guardianapp.guardian_v2.trips;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import org.osmdroid.util.GeoPoint;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ir.guardianapp.guardian_v2.DrivingStatus.time.Month;
 import ir.guardianapp.guardian_v2.DrivingStatus.time.PersianCalender;
@@ -48,8 +55,26 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripViewHold
         Trip trip = trips.get(position);
         holder.sourceName.setText(trip.getSourceName());
         holder.destinationName.setText(trip.getDestinationName());
-        holder.startTime.setText(String.valueOf(trip.getStartDate().getHours() + ":" + trip.getStartDate().getMinutes()));
-        holder.endTime.setText(String.valueOf(trip.getEndDate().getHours() + ":" + trip.getEndDate().getMinutes()));
+        DateFormat readFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        DateFormat writeFormat = new SimpleDateFormat( "HH:mm", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = readFormat.parse(trip.getStartDate().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date != null) {
+            holder.startTime.setText(writeFormat.format(date));
+        }
+        //
+        try {
+            date = readFormat.parse(trip.getEndDate().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date != null) {
+            holder.endTime.setText(writeFormat.format(date));
+        }
         holder.distance.setText(String.valueOf(trip.getDistanceInKM() + " km"));
         holder.average.setText(String.valueOf(trip.getAverage() + "%"));
         holder.date.setText(String.valueOf((new PersianCalender.SolarCalendar(trip.getStartDate()).date) + Month.getPersianMonth((new PersianCalender.SolarCalendar(trip.getStartDate()).month))));

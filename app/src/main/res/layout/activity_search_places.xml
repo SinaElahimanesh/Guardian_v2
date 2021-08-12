@@ -18,6 +18,8 @@
 
         <SearchView
             android:id="@+id/search"
+            android:focusableInTouchMode="true"
+            android:focusedByDefault="false"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false">

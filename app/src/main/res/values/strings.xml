@@ -36,7 +36,7 @@
     <string name="driving_vibration">میزان لرزش خودرو</string>
     <string name="driving_sleep">میزان خواب</string>
     <string name="driving_acceleration">شتاب خودرو</string>
-    <string name="driving_time">ساعت رانندگی</string>
+    <string name="driving_time">بیشترین ساعت رانندگی</string>
     <string name="driving_danger_zones">محدوده های خطر جاده</string>
     <string name="driving_weather">وضعیت آب و هوا</string>
     <string name="driving_road">نوع جاده</string>
@@ -129,6 +129,11 @@
     <string name="showcase_drivingbackground">در این قسمت 《درصد رانندگی سالم》 شما نشان داده می شود؛ که نشان می دهد در هر لحظه چقدر شرایط شما برای رانندگی مناسب است!</string>
     <string name="showcase_statistics">در هر لحظه میتوانید سرعت رانندگی خود، آب و هوای مسیر و اینکه چند دقیقه است که بدون توقف رانندگی می کنید را ملاحظه کنید.</string>
     <string name="showcase_menubutton">می توانید منوی برنامه را از این قسمت مشاهده کنید.</string>
+    <string name="showcase_centeronmapbutton">با استفاده از این دکمه می توانید به مکان فعلی خود در مسیریابی برگردید.</string>
+    <string name="showcase_overviewbutton">با استفاده از این دکمه می توانید نمای کل مسیر را روی نقشه ببینید.</string>
+    <string name="showcase_morebutton">با استفاده از این قسمت می توانید قسمت «رانندگی سالم» را باز و یا بسته کنید.</string>
+
+
     <string name="parking_subtitle">محل پارک خودرویتان ذخیره شد. بعدا با باز کردن اپلیکیشن می توانید محل پارکتان را پیدا کنید!</string>
     <string name="parking_button">باشه!</string>
 

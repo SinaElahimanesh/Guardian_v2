@@ -199,7 +199,7 @@ public class DrivingFragment extends Fragment {
             average.setText(((Math.round(driving.getAverage() * 100.0) / 100.0) + "%").toString());
             averageDescription.setText(EncodeDecode.calculateStatusAlgorithm(driving.getAverage()));
         } else {
-            average.setText("100");
+            average.setText("99");
             averageDescription.setText("اطلاعات ناموجود");
         }
 

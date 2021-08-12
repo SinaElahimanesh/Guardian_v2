@@ -137,12 +137,13 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout2"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:background="@drawable/factor_background"
                         android:orientation="vertical"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
+                        android:paddingBottom="6dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -158,6 +159,7 @@
                             app:sb_show_indicator="false" />
 
                         <TextView
+                            android:id="@+id/firstText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -168,9 +170,24 @@
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginTop="14dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/safetyStatus1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/iran_sans"
+                            android:paddingEnd="80dp"
+                            android:text="در صورتی که این حالت فعال باشد نمی توان نقشه را روی حالت روز یا شب قرار داد."
+                            android:textColor="@color/grey"
+                            android:textSize="11sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/firstText" />
+
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -205,7 +222,7 @@
                             android:layout_marginTop="14dp"
                             android:fontFamily="@font/sadgan_medium"
                             android:paddingBottom="4dp"
-                            android:text="حالت روز/شب"
+                            android:text="حالت روز/شب نقشه"
                             android:letterSpacing="0.25"
                             android:textColor="@color/black"
                             android:textSize="15sp"
@@ -287,7 +304,7 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="5dp"
                             android:fontFamily="@font/iran_sans"
-                            android:text="@string/settings_voice_subtitle"
+                            android:text="این قابلیت در حال حاضر فعال نمی باشد."
                             android:textColor="@color/grey"
                             android:textSize="11sp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -301,7 +318,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
-                android:id="@+id/locationConfirmButton"
+                android:id="@+id/doneButton"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
                 android:layout_gravity="center_horizontal"

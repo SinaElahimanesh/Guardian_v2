@@ -3,6 +3,8 @@ package ir.guardianapp.guardian_v2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -23,6 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -86,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView phoneNumTextView = findViewById(R.id.phoneNum);
         TextView messageTextLogin = findViewById(R.id.messageTextLogin);
         loginButton.setOnClickListener(v -> {
+//            hideSoftKeyboard(this);
             if(phoneNumTextView.getText().length() != 11) {
                 messageTextLogin.setText("شماره همراه باید ۱۱ رقم باشد!");
                 messageTextLogin.setTextColor(this.getResources().getColor(R.color.colorNegativeError));
@@ -152,5 +160,34 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         });
+
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                //
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "در صورت رد کردن درخواست موقعیت مکانی، گاردین نمی تواند از نقشه استفاده کند!", Toast.LENGTH_SHORT).show());
+            }
+        };
+        TedPermission.with(this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("در صورت رد کردن درخواست موقعیت مکانی، گاردین نمی تواند از نقشه استفاده کند! لطفا این دسترسی را به برنامه بدهید.")
+                .setPermissions(android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+                .check();
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodManager.isAcceptingText()){
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
     }
 }

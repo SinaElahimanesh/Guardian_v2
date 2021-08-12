@@ -47,7 +47,7 @@
                         android:src="@drawable/rectangle_box"/>
 
                     <LinearLayout
-                        android:id="@+id/statistic"
+                        android:id="@+id/statistic2"
                         android:layout_width="match_parent"
                         android:layout_height="68dp"
                         android:layoutDirection="ltr"
@@ -71,7 +71,7 @@
                                 android:fontFamily="@font/iran_sans"
                                 android:gravity="center_horizontal"
                                 android:paddingStart="17dp"
-                                android:text="105"
+                                android:text="0"
                                 android:textAlignment="textStart"
                                 tools:ignore="RtlCompat"
                                 android:textColor="#000000"
@@ -130,7 +130,7 @@
                                 android:alpha="0.94"
                                 android:fontFamily="@font/iran_sans"
                                 android:paddingLeft="4dp"
-                                android:text="2:34"
+                                android:text="0"
                                 android:textColor="#000000"
                                 android:textSize="13sp" />
 
@@ -206,7 +206,7 @@
                         android:layout_gravity="bottom|center">
 
                         <ImageView
-                            android:id="@+id/driving_background"
+                            android:id="@+id/driving_background3"
                             android:layout_width="138dp"
                             android:layout_height="135dp"
                             android:layout_marginEnd="4dp"
@@ -268,7 +268,7 @@
                             android:layout_marginStart="12dp"
                             android:background="@drawable/menu_icon"
                             style="?android:attr/borderlessButtonStyle"
-                            android:id="@+id/menuButton"/>
+                            android:id="@+id/menuButton2"/>
 
 
                         <FrameLayout
@@ -325,7 +325,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/alertMessageBox"
+            android:id="@+id/alertMessageBox2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -423,7 +423,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <ImageButton
-                android:id="@+id/parkingButton"
+                android:id="@+id/parkingButton2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -445,7 +445,7 @@
 
 
             <ImageButton
-                android:id="@+id/restButton"
+                android:id="@+id/restButton2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

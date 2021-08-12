@@ -133,6 +133,9 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
     // Permission
     private final int REQ_CODE = 100;
 
+    //
+    private boolean parkingMode = false;
+
     // onCreate VARS
     private Handler algorithmCallerHandler;
     public Runnable algorithmCallerRunnable;
@@ -145,7 +148,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         setContentView(R.layout.activity_main_map);
 
         // FIND_VIEWS
-        ImageButton restButton = findViewById(R.id.restButton);
+        ImageButton restButton = findViewById(R.id.restButton2);
         ImageButton back2mapButton = findViewById(R.id.back2mapButton);
         //
         weatherTypeImg = findViewById(R.id.WeatherTypeImage);
@@ -155,11 +158,11 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         //
         algorithmPercentageText = findViewById(R.id.driving_percentage);
         algorithmStatusText = findViewById(R.id.driving_status);
-        algorithmBackground = findViewById(R.id.driving_background);
+        algorithmBackground = findViewById(R.id.driving_background3);
         alertMessageText = findViewById(R.id.alertMessageText);
-        alertMessageBox = findViewById(R.id.alertMessageBox);
+        alertMessageBox = findViewById(R.id.alertMessageBox2);
         alertMessageImage = findViewById(R.id.alertMessageImage);
-        parkingButton = findViewById(R.id.parkingButton);
+        parkingButton = findViewById(R.id.parkingButton2);
         moreButton = findViewById(R.id.moreButton);
         parkingButton.setOnClickListener(v -> saveParking());
         statusCalculator = new StatusCalculator(this);
@@ -230,7 +233,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         nvDrawer = findViewById(R.id.nvView);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
-        Button button = findViewById(R.id.menuButton);
+        Button button = findViewById(R.id.menuButton2);
         button.setOnClickListener(v -> openDrawer());
 
         // first time calling algorithm
@@ -277,6 +280,8 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
             ObjectAnimator animation = ObjectAnimator.ofFloat(percentBox, "translationY", -600);
             animation.setDuration(750);
             animation.start();
+            boxAnimationState = BoxAnimationState.CLOSE;
+            moreButton.setBackgroundResource(R.drawable.ic_arrow_down);
 
             if (mapLocation != null && mMap != null)
                 updateCameraBearing(mMap, mapLocation);
@@ -290,6 +295,8 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
                 ObjectAnimator animation1 = ObjectAnimator.ofFloat(percentBox, "translationY", 0);
                 animation1.setDuration(500);
                 animation1.start();
+                boxAnimationState = BoxAnimationState.OPEN;
+                moreButton.setBackgroundResource(R.drawable.ic_arrow_up);
 
                 mapMarker.remove();
                 if (mapLocation != null && mMap != null)
@@ -333,7 +340,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
 //                mMarker = mMap.addMarker(new MarkerOptions().position(loc));
             mapLocation = location;
-            if (mMap != null) {
+            if (mMap != null && !parkingMode) {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.8f));
                 updateCameraBearing(mMap, location);
             }
@@ -514,6 +521,24 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         rlp2.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
         rlp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         rlp2.setMargins(0, 0, 90, 30);
+
+        if (mMap != null) {
+            parkingMode = true;
+        }
+        if(getParkingLocation() == null) {
+            parkingMode = false;
+        }
+
+        if(parkingMode) {
+            showParkingLocation(this, mMap);
+            Handler parkingHandler = new Handler(Looper.getMainLooper());
+            parkingHandler.postDelayed(algorithmCallerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    parkingMode = false;
+                }
+            }, 10000);
+        }
     }
 
     @Override
@@ -528,9 +553,11 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onLocationChanged(Location location) {
-        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); //15.2
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        if(!parkingMode) {
+            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15.8f).build(); //15.2
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     @Override
@@ -662,7 +689,7 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         super.onResume();
         isPaused = false;
         if (MainActivity.getShowGuide()) {
-            GuideManager.showGuide(this);
+            GuideManager.showMapGuide(this);
         }
         if (isAccelerometerSensorAvailable) {
             sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -675,25 +702,11 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
     @Override
     protected void onStop() {
         super.onStop();
-        if (Network.isNetworkAvailable(this)) {   // connected to internet
-            Handler handler = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == MessageResult.SUCCESSFUL) {
-                       //
-                    } else {
-                        try {
-                            JSONManager.writeJSONArrIntoJSONFile(MainMapActivity.this);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            };
-            MainActivity.executorService.submit(ThreadGenerator.postDrivingDetails(User.getInstance().getUsername(),
-                    User.getInstance().getToken(), JSONManager.getDrivingJSONArray(), handler));
-        } else {
-            Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+        System.out.println(JSONManager.getDrivingJSONArray());
+        try {
+            JSONManager.writeJSONArrIntoJSONFile(MainMapActivity.this);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -852,10 +865,8 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
             return;
         }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-        SharedPreferencesManager.writeToSharedPreferences("parkingLocation",  String.valueOf(location.getLatitude())+','+String.valueOf(location.getLongitude()));
 //        Toast.makeText(this,"محل پارک خودروی شما به موفقیت ذخیره شد.", Toast.LENGTH_SHORT).show();
-        GPSAndInternetChecker.showParkingAlert(this);
-        MainMapActivity.showParkingLocation(this, mMap);
+        GPSAndInternetChecker.showParkingAlert(this, mMap, location);
     }
 
     public static Location getParkingLocation(){

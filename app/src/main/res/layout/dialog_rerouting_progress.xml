@@ -13,10 +13,10 @@
         android:background="@color/appThemeColor"
         android:fontFamily="@font/iran_sans"
         android:gravity="center"
-        android:text="در حال یافتن مسیر به نزدیک ترین پمپ بنزین..."
+        android:text="از مسیر خارج شده اید! در حال مسیریابی دوباره..."
         android:textAlignment="center"
         android:textColor="#ffffff"
-        android:textSize="15sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

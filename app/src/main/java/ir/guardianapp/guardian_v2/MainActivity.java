@@ -26,6 +26,8 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.onesignal.OneSignal;
 
 import org.json.JSONException;
@@ -38,6 +40,7 @@ import java.util.concurrent.Executors;
 import ir.guardianapp.guardian_v2.database.JSONManager;
 import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
 import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
+import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         // MAKE IT FULL SCREEN
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -134,12 +139,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Driving JSON
-        try {
-            JSONManager.setDrivingJSONArray(JSONManager.readJSONArrFromJSONFile(this));
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+        Handler handler2 = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                //
+            }
+        };
+        MainActivity.executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler2));
     }
 
     private void startApp() {

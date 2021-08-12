@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,14 +19,19 @@ import android.widget.Toast;
 import com.gauravk.bubblenavigation.BubbleNavigationLinearView;
 import com.gauravk.bubblenavigation.listener.BubbleNavigationChangeListener;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.Executors;
 
 import ir.guardianapp.guardian_v2.database.DataBaseHelper;
+import ir.guardianapp.guardian_v2.database.JSONManager;
 import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.models.ThisTripData;
 import ir.guardianapp.guardian_v2.models.Trip;
 import ir.guardianapp.guardian_v2.models.User;
+import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -56,6 +62,35 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
 //        dbHelper.getAllTrips();
+
+        // Driving JSON
+        if(JSONManager.fileDoesExist(this)) {
+            try {
+                JSONManager.setDrivingJSONArray(JSONManager.readJSONArrFromJSONFile(this));
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            if(JSONManager.getDrivingJSONArray().length()>0) {
+                if (Network.isNetworkAvailable(this)) {   // connected to internet
+                    Handler handler = new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == MessageResult.SUCCESSFUL) {
+                                //
+                                JSONManager.deleteFile(MainMenuActivity.this);
+                                JSONManager.clearDrivingJSONArray();
+                            } else {
+                                //
+                            }
+                        }
+                    };
+                    MainActivity.executorService.submit(ThreadGenerator.postDrivingDetails(User.getInstance().getUsername(),
+                            User.getInstance().getToken(), JSONManager.getDrivingJSONArray(), handler));
+                } else {
+                    Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     @Override
@@ -140,35 +175,5 @@ public class MainMenuActivity extends AppCompatActivity {
     private void newDB() {
         dbHelper = new DataBaseHelper(this, Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE));
         db = dbHelper.db;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Handler handler2 = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-
-            }
-        };
-        MainActivity.executorService.submit(ThreadGenerator.postATripInformation(User.getInstance().getUsername(), User.getInstance().getToken(),
-                "tehran", 1, 1, "qom", 2, 2, 3,
-                (new Date()).toString(), (new Date()).toString(), 4, 5, handler2));
-
-        ThisTripData thisTripData = ThisTripData.getInstance();
-//        dbHelper.addTrip(new Trip(thisTripData.getSourceName(), thisTripData.getDestName(),
-//                thisTripData.getStartDate(), thisTripData.getEndDate(), thisTripData.getDistance(), thisTripData.getAverage()));
-
-//        if (Network.isNetworkAvailable(this)) {   // connected to internet
-//            if(thisTripData.getEnable()) {
-//                MainActivity.executorService.submit(ThreadGenerator.postATripInformation(thisTripData.getUsername(), thisTripData.getToken(),
-//                        thisTripData.getSourceName(), thisTripData.getSourceLongitude(), thisTripData.getSourceLatitude(),
-//                        thisTripData.getDestName(), thisTripData.getDestLongitude(), thisTripData.getDestLatitude(),
-//                        thisTripData.getDuration(), thisTripData.getStartDate(), thisTripData.getEndDate(),
-//                        thisTripData.getAverage(), thisTripData.getDistance(), handler2));
-//            }
-//        } else {
-//            Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
-//        }
     }
 }

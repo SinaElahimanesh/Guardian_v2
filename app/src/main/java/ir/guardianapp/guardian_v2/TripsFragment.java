@@ -57,13 +57,13 @@ public class TripsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_trips, container, false);
 
         progressBar = view.findViewById(R.id.progressBar);
-        tripsRecyclerView = view.findViewById(R.id.trips_recyclerview);
         label = view.findViewById(R.id.no_trips_label);
         if(Trip.getTrips().size() != 0){
             label.setVisibility(View.INVISIBLE);
             label.setEnabled(false);
         }
 
+        tripsRecyclerView = view.findViewById(R.id.trips_recyclerview);
         tripsAdapter = new TripsAdapter(Trip.getTrips(), new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -81,7 +81,7 @@ public class TripsFragment extends Fragment {
 
         Button refreshButton = view.findViewById(R.id.refreshButton);
         refreshButton.setOnClickListener(v -> {
-            if(Trip.getTrips().size() == (numberOfTrips - 5)) {
+            if(Trip.getTrips().size() >= (numberOfTrips - 6)) {
                 getTrips();
             } else {
                 Toast.makeText(getContext(), "سفر جدیدی برای نمایش وجود ندارد.", Toast.LENGTH_SHORT).show();
@@ -121,18 +121,18 @@ public class TripsFragment extends Fragment {
                 }
             }
         };
-//        if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
-//            if(canUpdate && requestLimit!=0) {
-//                canUpdate = false;
-//                requestLimit--;
-//                progressBar.setVisibility(View.VISIBLE);
-//                User user = User.getInstance();
-//                MainActivity.executorService.submit(ThreadGenerator.getRecentTrips(user.getUsername(), user.getToken(), numberOfTrips, handler));
-//            } else if(requestLimit == 0) {
-//                Toast.makeText(getContext(), "لطفا بعدا تلاش کنید!", Toast.LENGTH_SHORT).show();
-//            }
-//        } else {
-//            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
-//        }
+        if (Network.isNetworkAvailable(getActivity())) {   // connected to internet
+            if(canUpdate && requestLimit!=0) {
+                canUpdate = false;
+                requestLimit--;
+                progressBar.setVisibility(View.VISIBLE);
+                User user = User.getInstance();
+                MainActivity.executorService.submit(ThreadGenerator.getRecentTrips(user.getUsername(), user.getToken(), numberOfTrips, handler));
+            } else if(requestLimit == 0) {
+                Toast.makeText(getContext(), "لطفا بعدا تلاش کنید!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getContext(), "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

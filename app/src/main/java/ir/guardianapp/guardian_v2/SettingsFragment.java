@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.suke.widget.SwitchButton;
@@ -64,15 +66,20 @@ public class SettingsFragment extends Fragment {
             dayNightSwitch.setEnabled(false);
         }
 
+        Button doneButton = view.findViewById(R.id.doneButton);
+        doneButton.setOnClickListener(v -> Toast.makeText(getContext(), "تغییرات برای صفحه مسیریابی و نقشه با موفقیت ذخیره شد.", Toast.LENGTH_SHORT).show());
+
         return view;
     }
 
     private static void setupPreferences() {
-        if(SharedPreferencesManager.readFromSharedPreferences("defaultColor") != null)
+        if(!SharedPreferencesManager.readFromSharedPreferences("defaultColor").equalsIgnoreCase("")) {
             defaultColor = Boolean.parseBoolean(SharedPreferencesManager.readFromSharedPreferences("defaultColor"));
-        else
+        }
+        else {
             defaultColor = true;
-        if(SharedPreferencesManager.readFromSharedPreferences("dayNight") != null)
+        }
+        if(!SharedPreferencesManager.readFromSharedPreferences("dayNight").equalsIgnoreCase(""))
             dayNight = Boolean.parseBoolean(SharedPreferencesManager.readFromSharedPreferences("dayNight"));
         else
             dayNight = true;

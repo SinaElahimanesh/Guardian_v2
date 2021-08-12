@@ -393,16 +393,18 @@ public class MapThreadGenerator {
                     JSONObject address = jsonObject.getJSONObject("address");
                     StringBuilder result = new StringBuilder("");
                     if(address.has("city")) {
-                        result.append(address.getString("city"));
+                        result.append(address.getString("city")).append("-");
                     }
                     if(address.has("road")) {
-                        result.append(address.getString("road"));
+                        result.append(address.getString("road")).append("-");
                     } else if(address.has("neighbourhood")) {
-                        result.append(address.getString("neighbourhood"));
+                        result.append(address.getString("neighbourhood")).append("-");
                     }
                     if(result.equals("")) {
-                        result = new StringBuilder("ایران");
+                        result = new StringBuilder("ایران").append("-");
                     }
+                    if(result.charAt(result.length()-1) == '-')
+                        result = new StringBuilder(result.substring(0, result.length()-1));
 
                     Message message = new Message();
                     message.what = MessageResult.SUCCESSFUL;

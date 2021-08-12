@@ -3,6 +3,7 @@ package ir.guardianapp.guardian_v2.extras;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,12 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import com.google.android.gms.maps.GoogleMap;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import ir.guardianapp.guardian_v2.MainNavigationActivity;
 import ir.guardianapp.guardian_v2.R;
+import ir.guardianapp.guardian_v2.database.SharedPreferencesManager;
 
 
 public class GPSAndInternetChecker {
@@ -35,7 +41,7 @@ public class GPSAndInternetChecker {
         return true;
     }
 
-    public static void showParkingAlert(final Context context){
+    public static void showParkingAlert(final Context context, GoogleMap mMap, Location location){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_parking, null);
@@ -52,8 +58,19 @@ public class GPSAndInternetChecker {
         lp.y= 0;
         alertDialog.getWindow().setAttributes(lp);
 
-        Button parkButton = view.findViewById(R.id.parkButton);
-        parkButton.setOnClickListener(v -> alertDialog.dismiss());
+        Button lastParkingBtn = view.findViewById(R.id.lastParkingButton);
+        lastParkingBtn.setOnClickListener(v -> {
+            MainNavigationActivity.showParkingLocation(context, mMap);
+            alertDialog.dismiss();
+        });
+
+        Button newParkingBtn = view.findViewById(R.id.newParkingButton);
+        newParkingBtn.setOnClickListener(v -> {
+            SharedPreferencesManager.writeToSharedPreferences("parkingLocation",  String.valueOf(location.getLatitude())+','+String.valueOf(location.getLongitude()));
+            MainNavigationActivity.showParkingLocation(context, mMap);
+            alertDialog.dismiss();
+        });
+
     }
 
     public static void showUpdateAlert(final Context context, String updateLink, double height, double width){

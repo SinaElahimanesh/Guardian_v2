@@ -409,8 +409,10 @@ public class ThreadGenerator {
             @Override
             public void run() {
                 Response response = Requester.getInstance().RequestPostDrivingDetails(username, token, drivingJSONArr, drivingJSONArr.length());
+                Log.d("drivingsend", response.toString());
                 try {
                     String logoutResponse = response.body().string();
+                    Log.d("drivingsend", logoutResponse);
                     Message message = new Message();
                     if(logoutResponse.equalsIgnoreCase("successful")) {
                         message.what = MessageResult.SUCCESSFUL;
@@ -478,6 +480,7 @@ public class ThreadGenerator {
                         duration, startTime, endTime, average, distance);
                 try {
                     String logoutResponse = response.body().string();
+                    Log.d("tripresponsee",  logoutResponse);
                     Message message = new Message();
                     if(logoutResponse.equalsIgnoreCase("successful")) {
                         message.what = MessageResult.SUCCESSFUL;

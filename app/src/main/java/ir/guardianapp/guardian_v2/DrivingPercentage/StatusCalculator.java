@@ -1012,6 +1012,8 @@ public class StatusCalculator {
                 e.printStackTrace();
             }
 
+            Log.d("done in the json", "jsonfile");
+
             sleep_data.clear();
             speed_data.clear();
             time_data.clear();

@@ -19,12 +19,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 
+import ir.guardianapp.guardian_v2.DrivingPercentage.EncodeDecode;
 import ir.guardianapp.guardian_v2.database.ImageSavingManager;
 import ir.guardianapp.guardian_v2.extras.Network;
+import ir.guardianapp.guardian_v2.models.Driving;
 import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
@@ -38,6 +41,9 @@ public class ProfileFragment extends Fragment {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText phoneNumEditText;
+    private TextView usernameText;
+    private TextView driving_percentage;
+    private TextView driving_status;
 
     private static int RESULT_LOAD_IMAGE = 1;
 
@@ -59,6 +65,9 @@ public class ProfileFragment extends Fragment {
         usernameEditText = view.findViewById(R.id.usernameEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
         phoneNumEditText = view.findViewById(R.id.phoneNumEditText);
+        usernameText = view.findViewById(R.id.usernameText);
+        driving_percentage = view.findViewById(R.id.driving_percentage);
+        driving_status = view.findViewById(R.id.driving_status);
         Button saveButton = view.findViewById(R.id.saveProfileButton);
         ProgressBar editProgress = view.findViewById(R.id.progressBar);
 
@@ -223,6 +232,13 @@ public class ProfileFragment extends Fragment {
 
     private void setProfile(EditText username, EditText password, EditText phone) {
         User user = User.getInstance();
+        usernameText.setText(user.getUsername());
+        Driving driving = Driving.getInstance();
+        if (driving.getAverage()==-1)
+            driving_percentage.setText("99%");
+        else
+            driving_percentage.setText(((Math.round(driving.getAverage())) + "%").toString());
+        driving_status.setText(EncodeDecode.calculateStatusAlgorithm(driving.getAverage()));
         username.setHint(user.getUsername());
         password.setHint(user.getPassword());
         phone.setHint(user.getPhoneNum());

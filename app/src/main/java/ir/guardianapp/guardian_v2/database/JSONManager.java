@@ -1,6 +1,8 @@
 package ir.guardianapp.guardian_v2.database;
 
 import android.content.Context;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +20,7 @@ import java.util.Locale;
 
 public class JSONManager {
 
-    private static JSONArray drivingJSONArray;
+    private static JSONArray drivingJSONArray = new JSONArray();
 
     public static JSONObject createDrivingJSONObject(double sleep, double time, double speed,
                                                      double withoutStop, double roadType, double traffic,
@@ -68,6 +70,7 @@ public class JSONManager {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(userString);
         bufferedWriter.close();
+        Log.d("wrote in the file!", "done");
     }
 
     public static JSONArray readJSONArrFromJSONFile(Context context) throws IOException, JSONException {
@@ -86,11 +89,30 @@ public class JSONManager {
         return new JSONArray(response);
     }
 
+    public static boolean fileDoesExist(Context context) {
+        File f = new File(context.getFilesDir(), "driving.json");
+        if(f.exists() && !f.isDirectory()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean deleteFile(Context context) {
+        File f = new File(context.getFilesDir(), "driving.json");
+        return f.delete();
+    }
+
     public static JSONArray getDrivingJSONArray() {
         return drivingJSONArray;
     }
 
     public static void setDrivingJSONArray(JSONArray drivingJSONArray) {
         JSONManager.drivingJSONArray = drivingJSONArray;
+    }
+
+    public static void clearDrivingJSONArray() {
+        for(int i=0; i<JSONManager.drivingJSONArray.length() ;i++) {
+            JSONManager.drivingJSONArray.remove(i);
+        }
     }
 }

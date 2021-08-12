@@ -29,7 +29,7 @@ public class ThisTripData {
     private String startDate;
     private String endDate;
     private double average;
-    private double distance;
+    private int distance;
     private boolean enable = false;
 
     public void setUsername(String username) {
@@ -145,10 +145,10 @@ public class ThisTripData {
     }
 
     public void setDistance(double distance) {
-        this.distance = distance;
+        this.distance = (int)(distance/1000);
     }
 
-    public double getDistance() {
+    public int getDistance() {
         return distance;
     }
 

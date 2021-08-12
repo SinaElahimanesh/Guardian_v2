@@ -54,7 +54,6 @@ public class OSRMParser {
                 JSONObject firstLeg = legs.getJSONObject(0);
                 JSONArray steps = firstLeg.getJSONArray("steps");
                 for (int i = 0; i < steps.length(); i++) {
-                    Log.d("STEPSS", "" + i);
                     JSONObject stepObject = steps.getJSONObject(i);
                     Step javaStep = new Step();
                     javaStep.drivingSide = stepObject.getString("driving_side");
@@ -80,7 +79,6 @@ public class OSRMParser {
                         OSRMParser.lines.add(line);
                     }
                     OSRMParser.steps.add(javaStep);
-                    Log.d("STEPSsS", "" + OSRMParser.steps.size());
                 }
                 OSRMParser.parsingFinished = true;
                 osrmParseFinished.finished();

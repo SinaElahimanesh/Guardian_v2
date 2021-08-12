@@ -83,193 +83,193 @@ public class RoutingHelper {
 
         if(minStep.getType().equalsIgnoreCase("turn")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست بپیچید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("new name")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست بپیچید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("depart")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست بپیچید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("arrive")) {
-            return "پس از " + calculateDistance(remainingDist) + "به مقصد رسیده اید";
+            return "پس از " + calculateDistance(remainingDist) + " به مقصد رسیده اید";
         } else if(minStep.getType().equalsIgnoreCase("merge")) {
-            return "پس از " + calculateDistance(remainingDist) + "به مسیر می پیوندید";
+            return "پس از " + calculateDistance(remainingDist) + " به مسیر می پیوندید";
         }  else if(minStep.getType().equalsIgnoreCase("on ramp")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی راست وارد شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی راست وارد شوید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی چپ وارد شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی چپ وارد شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی راست به آرامی وارد شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی راست به آرامی وارد شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی چپ به آرامی وارد شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی چپ به آرامی وارد شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("off ramp")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی راست خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی راست خارج شوید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی چپ خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی چپ خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی راست به آرامی خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی راست به آرامی خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از خروجی چپ به آرامی خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " از خروجی چپ به آرامی خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("fork")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع به راست بروید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع به راست بروید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع به چپ بروید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع به چپ بروید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع به آرامی به راست بروید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع به آرامی به راست بروید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع به آرامی به چپ بروید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع به آرامی به چپ بروید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "در تقاطع مستقیم ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " در تقاطع مستقیم ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("end of road")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی از راست خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی از راست خارج شوید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی از چپ خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی از چپ خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی از راست خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی از راست خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی از راست خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی از راست خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی از چپ خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی از چپ خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی از چپ خارج شوید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی از چپ خارج شوید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی در مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("use lane")) {
-            return "پس از " + calculateDistance(remainingDist) + "در مسیر خود ادامه دهید";
+            return "پس از " + calculateDistance(remainingDist) + " در مسیر خود ادامه دهید";
         } else if(minStep.getType().equalsIgnoreCase("continue")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از راست در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " از راست در مسیر خود ادامه دهید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از چپ در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " از چپ در مسیر خود ادامه دهید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "در مسیر خود دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " در مسیر خود دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از راست در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " از راست در مسیر خود ادامه دهید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "از راست در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " از راست در مسیر خود ادامه دهید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از چپ در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " از چپ در مسیر خود ادامه دهید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "از چپ در مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " از چپ در مسیر خود ادامه دهید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("roundabout")) {
-            return "پس از " + calculateDistance(remainingDist) + "در میدان" + roundAboutString(minStep.getExit()) + "خارج شوید";
+            return "پس از " + calculateDistance(remainingDist) + "در میدان " + roundAboutString(minStep.getExit()) + " خارج شوید";
         } else if(minStep.getType().equalsIgnoreCase("rotary")) {
-            return "پس از " + calculateDistance(remainingDist) + "در میدان" + minStep.getRotary_name() + roundAboutString(minStep.getExit()) + "خارج شوید";
+            return "پس از " + calculateDistance(remainingDist) + "در میدان " + minStep.getRotary_name() + " " + roundAboutString(minStep.getExit()) + " خارج شوید";
         } else if(minStep.getType().equalsIgnoreCase("roundabout turn")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست بپیچید";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به راست دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به راست دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به چپ دور بزنید";
+                return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "مستقیم به مسیر خود ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
         } else if(minStep.getType().equalsIgnoreCase("notification")) {
             if(minStep.getDrivingSide().equalsIgnoreCase("right")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده به راست می پیچد";
+                return "پس از " + calculateDistance(remainingDist) + " جاده به راست می پیچد";
             } else  if(minStep.getDrivingSide().equalsIgnoreCase("left")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده به چپ می پیچد";
+                return "پس از " + calculateDistance(remainingDist) + " جاده به چپ می پیچد";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("uturn")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده دور می زند";
+                return "پس از " + calculateDistance(remainingDist) + " جاده دور می زند";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp right")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده پیچ خطرناک به راست دارد";
+                return "پس از " + calculateDistance(remainingDist) + " جاده پیچ خطرناک به راست دارد";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight right")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده به راست می پیچد";
+                return "پس از " + calculateDistance(remainingDist) + " جاده به راست می پیچد";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده پیچ خطرناک به چپ دارد";
+                return "پس از " + calculateDistance(remainingDist) + " جاده پیچ خطرناک به چپ دارد";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + "جاده به چپ می پیچد";
+                return "پس از " + calculateDistance(remainingDist) + " جاده به چپ می پیچد";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
-                return "پس از " + calculateDistance(remainingDist) + "در مسیر مستقیم ادامه دهید";
+                return "پس از " + calculateDistance(remainingDist) + " در مسیر مستقیم ادامه دهید";
             }
         }
         return "در مسیر خود ادامه دهید";

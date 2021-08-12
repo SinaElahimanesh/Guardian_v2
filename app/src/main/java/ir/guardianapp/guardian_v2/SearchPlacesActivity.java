@@ -26,6 +26,7 @@ public class SearchPlacesActivity extends AppCompatActivity implements SearchVie
     ListView list;
     ListViewAdapter adapter;
     SearchView searchEditText;
+    private static String searchText = "";
     String[] placesList;
     ArrayList<SearchPlaces> arraylist = new ArrayList<>();
 
@@ -57,6 +58,7 @@ public class SearchPlacesActivity extends AppCompatActivity implements SearchVie
                 HomeFragment.searchLatitude = item.getLatitude();
                 HomeFragment.searchLongitude = item.getLongitude();
                 HomeFragment.searchTitle = text;
+                SearchPlacesActivity.searchText = "";
                 startActivity(intent);
             }
         });
@@ -81,6 +83,24 @@ public class SearchPlacesActivity extends AppCompatActivity implements SearchVie
                 }
             }
         };
+
+        if(!searchText.equalsIgnoreCase("")) {
+            searchEditText.setQuery(searchText, false);
+        }
+    }
+
+    public static void setSearchText(String searchText) {
+        SearchPlacesActivity.searchText = searchText;
+    }
+
+    public static String getSearchText() {
+        return searchText;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SearchPlacesActivity.searchText = "";
     }
 
     @Override
@@ -103,5 +123,12 @@ public class SearchPlacesActivity extends AppCompatActivity implements SearchVie
             requestThread.start();
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SearchPlacesActivity.searchText = "";
+//        searchEditText.clearFocus();
     }
 }
