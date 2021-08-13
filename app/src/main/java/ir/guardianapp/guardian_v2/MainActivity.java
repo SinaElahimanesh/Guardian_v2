@@ -33,7 +33,11 @@ import com.onesignal.OneSignal;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -81,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
+
+        //
+        if(checkIfVPNConnected()) {
+            Toast.makeText(this,"روشن بودن VPN سرعت برنامه را کند می کند. لطفا آن را خاموش کنید!", Toast.LENGTH_LONG).show();
+        }
 
         // sharedPreferences
         SharedPreferencesManager.initializeSharedPreferences(this);
@@ -224,5 +233,19 @@ public class MainActivity extends AppCompatActivity {
     }
     public static boolean getShowGuide() {
         return showGuide;
+    }
+
+    public boolean checkIfVPNConnected() {
+        List<String> networkList = new ArrayList<>();
+        try {
+            for (NetworkInterface networkInterface : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                if (networkInterface.isUp())
+                    networkList.add(networkInterface.getName());
+            }
+        } catch (Exception ex) {
+            Log.d("VPN", "isVpnUsing Network List didn't received");
+        }
+
+        return networkList.contains("tun0");
     }
 }

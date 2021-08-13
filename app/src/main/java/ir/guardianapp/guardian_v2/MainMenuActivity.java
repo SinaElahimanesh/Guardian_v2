@@ -99,6 +99,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         newDB();
         HomeFragment homeFragment = new HomeFragment();
+        CURRENT_FRAGMENT = homeFragment;
 
         BubbleNavigationLinearView bubbleNavigationLinearView = findViewById(R.id.bottom_navigation_view_linear);
         bubbleNavigationLinearView.setNavigationChangeListener(new BubbleNavigationChangeListener() {
