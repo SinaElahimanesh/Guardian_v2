@@ -38,6 +38,11 @@ public class ImageSavingManager {
     }
 
     public static void loadImageFromStorage(ImageView profileImageView, Context context) {
+        ContextWrapper cw2 = new ContextWrapper(context);
+        File f2 = cw2.getDir("imageDir", Context.MODE_PRIVATE);
+        if(!f2.exists() || f2.isDirectory()) {
+            return;
+        }
         try {
             ContextWrapper cw = new ContextWrapper(context);
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
