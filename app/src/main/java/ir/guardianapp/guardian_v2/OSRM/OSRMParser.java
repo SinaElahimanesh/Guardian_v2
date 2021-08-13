@@ -56,12 +56,15 @@ public class OSRMParser {
                 for (int i = 0; i < steps.length(); i++) {
                     JSONObject stepObject = steps.getJSONObject(i);
                     Step javaStep = new Step();
-                    javaStep.drivingSide = stepObject.getString("driving_side");
                     javaStep.name = stepObject.getString("name");
                     javaStep.distance = stepObject.getDouble("distance");
                     javaStep.duration = stepObject.getDouble("duration");
                     javaStep.bearing = stepObject.getJSONObject("maneuver").getInt("bearing_after");
                     javaStep.type = stepObject.getJSONObject("maneuver").getString("type");
+                    if(stepObject.getJSONObject("maneuver").has("modifier"))
+                        javaStep.drivingSide = stepObject.getJSONObject("maneuver").getString("modifier");
+                    else
+                        javaStep.drivingSide = "straight";
                     if(stepObject.getJSONObject("maneuver").has("exit"))
                         javaStep.exit = stepObject.getJSONObject("maneuver").getInt("exit");
                     if(stepObject.getJSONObject("maneuver").has("rotary_name"))

@@ -35,7 +35,7 @@ public class RoutingHelper {
     }
 
     @Nullable
-    public static Step whichStepWeAreNearTo(Location location) {
+    public static Step whichStepWeAreNearTo(Location location, int bearing) {
         LatLng locationLatLng = new LatLng(location.getLat(), location.getLon());
         double minDistance = 10_000_000_00;
         Step minStep = null;
@@ -50,7 +50,7 @@ public class RoutingHelper {
                     minLine = line;
                 }
             }
-            if (minLine != null && minDistanceOfStep < minDistance) {
+            if (minLine != null && minDistanceOfStep < minDistance && Math.abs(step.bearing-bearing)<90) {
                 minDistance = minDistanceOfStep;
                 minStep = step;
             }
@@ -61,7 +61,7 @@ public class RoutingHelper {
     public static int getStepImage(Step minStep) {
         if (minStep.getType().equals("roundabout") || minStep.getType().equals("rotary")) {
             return R.drawable.ic_roundabout;
-        } else if (minStep.getDrivingSide().equals("arrive")) {
+        } else if (minStep.getType().equals("arrive")) {
             return R.drawable.ic_arrive;
         } else if (minStep.getDrivingSide().equals("left") | minStep.getDrivingSide().equals("sharp left") || minStep.getDrivingSide().equals("slight left")) {
             return R.drawable.ic_turn_left;
@@ -95,7 +95,7 @@ public class RoutingHelper {
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
                 return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
                 return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
@@ -113,7 +113,7 @@ public class RoutingHelper {
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
                 return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
                 return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
@@ -131,7 +131,7 @@ public class RoutingHelper {
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
                 return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
                 return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }
@@ -249,7 +249,7 @@ public class RoutingHelper {
             } else if(minStep.getDrivingSide().equalsIgnoreCase("sharp left")) {
                 return "پس از " + calculateDistance(remainingDist) + " به چپ دور بزنید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("slight left")) {
-                return "پس از " + calculateDistance(remainingDist) + " به آرامی به راست بپیچید";
+                return "پس از " + calculateDistance(remainingDist) + " به آرامی به چپ بپیچید";
             } else if(minStep.getDrivingSide().equalsIgnoreCase("straight")) {
                 return "پس از " + calculateDistance(remainingDist) + " مستقیم به مسیر خود ادامه دهید";
             }

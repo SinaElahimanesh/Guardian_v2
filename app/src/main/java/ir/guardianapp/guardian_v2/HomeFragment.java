@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -49,6 +51,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -59,6 +62,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import ir.guardianapp.guardian_v2.DrivingStatus.location.GPSTracker;
+import ir.guardianapp.guardian_v2.OSRM.OSRMParser;
 import ir.guardianapp.guardian_v2.extras.AnimationHandler;
 import ir.guardianapp.guardian_v2.extras.BitmapHelper;
 import ir.guardianapp.guardian_v2.extras.Network;
@@ -135,6 +140,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         locationConfirmButton.setOnClickListener(v -> {
             if(switchPosition==0) {
                 SeatBeltActivity.navigationMode = false;
+                OSRMParser.clearData();
                 startActivity(new Intent(getActivity(), SeatBeltActivity.class));
             } else {
                 addLocation(cameraLatitude, cameraLongitude);
@@ -211,6 +217,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+    // MAP
+    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+        @Override
+        public void onMyLocationChange(Location location) {
+            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.8f));
+            updateCameraBearing(mMap, location);
+        }
+    };
+
+    private void updateCameraBearing(GoogleMap googleMap, Location location) {
+        if (googleMap == null) return;
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)             // Sets the center of the map to current location
+                .zoom(15.8f)                   // Sets the zoom
+                .bearing(location.getBearing()) // Sets the orientation of the camera to east
+                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -236,6 +265,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         if(mMap != null)
             MainNavigationActivity.showParkingLocation(getContext(), mMap);
+
     }
 
     private final int REQ_CODE = 100;
@@ -342,6 +372,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         //
 //        MainNavigationActivity.showParkingLocation(getContext(), mMap);
+
+//        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
     }
 
     private void removeLocation() {
@@ -498,6 +530,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         } else if(sourceDest == SourceDest.DONE) {
             SeatBeltActivity.navigationMode = true;
+            OSRMParser.clearData();
             startActivity(new Intent(getActivity(), SeatBeltActivity.class));
         }
     }

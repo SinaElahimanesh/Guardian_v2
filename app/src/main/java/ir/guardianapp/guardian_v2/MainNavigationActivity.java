@@ -687,7 +687,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             m = mMap.addMarker(new MarkerOptions()
                     .flat(true)
                     .icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(getResources().getDrawable(R.drawable.ic_navigation_arrow, getTheme()))))
-                    .rotation(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude())).getBearing())
+                    .rotation(RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(targetLocation.getLatitude(), targetLocation.getLongitude()), (int)bearing).getBearing())
                     .anchor(0.5f, 0.5f)
                     .position(
                             new LatLng(targetLocation.getLatitude(), targetLocation
@@ -696,7 +696,8 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             m = mMap.addMarker(new MarkerOptions()
                     .flat(true)
                     .icon(BitmapDescriptorFactory.fromBitmap(BitmapHelper.drawableToBitmap(getResources().getDrawable(R.drawable.ic_navigation_arrow, getTheme()))))
-                    .rotation(targetLocation.bearingTo(lastKnownLocation))
+                    .rotation(targetLocation.getBearing())
+//                    .rotation(targetLocation.bearingTo(lastKnownLocation))
                     .anchor(0.5f, 0.5f)
                     .position(
                             new LatLng(targetLocation.getLatitude(), targetLocation
@@ -949,7 +950,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
                 if(!parkingMode && !overviewMode) {
 //                    moveMapMarker(location);
                     if(duration==0) duration = 100;
-                    bearing = lastKnownLocation.bearingTo(location);
+                    bearing = location.getBearing();//lastKnownLocation.bearingTo(location);
                     if(m == null) {
                         moveMapMarker(location);
                     }
@@ -1375,7 +1376,7 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
 
     Step lastStep;
     private void populateTextViews(android.location.Location location) {
-        Step minStep = RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(location.getLatitude(), location.getLongitude()));
+        Step minStep = RoutingHelper.whichStepWeAreNearTo(new ir.guardianapp.guardian_v2.OSRM.Location(location.getLatitude(), location.getLongitude()), (int)bearing);
         if(lastStep != null) {
             if(!minStep.getName().equalsIgnoreCase(lastStep.getName()) && minStep.getDistance()!=lastStep.getDistance()) {
                 dist = 0;
