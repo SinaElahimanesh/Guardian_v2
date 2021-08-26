@@ -20,6 +20,7 @@ import com.gauravk.bubblenavigation.BubbleNavigationLinearView;
 import com.gauravk.bubblenavigation.listener.BubbleNavigationChangeListener;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Date;
@@ -65,6 +66,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         // Driving JSON
         if(JSONManager.fileDoesExist(this)) {
+            System.out.println("wexist");
             try {
                 JSONManager.setDrivingJSONArray(JSONManager.readJSONArrFromJSONFile(this));
             } catch (IOException | JSONException e) {
@@ -77,10 +79,12 @@ public class MainMenuActivity extends AppCompatActivity {
                         public void handleMessage(Message msg) {
                             if (msg.what == MessageResult.SUCCESSFUL) {
                                 //
+                                System.out.println("dididididi");
                                 JSONManager.deleteFile(MainMenuActivity.this);
                                 JSONManager.clearDrivingJSONArray();
                             } else {
                                 //
+                                System.out.println("nothingd");
                             }
                         }
                     };
@@ -89,6 +93,50 @@ public class MainMenuActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+
+        // Trip JSON
+        if(ThisTripData.fileDoesExist(this)) {
+            try {
+                JSONObject trip = ThisTripData.readJSONArrFromJSONFile(this);
+                if (Network.isNetworkAvailable(this)) {   // connected to internet
+                    Handler handler = new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            if (msg.what == MessageResult.SUCCESSFUL) {
+                                //
+                                System.out.println("done!");
+                                ThisTripData.deleteFile(MainMenuActivity.this);
+                            } else {
+                                //
+                                System.out.println("nooo");
+                            }
+                        }
+                    };
+                    System.out.println("itis" +     trip.getString("endDate"));
+                    MainActivity.executorService.submit(ThreadGenerator.postATripInformation(trip.getString("username"),
+                    trip.getString("token"),
+                    trip.getString("sourceName"),
+                    trip.getDouble("sourceLongitude"),
+                    trip.getDouble("sourceLatitude"),
+                    trip.getString("destName"),
+                    trip.getDouble("destLongitude"),
+                    trip.getDouble("destLatitude"),
+                    trip.getDouble("duration"),
+                    trip.getString("startDate"),
+                    trip.getString("endDate"),
+                    trip.getDouble("average"),
+                    trip.getDouble("distance"),
+                    trip.getDouble("realDistance"),
+                    trip.getDouble("realLatitude"),
+                    trip.getDouble("realLongitude"),
+                    trip.getString("realEndTime"), handler));
+                } else {
+                    Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
         }
     }

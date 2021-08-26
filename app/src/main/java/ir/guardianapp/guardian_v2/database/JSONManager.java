@@ -26,7 +26,7 @@ public class JSONManager {
                                                      double withoutStop, double roadType, double traffic,
                                                      double weather, double nearCities, double vibration,
                                                      double acceleration, double month, double average,
-                                                     Date regDate, double longitude, double latitude) throws JSONException, ParseException {
+                                                     Date regDate, double longitude, double latitude, double speedLimit) throws JSONException, ParseException {
         JSONObject jsonObject = new JSONObject();
         //
         String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
@@ -54,6 +54,7 @@ public class JSONManager {
         jsonObject.put("reg", registerDate);
         jsonObject.put("long", longitude);
         jsonObject.put("li", latitude);
+        jsonObject.put("speed_limit", speedLimit);
         return jsonObject;
     }
 

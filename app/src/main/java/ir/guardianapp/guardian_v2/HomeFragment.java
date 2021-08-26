@@ -536,40 +536,40 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void postTrip() {
-        Handler handler2 = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                //
-            }
-        };
-        DateFormat readFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-        DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        Date date = null;
-        try {
-            date = readFormat.parse((new Date()).toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String startDate = "";
-        String endDate = "";
-        if (date != null) {
-            startDate = writeFormat.format(date);
-        }
-        //
-        try {
-            date = readFormat.parse((new Date()).toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (date != null) {
-            endDate = writeFormat.format(date);
-        }
-        ThisTripData thisTripData = ThisTripData.getInstance();
-        MainActivity.executorService.submit(ThreadGenerator.postATripInformation(User.getInstance().getUsername(), User.getInstance().getToken(),
-                thisTripData.getSourceName(), thisTripData.getSourceLongitude(), thisTripData.getSourceLatitude(),
-                thisTripData.getDestName(), thisTripData.getDestLongitude(), thisTripData.getDestLatitude(),
-                thisTripData.getDuration(), startDate, endDate,
-                thisTripData.getAverage(), thisTripData.getDistance(), handler2));
+//        Handler handler2 = new Handler(Looper.getMainLooper()) {
+//            @Override
+//            public void handleMessage(Message msg) {
+//                //
+//            }
+//        };
+//        DateFormat readFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+//        DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+//        Date date = null;
+//        try {
+//            date = readFormat.parse((new Date()).toString());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        String startDate = "";
+//        String endDate = "";
+//        if (date != null) {
+//            startDate = writeFormat.format(date);
+//        }
+//        //
+//        try {
+//            date = readFormat.parse((new Date()).toString());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        if (date != null) {
+//            endDate = writeFormat.format(date);
+//        }
+//        ThisTripData thisTripData = ThisTripData.getInstance();
+//        MainActivity.executorService.submit(ThreadGenerator.postATripInformation(User.getInstance().getUsername(), User.getInstance().getToken(),
+//                thisTripData.getSourceName(), thisTripData.getSourceLongitude(), thisTripData.getSourceLatitude(),
+//                thisTripData.getDestName(), thisTripData.getDestLongitude(), thisTripData.getDestLatitude(),
+//                thisTripData.getDuration(), startDate, endDate,
+//                thisTripData.getAverage(), thisTripData.getDistance(), handler2));
     }
 
     public void showProgressDialog() {

@@ -142,12 +142,14 @@ public class Requester {
     public Response RequestPostATrip(String username, String token,
                                      String sourceName, double sourceLongitude, double sourceLatitude,
                                      String destName, double destLongitude, double destLatitude,
-                                     double duration, String startTime, String endTime, double average, double distance){
+                                     double duration, String startTime, String endTime, double average, double distance,
+                                     double realDistance, double realLatitude, double realLongitude, String realEndTime){
         OkHttpClient okHttpClient = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(URI_PREFIX + "PostTripInformation/" + username + "/" + token
                 + "/" + sourceName + "/" + sourceLongitude + "/" + sourceLatitude
                 + "/" + destName + "/" + destLongitude + "/" + destLatitude
-                + "/" + duration + "/" + startTime + "/" + endTime + "/" + average + "/" + distance)
+                + "/" + ((int)duration) + "/" + startTime + "/" + endTime + "/" + average + "/" + distance
+        + "/" + realDistance  + "/" + realLatitude  + "/" + realLongitude  + "/" + realEndTime)
                 .newBuilder();
         String url = urlBuilder.build().toString();
         final Request request = new Request.Builder().url(url).build();

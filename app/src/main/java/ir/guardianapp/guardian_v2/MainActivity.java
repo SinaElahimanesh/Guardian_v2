@@ -118,6 +118,14 @@ public class MainActivity extends AppCompatActivity {
                         isLoggedIn = true;
                         MainActivity.setShowGuide(false);
                         User.getInstance().setToken(SharedPreferencesManager.getToken(MainActivity.this));
+                        //
+                        Handler handler2 = new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                //
+                            }
+                        };
+                        MainActivity.executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler2));
                     } else if (msg.what == MessageResult.FAILED) {
                         //
                     }
@@ -147,14 +155,6 @@ public class MainActivity extends AppCompatActivity {
                 retryButton.setVisibility(View.INVISIBLE);
             }
         });
-
-        Handler handler2 = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                //
-            }
-        };
-        MainActivity.executorService.submit(ThreadGenerator.getDrivingDetail(User.getInstance().getUsername(), User.getInstance().getToken(), handler2));
     }
 
     private void startApp() {

@@ -1,5 +1,18 @@
 package ir.guardianapp.guardian_v2.models;
 
+import android.content.Context;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +43,10 @@ public class ThisTripData {
     private String endDate;
     private double average;
     private int distance;
+    private double realDistance = 0;
+    private double realLatitude = -1;
+    private double realLongitude = -1;
+    private String realEndTime;
     private boolean enable = false;
 
     public void setUsername(String username) {
@@ -158,5 +175,116 @@ public class ThisTripData {
 
     public boolean getEnable() {
         return enable;
+    }
+
+    public void setRealDistance(double realDistance) {
+        this.realDistance = realDistance;
+    }
+
+    public double getRealDistance() {
+        return realDistance;
+    }
+
+    public void setRealLongitude(double realLongitude) {
+        this.realLongitude = realLongitude;
+    }
+
+    public double getRealLongitude() {
+        return realLongitude;
+    }
+
+    public void setRealLatitude(double realLatitude) {
+        this.realLatitude = realLatitude;
+    }
+
+    public double getRealLatitude() {
+        return realLatitude;
+    }
+
+    public void addDist(double dist) {
+        if(realDistance<0) realDistance = 0;
+        this.realDistance += dist;
+    }
+
+    public void setRealEndTime(Date realEndTime) {
+        String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+        String outputPattern = "yyyy-MM-dd hh:mm:ss";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.ENGLISH);
+        try {
+            this.realEndTime = outputFormat.format(inputFormat.parse(realEndTime.toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getRealEndTime() {
+        return realEndTime;
+    }
+
+    public static JSONObject createTripJSONObject() throws JSONException, ParseException {
+        JSONObject jsonObject = new JSONObject();
+        ThisTripData thisTripData = ThisTripData.getInstance();
+
+        jsonObject.put("username", thisTripData.username);
+        jsonObject.put("token", thisTripData.token);
+        jsonObject.put("sourceName", thisTripData.sourceName);
+        jsonObject.put("sourceLongitude", thisTripData.sourceLongitude);
+        jsonObject.put("sourceLatitude", thisTripData.sourceLatitude);
+        jsonObject.put("destName", thisTripData.destName);
+        jsonObject.put("destLongitude", thisTripData.destLongitude);
+        jsonObject.put("destLatitude", thisTripData.destLatitude);
+        jsonObject.put("duration", thisTripData.duration);
+        jsonObject.put("startDate", thisTripData.startDate);
+        jsonObject.put("endDate", thisTripData.endDate);
+        jsonObject.put("average", thisTripData.average);
+        jsonObject.put("distance", thisTripData.distance);
+        jsonObject.put("realDistance", thisTripData.realDistance);
+        jsonObject.put("realLatitude", thisTripData.realLatitude);
+        jsonObject.put("realLongitude", thisTripData.realLongitude);
+        jsonObject.put("realEndTime", thisTripData.realEndTime);
+
+        return jsonObject;
+    }
+
+    public static void writeJSONArrIntoJSONFile(Context context, JSONObject jsonObject) throws IOException {
+        // Convert JsonObject to String Format
+        String userString = jsonObject.toString();
+        // Define the File Path and its Name
+        File file = new File(context.getFilesDir(),"trip.json");
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(userString);
+        bufferedWriter.close();
+        Log.d("wrote in the file!", "done");
+    }
+
+    public static JSONObject readJSONArrFromJSONFile(Context context) throws IOException, JSONException {
+        File file = new File(context.getFilesDir(), "trip.json");
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = bufferedReader.readLine();
+        while (line != null){
+            stringBuilder.append(line).append("\n");
+            line = bufferedReader.readLine();
+        }
+        bufferedReader.close();
+        // This response will have Json Format String
+        String response = stringBuilder.toString();
+        return new JSONObject(response);
+    }
+
+    public static boolean fileDoesExist(Context context) {
+        File f = new File(context.getFilesDir(), "trip.json");
+        if(f.exists() && !f.isDirectory()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean deleteFile(Context context) {
+        File f = new File(context.getFilesDir(), "trip.json");
+        return f.delete();
     }
 }

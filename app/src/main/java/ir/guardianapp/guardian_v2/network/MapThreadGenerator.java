@@ -160,7 +160,8 @@ public class MapThreadGenerator {
                     }
 
                     Date today = new Date();
-                    calendar.set(today.getYear(), today.getMonth(), today.getDay(), hour, minute, 0);
+                    System.out.println(Calendar.getInstance().get(Calendar.YEAR));
+                    calendar.set(Calendar.getInstance().get(Calendar.YEAR), today.getMonth(), today.getDay(), hour, minute, 0);
                     Date endTime = calendar.getTime();
 
                     thisTripData.setStartDate(new Date());

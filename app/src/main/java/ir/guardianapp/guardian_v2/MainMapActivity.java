@@ -63,8 +63,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import ir.guardianapp.guardian_v2.DrivingPercentage.DriveAlertHandler;
@@ -81,6 +85,7 @@ import ir.guardianapp.guardian_v2.extras.GPSAndInternetChecker;
 import ir.guardianapp.guardian_v2.extras.GuideManager;
 import ir.guardianapp.guardian_v2.extras.Network;
 import ir.guardianapp.guardian_v2.extras.NumberHandler;
+import ir.guardianapp.guardian_v2.models.ThisTripData;
 import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MessageResult;
 import ir.guardianapp.guardian_v2.network.ThreadGenerator;
@@ -333,6 +338,8 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
         alertMessageBox.setMinimumHeight(39);
     }
 
+    private Location lastKnownLocation = new Location("");
+
     // MAP
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
         @Override
@@ -344,6 +351,13 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.8f));
                 updateCameraBearing(mMap, location);
             }
+
+            ThisTripData thisTripData = ThisTripData.getInstance();
+            thisTripData.addDist(location.distanceTo(lastKnownLocation));
+            thisTripData.setRealLatitude(location.getLatitude());
+            thisTripData.setRealLongitude(location.getLongitude());
+            thisTripData.setRealEndTime(new Date());
+            lastKnownLocation = location;
         }
     };
 
@@ -703,8 +717,15 @@ public class MainMapActivity extends AppCompatActivity implements SensorEventLis
     protected void onStop() {
         super.onStop();
         System.out.println(JSONManager.getDrivingJSONArray());
+        ThisTripData.getInstance().setRealEndTime(new Date());
         try {
-            JSONManager.writeJSONArrIntoJSONFile(MainMapActivity.this);
+            ThisTripData.writeJSONArrIntoJSONFile(this, ThisTripData.createTripJSONObject());
+        } catch (IOException | JSONException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            JSONManager.writeJSONArrIntoJSONFile(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

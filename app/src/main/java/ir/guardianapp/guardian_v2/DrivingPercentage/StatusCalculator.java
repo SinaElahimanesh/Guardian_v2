@@ -52,6 +52,7 @@ public class StatusCalculator {
     private ArrayList<Double> withoutStop_data = new ArrayList<>();
     private ArrayList<Double> traffic_data = new ArrayList<>();
     private ArrayList<Double> roadType_data = new ArrayList<>();
+    private ArrayList<Double> speedLimit_data = new ArrayList<>();
 
     ArrayList<String> alerts;
 
@@ -873,7 +874,6 @@ public class StatusCalculator {
         else {
             gps.ShowGPSAlertDialog();
         }
-        //
 
         // roadInformation
         RoadInformation roadInformation = new RoadInformation();
@@ -892,8 +892,8 @@ public class StatusCalculator {
         double speed_factor = calculateAverage(singleSpeed) * 3; //speedCalculator(staticUserSpeed, speedLimit, weatherType) * 3;
         double withoutStopDriving_factor = withoutStopDrivingCalculator(nonStop, totalDrive, totalTime, timeObj.getTimeHOUR(), timeObj.getTimeMINUTE()) * 3;
         double nearCities_factor = nearCitiesCalculator(distance) * 2;
-        double vibration_factor = calculateAverage(singleVibrate) * 2.2; //vibrationCalculator(vibration) * 2.2;
-        double acceleration_factor = calculateAverage(singleAcceleration) * 2.5; //accelerationCalculator(acceleration, weatherType) * 2.5;
+        double vibration_factor = vibrationCalculator(vibration) * 2.2; //vibrationCalculator(vibration) * 2.2;
+        double acceleration_factor = accelerationCalculator(acceleration, weatherType) * 2.5; //accelerationCalculator(acceleration, weatherType) * 2.5;
         double month_factor = monthCalculator(solarCalendar.month) * 0.8;
         double traffic_factor = 0; // trafficCalculator() * 1;
         double roadType_factor = roadTypeCalculator(highwayType, lanes, oneway) * 1;
@@ -931,6 +931,7 @@ public class StatusCalculator {
         double month_raw = EncodeDecode.monthEncode(solarCalendar.month);
         double traffic_raw = 0;
         double roadType_raw = EncodeDecode.roadTypeEncode(highwayType);
+        double speedLimit_raw = speedLimit;
 
         singleSpeed.clear();
         singleVibrate.clear();
@@ -984,12 +985,12 @@ public class StatusCalculator {
             average = 100;
         }
 
-        if(cycle == 5) {
+        if(cycle == 3) {
             averageLatitude = staticAverageLatitude;
             averageLongitude = staticAverageLongitude;
         }
 
-        if(cycle == 10) {
+        if(cycle == 6) {
             double sleep_save = calculateAverage(sleep_data);
             double speed_save = calculateAverage(speed_data);
             double time_save = calculateAverage(time_data);
@@ -1001,13 +1002,14 @@ public class StatusCalculator {
             double month_save = calculateAverage(month_data);
             double traffic_save = calculateAverage(traffic_data);
             double roadType_save = calculateAverage(roadType_data);
+            double speedLimit_save = calculateAverage(speedLimit_data);
 
             // Should save data
             try {
                 JSONManager.addJSONObject2JSONArray(JSONManager.createDrivingJSONObject(sleep_save,
                         time_save, speed_save, withoutStop_save, roadType_save, traffic_save, weather_save,
                         nearCities_save, vibration_save, acceleration_save, month_save,
-                        average, new Date(), averageLongitude, averageLatitude));
+                        average, new Date(), averageLongitude, averageLatitude, speedLimit_save));
             } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
@@ -1025,6 +1027,7 @@ public class StatusCalculator {
             month_data.clear();
             traffic_data.clear();
             roadType_data.clear();
+            speedLimit_data.clear();
             cycle = 0;
         }
         cycle ++;
@@ -1039,6 +1042,7 @@ public class StatusCalculator {
         month_data.add(month_raw);
         traffic_data.add(traffic_raw);
         roadType_data.add(roadType_raw);
+        speedLimit_data.add(speedLimit_raw);
 
         String nrc = nearestRestComplex(gps, average);
         Log.d("RestComplex", nrc);
@@ -1094,7 +1098,7 @@ public class StatusCalculator {
         if(array.size() != 0)
             ave /= array.size();
         else
-            return 88;
+            return 2;
         return ave;
     }
 

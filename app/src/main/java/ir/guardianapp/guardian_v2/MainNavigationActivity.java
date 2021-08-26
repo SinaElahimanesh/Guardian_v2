@@ -77,10 +77,15 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.maps.android.PolyUtil;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import ir.guardianapp.guardian_v2.DrivingPercentage.DriveAlertHandler;
 import ir.guardianapp.guardian_v2.DrivingPercentage.StatusCalculator;
@@ -105,6 +110,7 @@ import ir.guardianapp.guardian_v2.extras.TipHandler;
 import ir.guardianapp.guardian_v2.map.RoutingInformation;
 import ir.guardianapp.guardian_v2.marker_animation.LatLngInterpolator;
 import ir.guardianapp.guardian_v2.marker_animation.MarkerAnimation;
+import ir.guardianapp.guardian_v2.models.ThisTripData;
 import ir.guardianapp.guardian_v2.models.User;
 import ir.guardianapp.guardian_v2.network.MapThreadGenerator;
 import ir.guardianapp.guardian_v2.network.MessageResult;
@@ -935,7 +941,12 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, location -> {
             runOnUiThread(() -> {
+                ThisTripData thisTripData = ThisTripData.getInstance();
                 dist += location.distanceTo(lastKnownLocation);
+                thisTripData.addDist(location.distanceTo(lastKnownLocation));
+                thisTripData.setRealLatitude(location.getLatitude());
+                thisTripData.setRealLongitude(location.getLongitude());
+                thisTripData.setRealEndTime(new Date());
                 if(lastTime==0) lastTime = System.currentTimeMillis();
                 duration = (System.currentTimeMillis() - lastTime);
                 lastTime = System.currentTimeMillis();
@@ -1020,26 +1031,40 @@ public class MainNavigationActivity extends AppCompatActivity implements SensorE
             mMap.clear();
         if(polyline != null)
             polyline.remove();
-        if (Network.isNetworkAvailable(this)) {   // connected to internet
-            Handler handler = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == MessageResult.SUCCESSFUL) {
-                        //
-                    } else {
-                        try {
-                            JSONManager.writeJSONArrIntoJSONFile(MainNavigationActivity.this);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            };
-            MainActivity.executorService.submit(ThreadGenerator.postDrivingDetails(User.getInstance().getUsername(),
-                    User.getInstance().getToken(), JSONManager.getDrivingJSONArray(), handler));
-        } else {
-            Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+
+        ThisTripData.getInstance().setRealEndTime(new Date());
+        try {
+            ThisTripData.writeJSONArrIntoJSONFile(this, ThisTripData.createTripJSONObject());
+        } catch (IOException | JSONException | ParseException e) {
+            e.printStackTrace();
         }
+
+        try {
+            JSONManager.writeJSONArrIntoJSONFile(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        if (Network.isNetworkAvailable(this)) {   // connected to internet
+//            Handler handler = new Handler(Looper.getMainLooper()) {
+//                @Override
+//                public void handleMessage(Message msg) {
+//                    if (msg.what == MessageResult.SUCCESSFUL) {
+//                        //
+//                    } else {
+////                        try {
+////
+////                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        }
+//                    }
+//                }
+//            };
+//            MainActivity.executorService.submit(ThreadGenerator.postDrivingDetails(User.getInstance().getUsername(),
+//                    User.getInstance().getToken(), JSONManager.getDrivingJSONArray(), handler));
+//        } else {
+//            Toast.makeText(this, "اتصال شما به اینترنت برقرار نمی باشد.", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     // Drawer
